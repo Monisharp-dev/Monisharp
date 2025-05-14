@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Preview</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="preview.css" />
+  <link rel="stylesheet" href="navbar.css" />
+  <link rel="stylesheet" href="bottom-nav.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo"><b>MONI<i>SHARP</i></b></div>
+    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
+  </header>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="profile">
+      <img src="logo.png" alt="Avatar" />
+      <div>
+        <strong>@UserName</strong><br />
+        <span class="plan">Basic Plan</span>
+      </div>
+    </div>
+ <nav class="nav-links">
+  <a href="#"><i class="fas fa-download"></i> Download App</a>
+  <a href="#"><i class="fas fa-info-circle"></i> About Us</a>
+  <a href="#"><i class="fas fa-envelope"></i> Contact Us</a>
+</nav>
+ </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+  <!-- Dashboard Main Content -->
+  <main class="dashboard">
+    <!-- Main Balance -->
+    <section class="balance-card">
+      <p>Main Balance</p>
+      <h1>₦10,000.00</h1>
+    </section>
+
+    <!-- Info Cards -->
+    <section class="info-cards">
+      <div class="info-card">
+        <p>Referral Balance</p>
+        <h2>₦0.00</h2>
+      </div>
+      <div class="info-card">
+        <p>Number of Referrals</p>
+        <h2>0</h2>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <a href="#" class="active">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="#">
+      <i class="fas fa-bullhorn"></i>
+      <span>Posts</span>
+    </a>
+    <a href="#">
+      <i class="fas fa-wallet"></i>
+      <span>Wallet</span>
+    </a>
+    <a href="#">
+      <i class="fas fa-user"></i>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <!-- Scripts -->
+  <script src="preview.js"></script>
+</body>
+</html>

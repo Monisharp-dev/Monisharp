@@ -1,0 +1,133 @@
+/* signup.css */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #004d40, #00c853);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-container {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 40px 30px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  position: relative;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 20px auto;
+  width: 70px;
+}
+
+h2 {
+  text-align: center;
+  font-size: 1.8em;
+  margin-bottom: 25px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-bottom: 6px;
+  font-size: 0.95em;
+  color: #e0f2f1;
+  font-weight: 500;
+}
+
+input {
+  padding: 12px 15px;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 1em;
+  outline: none;
+  transition: background 0.3s ease;
+}
+
+input:focus {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+input::placeholder {
+  color: #ccc;
+}
+
+button {
+  background: #00e676;
+  color: #fff;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1em;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background: #00c853;
+}
+
+.note {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 0.85em;
+  color: #e0f7fa;
+}
+
+@media (max-width: 500px) {
+  .signup-container {
+    padding: 30px 20px;
+  }
+  
+  
+  .notify {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: bold;
+  color: white;
+  z-index: 9999;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  animation: fadein 0.4s ease-out;
+}
+.notify.success {
+  background-color: #28a745;
+}
+.notify.error {
+  background-color: #dc3545;
+}
+.notify.info {
+  background-color: #007bff;
+}
+@keyframes fadein {
+  from { opacity: 0; top: 10px; }
+  to { opacity: 1; top: 20px; }
+}
+  
+  
+}

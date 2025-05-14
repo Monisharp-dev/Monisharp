@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MoniSharp OCR Receipt Checker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      padding: 20px;
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    #output {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 5px;
+      background-color: #ecf0f1;
+      display: none;
+    }
+    #output.error {
+      background-color: #ffdddd;
+      border: 1px solid #e74c3c;
+      color: #c0392b;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Upload Receipt to Extract Details</h2>
+  <input type="file" id="receipt" accept="image/*"><br><br>
+  <button onclick="uploadReceipt()">Extract</button>
+
+  <div id="output"></div>
+
+  <script>
+    async function uploadReceipt() {
+      const file = document.getElementById("receipt").files[0];
+      const output = document.getElementById("output");
+      output.style.display = "none";
+      output.classList.remove("error");
+      output.innerHTML = "";
+
+      if (!file) {
+        alert("Please select an image.");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("language", "eng");
+      formData.append("isOverlayRequired", "false");
+
+      const response = await fetch("https://api.ocr.space/parse/image", {
+        method: "POST",
+        headers: {
+          "apikey": "K86507993388957"
+        },
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (data.IsErroredOnProcessing) {
+        alert("OCR Error: " + data.ErrorMessage[0]);
+        return;
+      }
+
+      const rawText = data.ParsedResults[0].ParsedText;
+      console.log("Raw OCR Text:", rawText);
+
+      // Normalize typical OCR issues
+      const text = rawText
+        .replace(/[,]/g, "")
+        .replace(/NI/g, "₦")
+        .replace(/N\s/g, "₦")
+        .replace(/[\u2010-\u2015\uFF0D\uFE63]/g, "-")
+        .replace(/[^\x20-\x7E]+/g, " ")
+        .replace(/\s{2,}/g, " ");
+
+      // Regex to extract details
+      const amountMatch = text.match(/₦\s?\d{1,6}(\.\d{2})?/i);
+      const receiverMatch = text.match(/(?:Credited to|Receiver|To|Beneficiary|credited To)[\s:\n]*([A-Za-z0-9\s]+)/i);
+      const dateMatch = text.match(/\b(?:\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s?\d{1,2}(?:st|nd|rd|th)?[,]?\s?\d{4})\b/i);
+
+      if (!amountMatch || !receiverMatch || !dateMatch) {
+        output.classList.add("error");
+        output.innerHTML = "<strong>Failed:</strong> Could not find all required fields.";
+        output.style.display = "block";
+        return;
+      }
+
+      const amount = amountMatch[0];
+      const receiver = receiverMatch[1].trim();
+      const date = dateMatch[0].replace(/(st|nd|rd|th)/, "");
+
+      output.innerHTML = `
+        <strong>Receipt Details:</strong><br>
+        <b>Amount:</b> ${amount}<br>
+        <b>Receiver:</b> ${receiver}<br>
+        <b>Date:</b> ${date}
+      `;
+      output.style.display = "block";
+    }
+  </script>
+
+</body>
+</html>

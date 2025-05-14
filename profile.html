@@ -1,0 +1,217 @@
+<!-- Updated HTML code with gender field and password lock -->
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Profile - MoniSharp</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="bottom-nav.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .profile-card {
+      background: #fff;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-top: 4rem;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      animation: fadeIn 1s ease-in-out;
+    }
+    .profile-img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 3px solid #0072ff;
+    }
+    .input-group {
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+    .input-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+    .input-group input, .input-group select {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      outline: none;
+    }
+    .input-group input[disabled] {
+      background-color: #eee;
+      color: #777;
+    }
+    .update-btn {
+      margin-top: 1rem;
+      padding: 0.6rem 1.5rem;
+      background-color: #0072ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .notify {
+      margin-top: 1rem;
+      padding: 0.8rem;
+      border-radius: 8px;
+      color: white;
+      animation: slideDown 0.5s ease forwards;
+    }
+    .notify.info { background-color: #00bcd4; }
+    .notify.success { background-color: #4caf50; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-card">
+    <img id="profileImage" class="profile-img" src="" alt="Profile Picture">
+    <div class="input-group">
+      <label for="firstName">First Name</label>
+      <input type="text" id="firstName" />
+    </div>
+    <div class="input-group">
+      <label for="lastName">Last Name</label>
+      <input type="text" id="lastName" />
+    </div>
+    <div class="input-group">
+      <label for="gender">Gender</label>
+      <select id="gender">
+        <option value="">Select</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input type="tel" id="phoneNumber" />
+    </div>
+    <div class="input-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" />
+    </div>
+    <div class="input-group">
+      <label for="password">Password <small>(Cannot be changed here)</small></label>
+      <input type="password" id="password" placeholder="********" disabled />
+    </div>
+    <div class="input-group">
+      <label for="age">Age</label>
+      <input type="number" id="age" />
+    </div>
+    <div class="input-group">
+      <label for="category">Category</label>
+      <select id="category">
+        <option value="">Select</option>
+        <option value="Student">Student</option>
+        <option value="Non-student">Non-student</option>
+      </select>
+    </div>
+
+    <button class="update-btn" onclick="updateProfile()">Update Profile</button>
+    <div id="notifyBox"></div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+  const fields = ["firstName", "lastName", "phoneNumber", "email", "password", "age", "category", "gender"];
+  const profileImage = document.getElementById("profileImage");
+  const passwordInput = document.getElementById("password");
+
+  let missing = false;
+
+  // Lock password field
+  passwordInput.disabled = true;
+  passwordInput.title = "Password can't be changed here.";
+
+  // Load stored data
+  fields.forEach(field => {
+    const input = document.getElementById(field);
+    const stored = localStorage.getItem(field);
+    if (stored) {
+      input.value = (field === "password") ? "********" : stored;
+    } else {
+      missing = true;
+    }
+  });
+
+  // Load or generate profile image based on gender
+  let storedImg = localStorage.getItem("profileImage");
+  const gender = localStorage.getItem("gender");
+
+  if (!storedImg || !gender) {
+    const seed = Math.random().toString(36).substring(2, 10);
+    const style = (gender === "Female") ? "micah" : "avataaars";
+    storedImg = `https://api.dicebear.com/7.x/${style}/svg?seed=${seed}`;
+    localStorage.setItem("profileImage", storedImg);
+  }
+  profileImage.src = storedImg;
+
+  if (missing) {
+    showNotification("Some profile fields are missing. Please update your info.", "info");
+  }
+});
+
+function updateProfile() {
+  const fields = ["firstName", "lastName", "phoneNumber", "email", "age", "category", "gender"];
+  let profile = {};
+
+  for (let field of fields) {
+    const input = document.getElementById(field);
+    if (!input.value.trim() || (field === "category" && input.value === "")) {
+      showNotification("All fields must be filled.", "info");
+      return;
+    }
+    const value = input.value.trim();
+    localStorage.setItem(field, value);
+    profile[field] = value;
+  }
+
+  // Set gender-based image on update
+  const gender = profile.gender;
+  const seed = Math.random().toString(36).substring(2, 10);
+  const style = (gender === "Female") ? "micah" : "avataaars";
+  const imageUrl = `https://api.dicebear.com/7.x/${style}/svg?seed=${seed}`;
+  localStorage.setItem("profileImage", imageUrl);
+  document.getElementById("profileImage").src = imageUrl;
+
+  // Keep password as is
+  const password = localStorage.getItem("password");
+  profile.password = password;
+
+  localStorage.setItem("ProfileData", JSON.stringify(profile));
+  showNotification("Profile updated successfully!", "success");
+}
+
+function showNotification(message, status) {
+  const box = document.getElementById("notifyBox");
+  box.innerHTML = `<div class='notify ${status}'>${message}</div>`;
+}
+  </script>
+  <script src="bottom-nav.js"></script>
+  <script src="navbar.js"></script>
+</body>
+</html>

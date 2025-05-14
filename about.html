@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About - MoniSharp</title>
+  <link rel="stylesheet" href="about.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+  <div class="about-container">
+    <div class="overlay"></div>
+    <div class="about-content">
+      <h1>Welcome to <span style="color: #4caf50;">MoniSharp</span></h1>
+      <p>
+        <strong>MoniSharp</strong> is a youth-driven platform created to help students and young individuals earn legitimate income online. Our core mission is simple: 
+        <strong>Refer and Earn</strong>. You earn by simply inviting others to join.
+      </p>
+
+      <p>
+        Unlike other platforms with hidden fees and complications, MoniSharp keeps it simple and accessible.
+        Register and activate your account for just <strong>₦200 ONLY</strong>. No hidden fees, no stress.
+        You earn <strong>₦100</strong> per referral and can withdraw once your balance hits <strong>₦200</strong> — with instant payment!
+      </p>
+
+      <h2>Why We Stand Out</h2>
+      <ul class="about-list">
+        <li>No bank charges</li>
+        <li>No scams – 100% trusted</li>
+        <li>Low activation fee</li>
+        <li>Open to students and non-students</li>
+        <li>User-friendly interface</li>
+        <li>Simple and rewarding referral system</li>
+      </ul>
+
+      <p>
+        In addition to referrals, you can also earn from sponsored tasks offered by partnering brands and companies. 
+        We’re here to give you a smart and easy way to make money online.
+      </p>
+
+      <div class="about-buttons">
+        <a href="preview.html"><i class="fas fa-laptop"></i> Preview Interface</a>
+        <a href="app-download-link"><i class="fas fa-download"></i> Download App</a>
+      </div>
+
+      <p class="happy">Happy Earning <i class="fas fa-child"></i></p>
+    </div>
+  </div>
+
+  <footer>
+    &copy; <span id="year"></span> MoniSharp. All rights reserved.
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelector(".about-content").classList.add("fade-in");
+      document.getElementById("year").textContent = new Date().getFullYear();
+    });
+  </script>
+</body>
+</html>

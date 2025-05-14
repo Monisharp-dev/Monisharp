@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Storage Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        button {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 5px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .notification button {
+            background-color: #28a745;
+        }
+        .notification button.cancel {
+            background-color: #dc3545;
+        }
+        .notification button:hover {
+            background-color: #218838;
+        }
+        .notification button.cancel:hover {
+            background-color: #c82333;
+        }
+        .notification .buttons {
+            margin-top: 10px;
+        }
+        .notification .buttons button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Local Storage Data</h2>
+    <table id="storageTable">
+        <thead>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be dynamically added here -->
+        </tbody>
+    </table>
+
+    <button onclick="clearStorage()">Clear All Local Storage</button>
+
+    <div id="notification" class="notification">
+        <div id="notificationText"></div>
+        <div id="notificationActions" class="buttons"></div>
+        <button onclick="clearAllDuplicates()">Clear All Duplicates</button>
+        <button onclick="hideNotification()">Close Notification</button>
+    </div>
+
+    <script>
+        let duplicates = [];
+
+        function loadStorageData() {
+            const tableBody = document.getElementById('storageTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            const keys = [];
+            const values = [];
+
+            duplicates = []; // Reset duplicates
+
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                const value = localStorage.getItem(key);
+
+                if (keys.includes(key) || values.includes(value)) {
+                    addDuplicate(key, value);
+                }
+
+                keys.push(key);
+                values.push(value);
+
+                // Create table row
+                const row = document.createElement('tr');
+                
+                // Create cells
+                const keyCell = document.createElement('td');
+                const valueCell = document.createElement('td');
+                const actionCell = document.createElement('td');
+                
+                // Create editable input for value
+                const valueInput = document.createElement('input');
+                valueInput.type = 'text';
+                valueInput.value = value;
+                valueInput.onchange = () => updateStorage(key, valueInput.value);
+                
+                // Create delete button
+                const deleteButton = document.createElement('button');
+                deleteButton.innerText = 'Delete';
+                deleteButton.onclick = () => deleteStorageItem(key);
+                
+                // Append cells to row
+                keyCell.innerText = key;
+                valueCell.appendChild(valueInput);
+                actionCell.appendChild(deleteButton);
+                
+                row.appendChild(keyCell);
+                row.appendChild(valueCell);
+                row.appendChild(actionCell);
+                
+                // Append row to table body
+                tableBody.appendChild(row);
+            }
+
+            if (duplicates.length > 0) {
+                showNotification();
+            }
+        }
+
+        function addDuplicate(key, value) {
+            if (!duplicates.find(d => d.key === key && d.value === value)) {
+                duplicates.push({ key, value });
+            }
+        }
+
+        function showNotification() {
+            const notificationText = document.getElementById('notificationText');
+            const notificationActions = document.getElementById('notificationActions');
+            notificationText.innerHTML = '<strong>Duplicates Found:</strong><br>';
+            notificationActions.innerHTML = ''; // Clear previous actions
+
+            duplicates.forEach((dup, index) => {
+                notificationText.innerHTML += `Key = "${dup.key}", Value = "${dup.value}"<br>`;
+            });
+
+            document.getElementById('notification').style.display = 'block';
+        }
+
+        function clearAllDuplicates() {
+            duplicates.forEach(dup => {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const currentKey = localStorage.key(i);
+                    const currentValue = localStorage.getItem(currentKey);
+
+                    if (currentKey === dup.key || currentValue === dup.value) {
+                        localStorage.removeItem(currentKey);
+                        break; // Remove only one instance
+                    }
+                }
+            });
+            loadStorageData(); // Refresh the table
+            hideNotification();
+        }
+
+        function hideNotification() {
+            document.getElementById('notification').style.display = 'none';
+        }
+
+        function updateStorage(key, value) {
+            localStorage.setItem(key, value);
+            loadStorageData(); // Refresh the table
+        }
+
+        function deleteStorageItem(key) {
+            localStorage.removeItem(key);
+            loadStorageData(); // Refresh the table
+        }
+
+        function clearStorage() {
+            localStorage.clear();
+            loadStorageData(); // Refresh the table
+        }
+
+        // Load storage data on page load
+        window.onload = loadStorageData;
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Withdraw Funds</title>
+  <link rel="stylesheet" href="withdraw.css" />
+  <link rel="stylesheet" href="bottom-nav.css">
+  <link rel="stylesheet" href="navbar.css">
+  <style>
+      /* Loader Styles - Removed per request */
+      <style>
+  /* Loader Styling */
+  #loader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  #loader div {
+    color: white;
+    font-size: 1.2em;
+    background: #222;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #000;
+    text-align: center;
+  }
+
+  /* Notification Styling */
+  .notification {
+    display: none;
+    margin-top: 15px;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .notification.success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+
+  .notification.warning {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+
+  .notification.error {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+</style>
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Withdraw Funds</h2>
+    <form id="withdrawForm">
+      <div class="form-group">
+        <label for="Id">User ID:</label>
+        <input type="text" id="Id" disabled />
+      </div>
+
+      <div class="form-group">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" required readonly disabled />
+      </div>
+
+      <div class="form-group">
+        <label for="bankName">Bank Name:</label>
+        <input type="text" id="bankName" required />
+      </div>
+
+      <div class="form-group">
+        <label for="accountName">Account Name:</label>
+        <input type="text" id="accountName" required />
+      </div>
+
+      <div class="form-group">
+        <label for="accountNumber">Account Number:</label>
+        <input type="number" id="accountNumber" required />
+      </div>
+
+      <div class="form-group">
+        <label for="date">Date:</label>
+        <input type="text" id="date" disabled />
+      </div>
+
+      <button type="submit">Submit Withdrawal</button>
+    </form>
+
+    <div id="notification" class="notification"></div>
+  </div>
+  
+  
+  <script src="bottom-nav.js"></script>
+  <script src="navbar.js"></script>
+  <script src="withdraw.js"></script>
+</body>
+</html>

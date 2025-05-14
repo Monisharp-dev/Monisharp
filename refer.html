@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Referral Page</title>
+  <link rel="stylesheet" href="refer.css">
+  <link rel="stylesheet" href="bottom-nav.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="cop.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  
+</head>
+<body>
+
+  <div class="container">
+      
+    <h1>Referral Program</h1>
+
+    <section class="referral-count">
+      <h2>Number of Referrals</h2>
+      <p id="referralNumber">Loading...</p>
+    </section>
+
+    <section class="referral-code">
+      <h2>My Referral Code</h2>
+      <div class="code-box">
+        <span id="referralCode">Loading...</span>
+        <button id="copyBtn">Copy</button>
+      </div>
+    </section>
+
+    <section class="rules">
+      <h2>Rules for a Valid Referral</h2>
+      <ul>
+        <li>User downloads app and registers with referral code</li>
+        <li>User activates account</li>
+        <li>You then get rewarded</li>
+      </ul>
+    </section>
+
+    <div id="notification" class="hidden">You're a Valid User</div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast"></div>
+   <!-- Activation Notification Box -->
+<div id="notifyBox" style="display: none;">
+  <div class="notification-content">
+    <p><strong>Activate your  with ₦200 by <a href="activate.html" style="color: #fff; text-decoration: underline;">clicking here</a>.</strong></p>
+  </div>
+  
+ </div>
+<!-- scripts-->
+  <script src="bottom-nav.js"></script>
+<script src="navbar.js"></script>
+  <script src="refer.js"></script>
+  <script src="cop.js"></script>
+  <script src="corrector.js"></script>
+</body>
+</html>

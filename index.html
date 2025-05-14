@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Preview</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="preview.css" />
+  <link rel="stylesheet" href="navbar.css" />
+  <link rel="stylesheet" href="bottom-nav.css" />
+  <link rel="stylesheet" href="cop.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+   <!-- Dashboard Main Content -->
+  <main class="dashboard">
+    <!-- Main Balance -->
+    <section class="balance-card">
+      <p>Main Balance</p>
+      <h1>₦0.00</h1>
+    </section>
+
+    <!-- Info Cards -->
+    <section class="info-cards">
+      <div class="info-card">
+        <p>Referral Balance</p>
+        <h2>₦0.00</h2>
+      </div>
+      <div class="info-card">
+        <p>Number of Referrals</p>
+        <h2>0</h2>
+      </div>
+    </section>
+  </main>
+
+<!-- Activation Notification Box -->
+<div id="notifyBox" style="display: none;">
+  <div class="notification-content">
+    <p><strong>Activate your  with ₦200 by <a href="activate.html" style="color: #fff; text-decoration: underline;">clicking here</a>.</strong></p>
+  </div>
+  
+  <!-- Scripts -->
+  <script>
+      document.addEventListener("DOMContentLoaded", () => {
+  const mainBalanceEl = document.querySelector(".balance-card h1");
+  const referralBalanceEl = document.querySelector(".info-cards .info-card:nth-child(1) h2");
+  const numberOfReferralsEl = document.querySelector(".info-cards .info-card:nth-child(2) h2");
+
+  let mainBalance = parseFloat(localStorage.getItem("mainBalance")) || 0;
+  const referrals = parseInt(localStorage.getItem("referrals")) || 0;
+  const lastReferralCount = parseInt(localStorage.getItem("lastReferralCount")) || 0;
+
+  const bonusPerReferral = 100;
+  const referralBalance = referrals * bonusPerReferral;
+
+  // Check if there are new referrals
+  if (referrals > lastReferralCount) {
+    const newBonus = (referrals - lastReferralCount) * bonusPerReferral;
+    mainBalance += newBonus;
+
+    // Save updated values
+    localStorage.setItem("mainBalance", mainBalance.toFixed(2));
+    localStorage.setItem("referralBalance", referralBalance.toFixed(2));
+    localStorage.setItem("lastReferralCount", referrals);
+  }
+
+  // Update UI
+  mainBalanceEl.textContent = `₦${mainBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+  referralBalanceEl.textContent = `₦${referralBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+  numberOfReferralsEl.textContent = referrals;
+});
+  </script>
+  <!-- operational js -->
+  <script src="id.js"></script>
+  <script src="homepage.js"></script>
+  <script src="cop.js"></script>
+  
+  <!-- structural js  -->
+  <script src="navbar.js"></script>
+  <script src="bottom-nav.js"></script>
+  <script src="preview.js"></script>
+  <script src="corrector.js"></script>
+</body>
+</html>

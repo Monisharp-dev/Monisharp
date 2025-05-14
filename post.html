@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Posts - MoniSharp</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="cop.css" />
+  <link rel="stylesheet" href="post.css" />
+  <link rel="stylesheet" href="preview.css" />
+  <link rel="stylesheet" href="navbar.css" />
+  <link rel="stylesheet" href="bottom-nav.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Notification -->
+  <div id="notification" class="notification">Copied successfully!</div>
+
+  <!-- Main Post Content -->
+  <main class="post-container">
+    <!-- MoniSharp Referral Post -->
+    <div class="post-card fade-in">
+      <img src="moni.jpeg" alt="Post Image" class="post-image" />
+      <h2 class="post-title">MoniSharp Referral Opportunity</h2>
+      <p class="post-content">
+        Make Una open eye see better platform wey dey pay students and non-students more than ₦10k weekly!
+        <br /><br />
+        MoniSharp pays users through its simple referral system. Users earn ₦100 per referral and can easily place a withdrawal anytime. It is open to both students and non-students.
+        <br /><br />
+        - No bank charges<br />
+        - Open to students and non-students<br />
+        - Simplified referral system
+      </p>
+      <div class="post-actions">
+        <button onclick="copyText(this)" class="copy-btn">
+          <i class="fas fa-copy"></i> Copy Text
+        </button>
+        <a href="moni.jpeg" download class="download-btn">
+          <i class="fas fa-download"></i> Download Image
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Activation Notification Box -->
+  <div id="notifyBox" style="display: none;">
+    <div class="notification-content">
+      <p><strong>Activate your account with ₦200 by <a href="activate.html" style="color: #fff; text-decoration: underline;">clicking here</a>.</strong></p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="cop.js"></script>
+  <script src="navbar.js"></script>
+  <script src="bottom-nav.js"></script>
+  <script src="post.js"></script>
+  <script src="corrector.js"></script>
+
+</body>
+</html>

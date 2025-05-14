@@ -1,0 +1,60 @@
+/* Full screen notification overlay */
+#notifyBox {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent dark background */
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(6px); /* Slightly more pronounced blur */
+  padding: 20px;
+}
+
+/* Notification box content */
+.notification-content {
+  background-color: #ff9800;
+  padding: 30px;
+  border-radius: 14px;
+  text-align: center;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 1.5rem;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 600;
+  position: relative;
+}
+
+/* Activation link style */
+.notification-content a {
+  color: #fff;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+/* Extra timing message below the content */
+.notice-timing {
+  margin-top: 16px;
+  font-size: 1rem;
+  color: #ffe;
+  font-weight: 400;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .notification-content {
+    font-size: 1.2rem;
+    padding: 20px;
+  }
+
+  .notice-timing {
+    font-size: 0.9rem;
+  }
+}
