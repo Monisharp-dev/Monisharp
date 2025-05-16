@@ -21,6 +21,7 @@ const navbarSidebarHTML = `
       <a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
       <a href="post.html"><i class="fas fa-bullhorn"></i> Sponsored Posts</a>
       <a href="task.html"><i class="fas fa-tasks"></i> Task</a> <!-- New Task section -->
+      <a href="Taskwithdraw.html"><i class="fas fa-wallet"></i> Task Withdrawal</a> <!-- Added Task Withdrawal -->
       <a href="withdraw.html"><i class="fas fa-hand-holding-usd"></i> Withdraw</a>
       <a href="withdrawHistory.html"><i class="fas fa-history"></i> Withdrawal History</a>
       <a href="about.html"><i class="fas fa-envelope"></i> About Us</a>

@@ -1,0 +1,126 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Withdrawal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    
+  <link rel="stylesheet" href="bottom-nav.css">
+  <link rel="stylesheet" href="navbar.css">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; margin-bottom: 5px; font-weight: bold; }
+    input, button { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    button { background: #4CAF50; color: white; font-weight: bold; cursor: pointer; }
+    button:hover { background: #45a049; }
+    .notification { display: none; padding: 15px; margin-top: 20px; border-radius: 5px; }
+    .notification.success { background-color: #dff0d8; color: #3c763d; }
+    .notification.error { background-color: #f2dede; color: #a94442; }
+    .notification.warning { background-color: #fcf8e3; color: #8a6d3b; }
+  </style>
+</head>
+<body>  <h2>Task Balance Withdrawal</h2>
+  <form id="taskWithdrawForm">
+    <div class="form-group">
+      <label for="Id">User ID</label>
+      <input type="text" id="Id" readonly>
+    </div>
+    <div class="form-group">
+      <label for="amount">Amount</label>
+      <input type="number" id="amount" readonly>
+    </div>
+    <div class="form-group">
+      <label for="bankName">Bank Name</label>
+      <input type="text" id="bankName" required>
+    </div>
+    <div class="form-group">
+      <label for="accountName">Account Name</label>
+      <input type="text" id="accountName" required>
+    </div>
+    <div class="form-group">
+      <label for="accountNumber">Account Number</label>
+      <input type="text" id="accountNumber" required>
+    </div>
+    <div class="form-group">
+      <label for="date">Date</label>
+      <input type="text" id="date" readonly>
+    </div>
+    <button type="submit">Withdraw Now</button>
+  </form>  <div id="notification" class="notification"></div> 
+   <script>
+document.addEventListener('DOMContentLoaded', () => {
+  const Id = localStorage.getItem('Id');
+  const taskBalanceKey = `taskBalance_${Id}`;
+  const taskBalance = parseFloat(localStorage.getItem(taskBalanceKey)) || 0;
+
+  document.getElementById('Id').value = Id || 'N/A';
+  document.getElementById('amount').value = taskBalance.toFixed(2);
+  document.getElementById('date').value = new Date().toLocaleString();
+
+  const notification = document.getElementById('notification');
+  const form = document.getElementById('taskWithdrawForm');
+
+  function showNotification(message, type) {
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.style.display = 'block';
+    setTimeout(() => notification.style.display = 'none', 5000);
+  }
+
+  async function submitWithdrawal(payload, attempt = 1) {
+    const url = 'https://sheetdb.io/api/v1/pecncmqdgxgih';
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: payload })
+      });
+      if (!res.ok) throw new Error('Status: ' + res.status);
+      return true;
+    } catch (err) {
+      if (attempt < 10) return await submitWithdrawal(payload, attempt + 1);
+      return false;
+    }
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const amount = parseFloat(document.getElementById('amount').value);
+    const bankName = document.getElementById('bankName').value.trim();
+    const accountName = document.getElementById('accountName').value.trim();
+    const accountNumber = document.getElementById('accountNumber').value.trim();
+    const date = document.getElementById('date').value;
+
+    if (amount < 400) return showNotification("Minimum withdrawal amount is ₦400.", "warning");
+    if (!bankName || !accountName || !accountNumber) return showNotification("All fields are required.", "warning");
+    if (amount > taskBalance) return showNotification("Insufficient task balance.", "warning");
+
+    const payload = { Id, amount, bankName, accountName, accountNumber, date, source: 'Task' };
+    const success = await submitWithdrawal(payload);
+
+    if (success) {
+      localStorage.setItem(taskBalanceKey, '0');  // Reset task balance for this user
+
+      const history = JSON.parse(localStorage.getItem('withdrawalHistory')) || [];
+      history.push({ ...payload, status: 'Completed' });
+      localStorage.setItem('withdrawalHistory', JSON.stringify(history));
+
+      // Reset all input fields after successful withdrawal
+      form.reset();
+
+      // Reset the Id and amount fields manually after reset (to keep Id visible and amount = 0)
+      document.getElementById('Id').value = Id || 'N/A';
+      document.getElementById('amount').value = '0.00';
+      document.getElementById('date').value = new Date().toLocaleString();
+
+      showNotification("Withdrawal request submitted successfully.", "success");
+    } else {
+      showNotification("Failed to submit withdrawal. Try again later.", "error");
+    }
+  });
+});
+  </script>
+  <script src="navbar.js"></script>
+  <script src="bottom-nav.js"></script></body>
+</html>
