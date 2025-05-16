@@ -12,6 +12,7 @@
   align-items: center;
   backdrop-filter: blur(6px); /* Slightly more pronounced blur */
   padding: 20px;
+  animation: fadeSlide 0.4s ease-in-out; /* Animation added */
 }
 
 /* Notification box content */
@@ -56,5 +57,17 @@
 
   .notice-timing {
     font-size: 0.9rem;
+  }
+}
+
+/* Fade-in slide animation */
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

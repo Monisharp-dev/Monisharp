@@ -85,6 +85,12 @@ function shouldMakeApiRequest() {
 
 // Referral update function
 async function updateReferrals(refereeCode) {
+  if (!localStorage.getItem("activateStatus")) {
+    showToast("Account not activated. Please activate to update referrals.");
+    console.warn("activateStatus not found. Blocking referral update.");
+    return;
+  }
+
   for (let url of apiUrls) {
     console.log("Checking API:", url);
     try {
@@ -124,6 +130,12 @@ async function updateReferrals(refereeCode) {
 
 // Sync current user's referrals
 async function syncReferralsFromAPI() {
+  if (!localStorage.getItem("activateStatus")) {
+    showToast("Account not activated. Please activate to sync data.");
+    console.warn("activateStatus not found. Blocking sync.");
+    return;
+  }
+
   const userId = localStorage.getItem("Id");
   if (!userId) {
     console.warn("UserID not found in localStorage.");
