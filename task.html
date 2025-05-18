@@ -4,77 +4,88 @@
   <meta charset="UTF-8">
   <title>Task Submission</title>
   <link rel="stylesheet" href="task.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-<link rel="stylesheet" href="bottom-nav.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="bottom-nav.css">
 </head>
 <body>
   <div class="task-container">
     <h1 class="header">Complete Tasks</h1>
 
-<div class="task-card">
-  <!-- Clickable Header -->
-  <div class="task-header" onclick="toggleTaskDetails(this)">
-    <img src="logo.png" alt="Task Image" />
-    <div class="task-text">
-  <h2>Register And Complete Message Task</h2>
-  <ul>
-    <li>Copy the link below:</li>
-    <li>
-      <a href="https://money666.vip?code=gzkelz" target="_blank" rel="noopener noreferrer">
-        https://money666.vip?code=gzkelz
-      </a>
-    </li>
-    <li>Paste it on your browser.</li>
-    <li>Register and complete the message task.</li>
-    <li>This task is for new users only.</li>
-  </ul>
-  <p><strong>Reward: N100</strong></p>
-</div>
+    <!-- Task 1 -->
+    <div class="task-card" data-task-id="register-task">
+      <div class="task-header" onclick="toggleTaskDetails(this)">
+        <img src="logo.png" alt="Task Image" />
+        <div class="task-text">
+          <h2>Register And Complete Message Task</h2>
+          <ul>
+            <li>Copy the link below:</li>
+            <li>
+              <a href="https://money666.vip?code=gzkelz" target="_blank" rel="noopener noreferrer">
+                https://money666.vip?code=gzkelz
+              </a>
+            </li>
+            <li>Paste it on your browser.</li>
+            <li>Register and complete the message task.</li>
+            <li>This task is for new users only.</li>
+          </ul>
+          <p><strong>Reward: N100</strong></p>
+        </div>
+      </div>
 
-  <!-- Task Details (hidden by default) -->
-  <div class="task-details">
-    <form class="task-form">
-      <input type="hidden" name="Id" value="" class="hidden-id" />
-      <textarea name="text" placeholder="Enter a brief message..." required></textarea>
-      <input type="file" name="screenshot" accept="image/*" required />
-      <button type="submit" class="submit-btn">Submit Task</button>
-    </form>
-  </div>
-</div>  
-</div>  <!-- Duplicate .task-card blocks for additional tasks -->
-         
-    <div class="task-card">
-  <!-- Clickable Header -->
-  <div class="task-header" onclick="toggleTaskDetails(this)">
-    <img src="logo.png" alt="Task Image" />
-    <div class="task-text">
-      <h2>Tell Others About Us</h2>
-      <ul>
-        <li>Copy link and share to 5 Facebook groups</li>
-<li>Link : <a href="https://tinyurl.com/MoniSharp" target="_blank" rel="noopener noreferrer">https://tinyurl.com/MoniSharp</a></li>
-<li>Make good use of your referral</li>
-      </ul>
-      <p><strong>Reward: N100</strong></p>
+      <div class="task-details">
+        <form class="task-form">
+          <input type="hidden" name="Id" value="" class="hidden-id" />
+          <textarea name="text" placeholder="Enter a brief message..." required></textarea>
+          <input type="file" name="screenshot" accept="image/*" required />
+          <button type="submit" class="submit-btn">Submit Task</button>
+        </form>
+      </div>
+    </div>  
+
+    <!-- Task 2 -->
+    <div class="task-card" data-task-id="facebook-share">
+      <div class="task-header" onclick="toggleTaskDetails(this)">
+        <img src="logo.png" alt="Task Image" />
+        <div class="task-text">
+          <h2>Tell Others About Us</h2>
+          <ul>
+            <li>Copy link and share to 5 Facebook groups</li>
+            <li>Link: 
+              <a href="https://tinyurl.com/MoniSharp" target="_blank" rel="noopener noreferrer">
+                https://tinyurl.com/MoniSharp
+              </a>
+            </li>
+            <li>Make good use of your referral</li>
+          </ul>
+          <p><strong>Reward: N100</strong></p>
+        </div>
+      </div>
+
+      <div class="task-details">
+        <form class="task-form">
+          <input type="hidden" name="Id" value="" class="hidden-id" />
+          <textarea name="text" placeholder="Enter a brief message..." required></textarea>
+          <input type="file" name="screenshot" accept="image/*" required />
+          <button type="submit" class="submit-btn">Submit Task</button>
+        </form>
+      </div>
     </div>
-  </div>
-
-  <!-- Task Details (hidden by default) -->
-  <div class="task-details">
-    <form class="task-form">
-      <input type="hidden" name="Id" value="" class="hidden-id" />
-      <textarea name="text" placeholder="Enter a brief message..." required></textarea>
-      <input type="file" name="screenshot" accept="image/*" required />
-      <button type="submit" class="submit-btn">Submit Task</button>
-    </form>
-  </div>
-</div>
 
   </div>
 
+  <!-- Alert Box -->
   <div id="alertBox" class="alert hidden">
     <p id="alertMessage">This is a sample alert.</p>
   </div>
-<script src="taskBal.js"></script>
+  
+  <div id="loaderOverlay" class="loader-overlay hidden">
+  <div class="loader-box">
+    <div class="loader"></div>
+    <p>Submitting, please hold on...</p>
+  </div>
+</div>
+
+  <script src="taskBal.js"></script>
   <script src="admin.js"></script>
   <script src="bottom-nav.js"></script>
   <script src="task.js"></script>

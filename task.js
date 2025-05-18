@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Check if task already completed
     if (localStorage.getItem(taskKey)) {
-      form.parentElement.innerHTML = `<p class="task-done">You have already completed this task.</p>`;
+      card.style.display = "none"; // Hide completed task
       return;
     }
 
@@ -18,12 +18,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Handle form submission
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
+      showLoader();
 
       const text = form.querySelector("textarea").value.trim();
       const file = form.querySelector('input[type="file"]').files[0];
 
       if (!file || !text) {
         showAlert("All fields are required!", "#f44336");
+        hideLoader();
         return;
       }
 
@@ -46,12 +48,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!imgData.success) {
           showAlert("Image upload failed. Try again.", "#f44336");
+          hideLoader();
           return;
         }
 
         const imageUrl = imgData.data.url;
 
-        // Now send to SheetDB
+        // Prepare data to send to SheetDB
         const sheetData = {
           Id: userId,
           imageUrl: imageUrl,
@@ -64,26 +67,30 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({ data: [sheetData] })
         });
 
-        // Store flag to prevent duplicate submission
+        // Mark task as completed
         localStorage.setItem(taskKey, "true");
-
         showAlert("Task submitted successfully!");
-        form.reset();
-        form.parentElement.innerHTML = `<p class="task-done">You have successfully submitted this task.</p>`;
+
+        // Hide the task card
+        card.style.display = "none";
       } catch (err) {
         console.error("Submission failed:", err);
         showAlert("There was an error submitting the task.", "#f44336");
+      } finally {
+        hideLoader();
       }
     });
   });
 });
 
+// Toggle display of task detail box
 function toggleTaskDetails(header) {
   const card = header.closest(".task-card");
   const details = card.querySelector(".task-details");
   details.style.display = details.style.display === "flex" ? "none" : "flex";
 }
 
+// Show success or error alert
 function showAlert(message, color = "#4CAF50") {
   const alertBox = document.getElementById("alertBox");
   const alertMessage = document.getElementById("alertMessage");
@@ -95,4 +102,16 @@ function showAlert(message, color = "#4CAF50") {
   setTimeout(() => {
     alertBox.classList.add("hidden");
   }, 4000);
+}
+
+// Show loader and blur background
+function showLoader() {
+  const loader = document.getElementById("loaderOverlay");
+  if (loader) loader.classList.remove("hidden");
+}
+
+// Hide loader
+function hideLoader() {
+  const loader = document.getElementById("loaderOverlay");
+  if (loader) loader.classList.add("hidden");
 }
