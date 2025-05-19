@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seed Deposit</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="bottom-nav.css">
+  <link rel="stylesheet" href="seed-deposit.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Seed Deposit</h1>
+    <p>Pay to the following account:</p>
+    <div class="account-details">
+      <p><strong>Bank:</strong> Palmpay</p>
+      <p><strong>Account Name:</strong> Esther</p>
+      <p><strong>Account Number:</strong> 9160157219</p>
+    </div>
+
+    <form id="depositForm">
+      <label for="id">Your ID:</label>
+      <input type="text" id="id" name="id" readonly />
+
+      <label for="date">Date:</label>
+      <input type="text" id="date" name="date" readonly />
+
+      <label for="paymentPurpose">Purpose of Payment:</label>
+      <select id="paymentPurpose" name="paymentPurpose" required>
+        <option value="" disabled selected>Select purpose</option>
+        <option value="seed">Seed Payment</option>
+        <option value="fertilizer">Fertilizers Payment</option>
+      </select>
+
+      <label for="screenshot">Upload Screenshot of Payment:</label>
+      <input type="file" id="screenshot" name="screenshot" accept="image/*" required />
+
+      <button type="submit">Submit Deposit</button>
+    </form>
+
+    <div class="notification hidden" id="notification"></div>
+
+    <p class="note">
+      Once your payment is confirmed, you will be notified to plant the available seed.
+    </p>
+  </div>
+  <script src="bottom-nav.js"></script>
+  <script src="navbar.js"></script>
+  <script src="seed-deposit.js"></script>
+</body>
+</html>
