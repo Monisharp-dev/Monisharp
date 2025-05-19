@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plant a Seed</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="seed.css" />
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="bottom-nav.css">
+  <style>
+    body {
+      background: linear-gradient(120deg, #e0ffe7, #ffffff);
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 1rem;
+    }
+
+    header {
+      text-align: center;
+      padding: 2rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      color: #28a745;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: #444;
+    }
+
+    .notification-box, .intro, .deposit-info, .more-info {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+
+    .card {
+      flex: 1;
+      min-width: 250px;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 15px;
+      padding: 1rem;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .actions {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    button {
+      background: #28a745;
+      color: white;
+      padding: 0.8rem 2rem;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin: 0.5rem;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    ul {
+      padding-left: 1.2rem;
+    }
+
+    .note {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 1rem;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 2rem 1rem 1rem;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+
+    .notification.hidden {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .cards {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Plant a Seed</h1>
+      <p>Grow your earnings from just <strong>&#8358;100</strong>. Join, wait, and reap the harvest!</p>
+    </header>
+
+    <section class="notification-box">
+      <div class="availability">
+        <p><strong>Available Now:</strong> Basic Seed </p>
+        <p><strong>Unavailable:</strong> Mega Seed (coming soon...)</p>
+      </div>
+    </section>
+
+    <section class="intro">
+      <h2>Why Plant a Seed?</h2>
+      <p>"Plant a Seed" is a fun and rewarding earning system where users invest a little to gain more. It promotes consistency, hope, and smart risk-taking.</p>
+
+      <h3>How it Works</h3>
+      <ul>
+        <li>Pay a seed amount (e.g., <strong>&#8358;100</strong>) to enter a seed round.</li>
+        <li>Each round takes exactly 6 participants.</li>
+        <li>3 or 4 lucky participants receive bigger rewards!</li>
+        <li>Unlucky ones get a <strong>&#8358;10</strong> consolation reward.</li>
+      </ul>
+
+      <h3>Seed Categories</h3>
+      <div class="cards">
+        <div class="card">
+          <h4>Basic Seed</h4>
+          <p>Entry: <strong>&#8358;100</strong></p>
+          <p>Rewards: Up to <strong>&#8358;250</strong></p>
+        </div>
+        <div class="card">
+          <h4>Green Seed</h4>
+          <p>Entry: <strong>&#8358;400</strong></p>
+          <p>Rewards: Up to <strong>&#8358;1000</strong></p>
+        </div>
+        <div class="card">
+          <h4>Mega Seed</h4>
+          <p>Entry: <strong>&#8358;1000</strong></p>
+          <p>Rewards: Up to <strong>&#8358;2500</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="actions">
+      <button onclick="location.href='basic-seed.html'">Plant Basic Seed</button>
+      <!-- Future:
+      <button onclick="location.href='green-seed.html'">Plant Green Seed</button>
+      <button onclick="location.href='mega-seed.html'">Plant Mega Seed</button> -->
+    </section>
+
+    <section class="deposit-info">
+      <h3>Ready to Plant?</h3>
+      <p>Make a deposit first to get your slot!</p>
+      <ul>
+        <li><strong>Bank:</strong> PalmPay</li>
+        <li><strong>Name:</strong> Esther</li>
+        <li><strong>Account Number:</strong> 9160157219</li>
+      </ul>
+      <button onclick="location.href='seed-deposit.html'">Deposit Now</button>
+      <p class="note">Once your payment is confirmed, you'll be notified to plant a seed that is available.</p>
+    </section>
+
+    <section class="more-info">
+      <h3>Boost Your Chances with Fertilizers!</h3>
+      <ul>
+        <li><strong>Gold Fertilizer:</strong> ₦600 (valid for 6 rounds)</li>
+        <li><strong>Premium Fertilizer:</strong> ₦400 (valid for 4 rounds)</li>
+        <li><strong>Local Fertilizer:</strong> ₦50 (valid for 1 round)</li>
+      </ul>
+      <p>Fertilizers help increase your chance of becoming one of the winners!</p>
+    </section>
+
+    <div class="footer">
+      &copy; 2025 Plant a Seed. All rights reserved.
+    </div>
+
+    <div id="notification" class="notification hidden"></div>
+  </div>
+<script src="profile cop.js"></script>
+  <script src="bottom-nav.js"></script>
+  <script src="navbar.js"></script>
+  <script src="seed.js"></script>
+</body>
+</html>
