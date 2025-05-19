@@ -1,5 +1,5 @@
 // List of allowed user Ids
-const allowedIds = ["USER123", "USER456", "etokwudog"]; // Replace with actual allowed Ids
+const allowedIds = ["USER123", "USER456", "etokwudog","thehacker190261"]; // Replace with actual allowed Ids
 
 // Get the current user's Id from localStorage
 const currentId = localStorage.getItem("Id");
@@ -52,7 +52,7 @@ if (allowedIds.includes(currentId)) {
 
   // Notification text
   const text = document.createElement("span");
-  text.textContent = "Good day user, you performed two task and out if the two task, you performed one wrongly. Please do well to follow instructions to avoid Your Account getting ban. We acknowledge our fault in one if the task and we compensated your account with ₦50. Thank you ";
+  text.textContent = "Good day user, you performed two task and out of the two task, you performed one wrongly. Please do well to follow instructions to avoid Your Account getting ban. We acknowledge our fault in one of the task and we have compensated your account with ₦50. Thank you ";
 
   // Close button
   const closeBtn = document.createElement("span");
@@ -76,5 +76,5 @@ if (allowedIds.includes(currentId)) {
       notification.classList.remove("show");
       setTimeout(() => notification.remove(), 500); // Remove after fade-out
     }
-  }, 5000);
+  }, 15000);
 }
