@@ -25,6 +25,7 @@ function allotTaskBalance(userId, amount, uniqueKey) {
 }
 
 // Allotting task balances to multiple users
-allotTaskBalance("etokwudog", 50, "0000A");
-allotTaskBalance("johndoe123", 3000, "XYZ89");
+allotTaskBalance("etokwudog", 150, "0000B");
+allotTaskBalance("favyjay28", 100, "XYZ89");
 allotTaskBalance("blessing246", 4500, "LMN34");
+
