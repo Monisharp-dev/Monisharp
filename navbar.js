@@ -21,7 +21,7 @@ const navbarSidebarHTML = `
       <a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
       <a href="post.html"><i class="fas fa-bullhorn"></i> Sponsored Posts</a>
       <a href="task.html"><i class="fas fa-tasks"></i> Task</a>
-      <a href="Taskwithdraw.html"><i class="fas fa-wallet"></i> Task Withdrawal</a>
+      <a href="Taskwithdrawal.html"><i class="fas fa-wallet"></i> Task Withdrawal</a>
       <a href="withdraw.html"><i class="fas fa-hand-holding-usd"></i> Withdraw</a>
       <a href="withdrawHistory.html"><i class="fas fa-history"></i> Withdrawal History</a>
       <a href="seed.html"><i class="fas fa-seedling"></i> Plant a Seed</a> <!-- New Menu -->
