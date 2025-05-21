@@ -1,12 +1,19 @@
-// List of allowed user Ids
-const allowedIds = ["USER123", "USER456", "etokwudog","thehacker190261"]; // Replace with actual allowed Ids
+// Map of user IDs to their messages
+const userMessages = {
+  "etokwudog": "You are ALREADY A MEMBER in Bounty News. That task was specifically for newusrrs only. You have not been credited",
+  "opalekesoromdayo": "₦100 cash has been credited to your account for performing task very well",
+  "Jamesudom2510": "You are ALREADY A MEMBER in Bounty News. That task was specifically for newusrrs only. You have not been credited",
+  "favyjay28": "You are ALREADY A MEMBER in Bounty News. That task was specifically for newusrrs only. You have not been credited",
+  "ajaniisraelojasope11": "₦50 has been credited to your task balance instead if ₦100 because you did not link your WhatsApp account to Wabot",
+  "gomoarukhe": "You are already a member on bounty news and you earned ₦50 for partially completing a task.",
+};
 
-// Get the current user's Id from localStorage
+// Get the current user's ID
 const currentId = localStorage.getItem("Id");
 
-// Check if user is in the allowed list
-if (allowedIds.includes(currentId)) {
-  // Create CSS via <style> element
+// Check if there's a message for the current user
+if (userMessages[currentId]) {
+  // Create <style> for notification if not already present
   const style = document.createElement("style");
   style.textContent = `
     #user-notification {
@@ -27,11 +34,9 @@ if (allowedIds.includes(currentId)) {
       align-items: center;
       gap: 12px;
     }
-
     #user-notification.show {
       opacity: 1;
     }
-
     #user-notification .close-btn {
       margin-left: auto;
       cursor: pointer;
@@ -39,42 +44,46 @@ if (allowedIds.includes(currentId)) {
       font-weight: bold;
       color: white;
     }
-
     #user-notification .close-btn:hover {
       color: #ddd;
     }
   `;
   document.head.appendChild(style);
 
-  // Create notification container
+  // Create the notification element
   const notification = document.createElement("div");
   notification.id = "user-notification";
 
-  // Notification text
   const text = document.createElement("span");
-  text.textContent = "Good day user, you performed two task and out of the two task, you performed one wrongly. Please do well to follow instructions to avoid Your Account getting ban. We acknowledge our fault in one of the task and we have compensated your account with ₦50. Thank you ";
+  text.textContent = `Hello ${currentId}, ${userMessages[currentId]}`;
 
-  // Close button
   const closeBtn = document.createElement("span");
   closeBtn.className = "close-btn";
   closeBtn.textContent = "×";
   closeBtn.onclick = () => notification.remove();
 
-  // Append elements
   notification.appendChild(text);
   notification.appendChild(closeBtn);
   document.body.appendChild(notification);
 
-  // Show notification (fade in)
   setTimeout(() => {
     notification.classList.add("show");
   }, 100);
 
-  // Auto-hide after 5 seconds
   setTimeout(() => {
     if (document.body.contains(notification)) {
       notification.classList.remove("show");
-      setTimeout(() => notification.remove(), 500); // Remove after fade-out
+      setTimeout(() => notification.remove(), 500);
     }
   }, 15000);
 }
+
+etokwudog	ALREADY A MEMBER 
+opalekesoromdayo	₦100 cash
+Jamesudom2510	ALREADY A MEMBER
+favyjay28	ALREADY A MEMBER 
+ajaniisraelojasope11	₦50. Did not link account 
+gomoarukhe	ALREADY A MEMBER 
+gomoarukhe	₦50 
+gomoarukhe	Have registered
+gomoarukhe	ALREADY A MEMBER 
