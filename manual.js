@@ -1,6 +1,6 @@
 // List of allowed user Ids
 const allowedIds = ["Ulingsmart102008","raetharolin","ajaniisraelojasope11","opalekesoromdayo","obunsodaniel","bilkisumusa888","feargodthompson","dconfidence322"
-"icefieldwaripamoweifreedom"]; // Replace with your specific Ids
+"icefieldwaripamoweifreedom","utomobongpatrick16"]; // Replace with your specific Ids
 
 // Get the current user's Id from localStorage
 const currentUserId = localStorage.getItem("Id");
