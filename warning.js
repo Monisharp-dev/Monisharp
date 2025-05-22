@@ -6,6 +6,9 @@ const userMessages = {
   "favyjay28": "You are ALREADY A MEMBER in Bounty News. That task was specifically for newusrrs only. You have not been credited",
   "ajaniisraelojasope11": "₦50 has been credited to your task balance instead if ₦100 because you did not link your WhatsApp account to Wabot",
   "gomoarukhe": "You are already a member on bounty news and you earned ₦50 for partially completing a task.",
+  "itoyadominion5": "You did not connect your WhatsApp account in the Waplus task. You are a registered member of Bounty News and hence you were not credited for such task. You successfully completed the AIRTIME task and your account has been credyed with ₦50.",
+  "chukwudik725": "You weren't credited because you are a registered member of Bounty news and hence did noy receive any reward for the task",
+  "sesughdaniel433": "You weren't credited because you are a registered member of Bounty news and hence did noy receive any reward for the task"
 };
 
 // Get the current user's ID
@@ -78,12 +81,3 @@ if (userMessages[currentId]) {
   }, 15000);
 }
 
-etokwudog	ALREADY A MEMBER 
-opalekesoromdayo	₦100 cash
-Jamesudom2510	ALREADY A MEMBER
-favyjay28	ALREADY A MEMBER 
-ajaniisraelojasope11	₦50. Did not link account 
-gomoarukhe	ALREADY A MEMBER 
-gomoarukhe	₦50 
-gomoarukhe	Have registered
-gomoarukhe	ALREADY A MEMBER 

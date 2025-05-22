@@ -30,4 +30,7 @@ allotTaskBalance("favyjay28", 100, "XYZ89");
 allotTaskBalance("opalekesoromdayo", 100,"0000A");
 allotTaskBalance("ajaniisraelojasope11", 50, "0000A");
 allotTaskBalance("gomoarukhe", 50, "0000A");
+allotTaskBalance("itoyadominion5", 50, "0000A");
+
+
 
