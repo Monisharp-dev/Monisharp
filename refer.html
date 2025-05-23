@@ -7,14 +7,105 @@
   <link rel="stylesheet" href="refer.css">
   <link rel="stylesheet" href="bottom-nav.css">
   <link rel="stylesheet" href="navbar.css">
-  <link rel="stylesheet" href="cop.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .code-box, .link-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 10px 0;
+      background: #f5faff;
+    }
+
+    .code-box span, .link-box span {
+      word-break: break-all;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    ul {
+      list-style: disc;
+      padding-left: 20px;
+    }
+
+    .rules ul, .referral-instruction ul {
+      margin-top: 0;
+    }
+
+    #customToast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #007BFF;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 9999;
+    }
+
+    #notifyBox {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #ff6600;
+      padding: 15px;
+      color: white;
+      border-radius: 8px;
+      z-index: 999;
+    }
+
+    .notification-content a {
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
 
   <div class="container">
-      
     <h1>Referral Program</h1>
 
     <section class="referral-count">
@@ -30,6 +121,25 @@
       </div>
     </section>
 
+    <section class="referral-instruction">
+      <h2>How to Refer</h2>
+      <p>To earn rewards:</p>
+      <ul>
+        <li>Copy your referral code above</li>
+        <li>Copy the app link below</li>
+        <li>Share both with your friends</li>
+        <li>Your friend should download the app, register, and use your referral code</li>
+      </ul>
+    </section>
+
+    <section class="app-link">
+      <h2>MoniSharp App Link</h2>
+      <div class="link-box">
+        <span id="appLink">https://tinyurl.com/MoniSharp</span>
+        <button onclick="copyAppLink()">Copy Link</button>
+      </div>
+    </section>
+
     <section class="rules">
       <h2>Rules for a Valid Referral</h2>
       <ul>
@@ -42,21 +152,49 @@
     <div id="notification" class="hidden">You're a Valid User</div>
   </div>
 
-  <!-- Toast container -->
-  <div id="toast"></div>
-   <!-- Activation Notification Box -->
-<div id="notifyBox" style="display: none;">
-  <div class="notification-content">
-    <p><strong>Activate your  with ₦200 by <a href="activate.html" style="color: #fff; text-decoration: underline;">clicking here</a>.</strong></p>
+  <!-- Custom Toast -->
+  <div id="customToast">Copied to clipboard!</div>
+
+  <!-- Activation Notification Box -->
+  <div id="notifyBox" style="display: none;">
+    <div class="notification-content">
+      <p><strong>Activate your account with ₦200 by <a href="activate.html">clicking here</a>.</strong></p>
+    </div>
   </div>
-  
- </div>
-<!-- scripts-->
-<script src="warning.js"></script>
+
+  <!-- Scripts -->
+  <script src="warning.js"></script>
   <script src="bottom-nav.js"></script>
-<script src="navbar.js"></script>
+  <script src="navbar.js"></script>
   <script src="refer.js"></script>
   <script src="cop.js"></script>
   <script src="corrector.js"></script>
+
+  <script>
+    function showToast(message) {
+      const toast = document.getElementById("customToast");
+      toast.textContent = message;
+      toast.style.display = "block";
+      setTimeout(() => toast.style.opacity = "1", 100);
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => toast.style.display = "none", 400);
+      }, 2500);
+    }
+
+    function copyAppLink() {
+      const link = document.getElementById("appLink").innerText;
+      navigator.clipboard.writeText(link).then(() => {
+        showToast("App link copied to clipboard!");
+      });
+    }
+
+    document.getElementById("copyBtn").addEventListener("click", function () {
+      const code = document.getElementById("referralCode").innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        showToast("Referral code copied to clipboard!");
+      });
+    });
+  </script>
 </body>
 </html>

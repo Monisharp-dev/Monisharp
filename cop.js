@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const notifyBox = document.getElementById("notifyBox");
   const userId = localStorage.getItem("Id");
   const apiURLs = [
     "https://sheetdb.io/api/v1/k51vpzir9tfo8",
@@ -7,12 +6,90 @@ document.addEventListener("DOMContentLoaded", () => {
     "https://sheetdb.io/api/v1/backup_api_2"
   ];
 
+  // Create style element dynamically
+  const style = document.createElement("style");
+  style.innerHTML = `
+    #notifyBox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(6px);
+      padding: 20px;
+      animation: fadeSlide 0.4s ease-in-out;
+    }
+
+    .notification-content {
+      background-color: #ff9800;
+      padding: 30px;
+      border-radius: 14px;
+      text-align: center;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      color: #fff;
+      font-size: 1.5rem;
+      font-family: 'Segoe UI', sans-serif;
+      font-weight: 600;
+    }
+
+    .notification-content a {
+      color: #fff;
+      text-decoration: underline;
+      font-weight: bold;
+    }
+
+    .notice-timing {
+      margin-top: 16px;
+      font-size: 1rem;
+      color: #ffe;
+      font-weight: 400;
+      text-align: center;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    @media (max-width: 500px) {
+      .notification-content {
+        font-size: 1.2rem;
+        padding: 20px;
+      }
+
+      .notice-timing {
+        font-size: 0.9rem;
+      }
+    }
+
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Create notifyBox element
+  const notifyBox = document.createElement("div");
+  notifyBox.id = "notifyBox";
+  notifyBox.style.display = "none";
+  document.body.appendChild(notifyBox);
+
   function showActivationNotice() {
     notifyBox.style.display = "flex";
     notifyBox.innerHTML = `
       <div class="notification-content">
         <p><strong>Activate your account with ₦200 by 
-        <a href="activate.html" style="color: #fff; text-decoration: underline;">clicking here</a>.</strong></p>
+        <a href="activate.html">clicking here</a>.</strong></p>
       </div>
     `;
   }
@@ -22,9 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getCurrentTimeSlot() {
-    const now = new Date();
-    const hour = now.getHours();
-
+    const hour = new Date().getHours();
     if (hour < 12) return "morning";
     if (hour >= 20) return "evening";
     return null;
@@ -69,16 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function processUserActivation() {
-    if (!userId) {
-      showActivationNotice();
-      return;
-    }
+    if (!userId) return showActivationNotice();
 
     const rawData = localStorage.getItem("copData");
-    if (!rawData) {
-      showActivationNotice();
-      return;
-    }
+    if (!rawData) return showActivationNotice();
 
     const users = JSON.parse(rawData);
     const user = users.find(item => item.Id === userId);
@@ -112,14 +181,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const now = new Date();
       let nextCheck = "later today";
 
-      if (now.getHours() < 12) {
-        nextCheck = "after 8:00 PM";
-      } else if (now.getHours() < 20) {
-        nextCheck = "tomorrow morning";
-      }
+      if (now.getHours() < 12) nextCheck = "after 8:00 PM";
+      else if (now.getHours() < 20) nextCheck = "tomorrow morning";
 
       notifyBox.innerHTML += `
-        <div class="notice-timing" style="margin-top: 10px; color: #ffc; font-size: 14px;">
+        <div class="notice-timing">
           We'll check again automatically ${nextCheck}.
         </div>
       `;
