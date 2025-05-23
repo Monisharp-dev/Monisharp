@@ -27,6 +27,7 @@ const navbarSidebarHTML = `
       <a href="seed.html"><i class="fas fa-seedling"></i> Plant a Seed</a> <!-- New Menu -->
       <a href="seedHarvest.html"><i class="fas fa-leaf"></i> Harvest</a> <!-- New Menu -->
       <a href="about.html"><i class="fas fa-envelope"></i> About Us</a>
+      <a href="contact.html"><i class="fas fa-phone-alt"></i> Contact Us</a> <!-- Contact Us -->
     </nav>
   </div>
 
