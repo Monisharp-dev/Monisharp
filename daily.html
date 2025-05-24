@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MONISHARP | Daily Bonus</title>
+  <link rel="stylesheet" href="bottom-nav.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(145deg, #004e92, #000428);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .container {
+      background: #ffffff10;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .app-name {
+      font-size: 26px;
+      font-weight: bold;
+      color: #00ffcc;
+      margin-bottom: 10px;
+    }
+
+    .icon {
+      font-size: 50px;
+      margin-bottom: 10px;
+    }
+
+    .bonus-text {
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .bonus-amount {
+      font-size: 36px;
+      font-weight: bold;
+      color: #00ffcc;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 14px 24px;
+      font-size: 16px;
+      background-color: #00ffcc;
+      color: #000;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:disabled {
+      background: #888;
+      color: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #00ffcc;
+      color: #000;
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      font-weight: bold;
+      z-index: 999;
+      display: none;
+      animation: slideIn 0.4s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="app-name">MONISHARP</div>
+    <div class="icon">🎉</div>
+    <div class="bonus-text">Claim your daily login bonus of</div>
+    <div class="bonus-amount">₦10</div>
+    <button id="claimBtn">Claim Bonus</button>
+  </div>
+
+  <div class="notification" id="notifyBox"></div>
+
+  <script>
+    const claimBtn = document.getElementById("claimBtn");
+    const notifyBox = document.getElementById("notifyBox");
+    const bonusAmount = 10;
+
+    function getTodayDate() {
+      const today = new Date().toISOString().split("T")[0];
+      console.log("Today’s date:", today);
+      return today;
+    }
+
+    function getUserId() {
+      const id = localStorage.getItem("Id") || "thehacker190261"; // fallback for test
+      console.log("User ID:", id);
+      return id;
+    }
+
+    function getTaskBalanceKey() {
+      const key = `taskBalance_${getUserId()}`;
+      console.log("Task Balance Key:", key);
+      return key;
+    }
+
+    function hasClaimedToday() {
+      const lastDate = localStorage.getItem("lastClaimDate");
+      const today = getTodayDate();
+      const claimed = lastDate === today;
+      console.log("Last claim date:", lastDate);
+      console.log("Has claimed today?", claimed);
+      return claimed;
+    }
+
+    function markClaimedToday() {
+      const today = getTodayDate();
+      localStorage.setItem("lastClaimDate", today);
+      console.log("Marked today's claim.");
+    }
+
+    function updateTaskBalance(amount) {
+      const key = getTaskBalanceKey();
+      let current = parseInt(localStorage.getItem(key)) || 0;
+      let updated = current + amount;
+      localStorage.setItem(key, updated);
+      console.log(`Updated task balance: ${current} + ${amount} = ${updated}`);
+    }
+
+    function showNotification(message) {
+      notifyBox.textContent = message;
+      notifyBox.style.display = "block";
+      setTimeout(() => {
+        notifyBox.style.display = "none";
+      }, 4000);
+    }
+
+    // Initial check on load
+    if (hasClaimedToday()) {
+      claimBtn.disabled = true;
+      claimBtn.textContent = "Already Claimed Today";
+    }
+
+    claimBtn.addEventListener("click", () => {
+      if (!hasClaimedToday()) {
+        updateTaskBalance(bonusAmount);
+        markClaimedToday();
+        claimBtn.disabled = true;
+        claimBtn.textContent = "Already Claimed Today";
+        showNotification(`₦${bonusAmount} added to your task balance!`);
+        console.log("Bonus claimed successfully.");
+      } else {
+        console.log("Bonus already claimed today.");
+      }
+    });
+  </script>
+  <script src="bottom-nav.js"></script>
+</body>
+</html>
