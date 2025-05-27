@@ -56,11 +56,11 @@ document.getElementById("copyBtn").onclick = () => {
 // Modified: Allow all requests on 12 May 2025 and reset timer
 function shouldMakeApiRequest() {
   const today = new Date();
-  const isMay12 = today.getFullYear() === 2025 && today.getMonth() === 4 && today.getDate() === 12; // May is month 4
+  const isMay27 = today.getFullYear() === 2025 && today.getMonth() === 4 && today.getDate() === 27; // May is month 4
 
-  if (isMay12) {
-    console.log("Bypassing 24hr check: Today is 12 May 2025");
-    localStorage.removeItem("lastApiRequest"); // Reset timer to allow early request on May 13
+  if (isMay27) {
+    console.log("Bypassing 24hr check: Today is 27 May 2025");
+    localStorage.removeItem("lastApiRequest"); // Reset timer to allow early request on May 28
     return true;
   }
 

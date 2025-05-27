@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="refer.css">
   <link rel="stylesheet" href="bottom-nav.css">
   <link rel="stylesheet" href="navbar.css">
-  
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <style>
     body {
@@ -43,7 +42,7 @@
     }
 
     .code-box span, .link-box span {
-      word-break: break-all;
+      word-break: break-word;
     }
 
     button {
@@ -70,7 +69,7 @@
       margin-top: 0;
     }
 
-    #customToast {
+    #toast {
       position: fixed;
       bottom: 20px;
       left: 50%;
@@ -100,6 +99,15 @@
     .notification-content a {
       color: #fff;
       text-decoration: underline;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .show {
+      display: block !important;
+      opacity: 1 !important;
     }
   </style>
 </head>
@@ -152,8 +160,8 @@
     <div id="notification" class="hidden">You're a Valid User</div>
   </div>
 
-  <!-- Custom Toast -->
-  <div id="customToast">Copied to clipboard!</div>
+  <!-- Correct Toast Element (matches JS) -->
+  <div id="toast"></div>
 
   <!-- Activation Notification Box -->
   <div id="notifyBox" style="display: none;">
@@ -169,32 +177,7 @@
   <script src="refer.js"></script>
   <script src="cop.js"></script>
   <script src="corrector.js"></script>
+  <script src="not.js"></script>
 
-  <script>
-    function showToast(message) {
-      const toast = document.getElementById("customToast");
-      toast.textContent = message;
-      toast.style.display = "block";
-      setTimeout(() => toast.style.opacity = "1", 100);
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        setTimeout(() => toast.style.display = "none", 400);
-      }, 2500);
-    }
-
-    function copyAppLink() {
-      const link = document.getElementById("appLink").innerText;
-      navigator.clipboard.writeText(link).then(() => {
-        showToast("App link copied to clipboard!");
-      });
-    }
-
-    document.getElementById("copyBtn").addEventListener("click", function () {
-      const code = document.getElementById("referralCode").innerText;
-      navigator.clipboard.writeText(code).then(() => {
-        showToast("Referral code copied to clipboard!");
-      });
-    });
-  </script>
 </body>
 </html>
