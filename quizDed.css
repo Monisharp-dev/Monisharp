@@ -1,0 +1,49 @@
+/* seed-deposit.css */
+
+body { font-family: 'Segoe UI', sans-serif; background-color: #f1f8f4; margin: 0; padding: 0; }
+
+.container { max-width: 500px; margin: 40px auto; padding: 20px; background: #ffffff; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+
+h1 { text-align: center; color: #2e7d32; }
+
+.account-details { background: #e8f5e9; padding: 15px; border-left: 5px solid #4caf50; margin-bottom: 20px; }
+
+label { display: block; margin: 10px 0 5px; font-weight: bold; }
+
+input[type="text"],
+input[type="file"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: white;
+  color: #333;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+/* Optional: styling for the select arrow */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23666" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px 16px;
+  padding-right: 35px;
+}button { width: 100%; padding: 12px; background: #4caf50; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; transition: background 0.3s; }
+
+button:hover { background: #388e3c; }
+
+.notification { margin-top: 15px; padding: 10px; border-radius: 5px; text-align: center; background: #d0f0c0; color: #2e7d32; font-weight: bold; }
+
+.notification.error { background: #fddede; color: #c62828; }
+
+.hidden { display: none; }
+
+.note { margin-top: 20px; font-size: 14px; color: #555; text-align: center; }
+

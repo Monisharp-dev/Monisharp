@@ -1,0 +1,125 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboard - QuickBrain Mini</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #d4f7dc, #ffffff, #cce4ff);
+      color: #1a1a1a;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #1e90ff;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    .container {
+      padding: 1rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    th, td {
+      padding: 1rem;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    th {
+      background-color: #00a859;
+      color: white;
+      font-weight: 600;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover {
+      background-color: #f9f9f9;
+    }
+    .placeholder {
+      text-align: center;
+      padding: 2rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>QuickBrain Mini Leaderboard</h1>
+  </header>  <div class="container">
+    <table id="leaderboard-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Score</th>
+          <th>Status</th>
+          <th>Earned</th>
+          <th>Time</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboard-body">
+        <tr><td colspan="6" class="placeholder">Loading leaderboard...</td></tr>
+      </tbody>
+    </table>
+  </div>  <script>
+    const today = new Date();
+    const day = today.getDay(); // Sunday = 0, Saturday = 6
+
+    if (day === 6) {
+      console.log("Today is Saturday. Fetching leaderboard data...");
+
+      fetch("https://sheetdb.io/api/v1/g8xwcmnmohv57")
+        .then(res => res.json())
+        .then(data => {
+          const tbody = document.getElementById("leaderboard-body");
+          tbody.innerHTML = "";
+
+          if (data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="placeholder">No entries yet.</td></tr>`;
+            return;
+          }
+
+          data.forEach(entry => {
+            const row = `
+              <tr>
+                <td>${entry.name || "N/A"}</td>
+                <td>${entry.score || "0"}</td>
+                <td>${entry.status || "Pending"}</td>
+                <td>₦${entry.earned || "0"}</td>
+                <td>${entry.time || "-"}</td>
+                <td>${entry.dateSubmitted || "-"}</td>
+              </tr>`;
+            tbody.innerHTML += row;
+          });
+
+          console.log("Leaderboard updated successfully.");
+        })
+        .catch(error => {
+          document.getElementById("leaderboard-body").innerHTML = `<tr><td colspan="6" class="placeholder">Error loading data</td></tr>`;
+          console.error("Error fetching leaderboard:", error);
+        });
+    } else {
+      console.log("Today is not Saturday. Skipping leaderboard update.");
+      document.getElementById("leaderboard-body").innerHTML = `<tr><td colspan="6" class="placeholder">Leaderboard updates every Saturday.</td></tr>`;
+    }
+  </script></body>
+</html>

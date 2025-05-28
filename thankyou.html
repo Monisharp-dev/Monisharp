@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thank You</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #00b894, #ffffff, #0984e3);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: #004d40;
+    }
+
+    .thank-you-box {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .thank-you-box h1 {
+      color: #00b894;
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+
+    .thank-you-box p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    .emoji {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 0.9rem;
+      color: #2d3436;
+    }
+
+    .home-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 12px 24px;
+      background-color: #00b894;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .home-btn:hover {
+      background-color: #019172;
+    }
+
+    @media screen and (max-width: 500px) {
+      .thank-you-box {
+        padding: 30px 20px;
+      }
+
+      .thank-you-box h1 {
+        font-size: 2rem;
+      }
+
+      .thank-you-box p {
+        font-size: 1rem;
+      }
+
+      .home-btn {
+        padding: 10px 20px;
+        font-size: 0.95rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="thank-you-box">
+    <div class="emoji">🎉</div>
+    <h1>Thank You!</h1>
+    <p>You've successfully completed the quiz.</p>
+    <p>Your results will be reviewed, and winners will be announced before the week runs out.</p>
+    <p>We appreciate your participation in <strong>QuickBrain Mini</strong>.</p>
+
+    <a href="index.html" class="home-btn">Go Home</a>
+
+    <div class="footer">
+      💚🤍💙 Powered by MoniSharp Team
+    </div>
+  </div>
+</body>
+</html>

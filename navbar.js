@@ -1,25 +1,31 @@
-// Get user info from localStorage
 const userId = localStorage.getItem("Id") || "Guest";
 const profileImage = localStorage.getItem("profileImage") || "logo.png";
 
-// Badge logic
-const newFeatureKey = "dailyRewardSeen";
-const newFeatureDuration = 3; // days
+const badgeKeys = {
+  dailyReward: "dailyRewardSeen",
+  quickBrainNew: "quickBrainNewSeen",
+};
+const badgeDurations = {
+  dailyReward: 3,
+  quickBrainNew: 5,
+};
 
-function shouldShowNewBadge() {
-  const seenDate = localStorage.getItem(newFeatureKey);
+function shouldShowBadge(key, duration) {
+  const seenDate = localStorage.getItem(key);
   if (!seenDate) {
-    localStorage.setItem(newFeatureKey, new Date().toISOString());
+    localStorage.setItem(key, new Date().toISOString());
     return true;
   }
   const seen = new Date(seenDate);
   const now = new Date();
   const diffDays = Math.floor((now - seen) / (1000 * 60 * 60 * 24));
-  return diffDays < newFeatureDuration;
+  return diffDays < duration;
 }
 
-// Insert Navigation Bar, Sidebar, and Overlay into the DOM
-const newBadge = shouldShowNewBadge() ? `<span class="new-badge">NEW</span>` : ``;
+const dailyBadge = shouldShowBadge(badgeKeys.dailyReward, badgeDurations.dailyReward)
+  ? `<span class="new-badge">NEW</span>` : ``;
+const quickBrainBadge = shouldShowBadge(badgeKeys.quickBrainNew, badgeDurations.quickBrainNew)
+  ? `<span class="new-badge">NEW</span>` : ``;
 
 const navbarSidebarHTML = `
   <style>
@@ -38,6 +44,100 @@ const navbarSidebarHTML = `
       50% { opacity: 0.4; }
       100% { opacity: 1; }
     }
+
+    .sidebar {
+      width: 250px;
+      background: #fff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar.active {
+      transform: translateX(0);
+    }
+
+    .sidebar .scrollable-content {
+      overflow-y: auto;
+      max-height: 50vh;
+      padding-bottom: 20px;
+    }
+
+    .sidebar-section {
+      margin: 20px 0 10px 15px;
+      font-weight: bold;
+      color: #555;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .nav-links a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 15px;
+      color: #222;
+      text-decoration: none;
+      font-size: 14px;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .nav-links a:hover {
+      background: #f0f0f0;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      padding: 10px 15px;
+    }
+
+    .profile img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+    }
+
+    .navbar {
+      background: white;
+      color: #222;
+      padding: 10px 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .menu-icon {
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      z-index: 999;
+    }
+
+    .overlay.active {
+      display: block;
+    }
   </style>
 
   <header class="navbar">
@@ -53,28 +153,38 @@ const navbarSidebarHTML = `
         <span class="plan">Valid User</span>
       </div>
     </div>
-    <nav class="nav-links">
-      <a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-      <a href="post.html"><i class="fas fa-bullhorn"></i> Sponsored Posts</a>
-      <a href="task.html"><i class="fas fa-tasks"></i> Task</a>
-      <a href="daily.html"><i class="fas fa-gift"></i> Daily Reward ${newBadge}</a>
-      <a href="Taskwithdrawal.html"><i class="fas fa-wallet"></i> Task Withdrawal</a>
-      <a href="withdraw.html"><i class="fas fa-hand-holding-usd"></i> Withdraw</a>
-      <a href="withdrawHistory.html"><i class="fas fa-history"></i> Withdrawal History</a>
-      <a href="seed.html"><i class="fas fa-seedling"></i> Plant a Seed</a>
-      <a href="seedHarvest.html"><i class="fas fa-leaf"></i> Harvest</a>
-      <a href="about.html"><i class="fas fa-envelope"></i> About Us</a>
-      <a href="contact.html"><i class="fas fa-phone-alt"></i> Contact Us</a>
-    </nav>
+
+    <div class="scrollable-content">
+      <div class="sidebar-section">TASK</div>
+      <nav class="nav-links">
+        <a href="task.html"><i class="fas fa-tasks"></i> Task</a>
+        <a href="Taskwithdrawal.html"><i class="fas fa-wallet"></i> Task Withdrawal</a>
+        <a href="withdraw.html"><i class="fas fa-hand-holding-usd"></i> Withdraw</a>
+        <a href="withdrawHistory.html"><i class="fas fa-history"></i> Withdrawal History</a>
+      </nav>
+
+      <div class="sidebar-section">QUIZZES</div>
+      <nav class="nav-links">
+        <a href="daily.html"><i class="fas fa-gift"></i> Daily Reward ${dailyBadge}</a>
+        <a href="intro.html"><i class="fas fa-brain"></i> What's QuickBrain Mini ${quickBrainBadge}</a>
+        <a href="join.html"><i class="fas fa-sign-in-alt"></i> Join QuickBrain Mini ${quickBrainBadge}</a>
+        <a href="leaderboard.html"><i class="fas fa-trophy"></i> Leaderboard ${quickBrainBadge}</a>
+      </nav>
+
+      <div class="sidebar-section">INFORMATION</div>
+      <nav class="nav-links">
+        <a href="#"><i class="fas fa-coins"></i> How to Earn ${quickBrainBadge}</a>
+        <a href="about.html"><i class="fas fa-envelope"></i> About Us</a>
+        <a href="contact.html"><i class="fas fa-phone-alt"></i> Contact Us</a>
+      </nav>
+    </div>
   </div>
 
   <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 `;
 
-// Inject into the beginning of body
 document.body.insertAdjacentHTML('afterbegin', navbarSidebarHTML);
 
-// Sidebar toggle function
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");
   const overlay = document.getElementById("overlay");

@@ -1,0 +1,125 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #e0f7fa, #e8f5e9);
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 500px;
+  margin: 60px auto;
+  background: white;
+  padding: 30px 25px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  text-align: center;
+}
+
+h1 {
+  color: #0277bd;
+}
+
+p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+button {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#payBank {
+  background-color: #4caf50;
+  color: white;
+}
+
+#payTask {
+  background-color: #2196f3;
+  color: white;
+}
+
+button i {
+  margin-right: 8px;
+}
+
+button:hover {
+  transform: scale(1.05);
+  opacity: 0.95;
+}
+
+#notification {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  display: none;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #2e7d32;
+  border-left: 6px solid #2e7d32;
+}
+
+.error {
+  background-color: #fddede;
+  color: #c62828;
+  border-left: 6px solid #c62828;
+}
+
+.hidden {
+  display: none;
+}
+
+#proceedSection {
+  margin-top: 30px;
+}
+
+#proceedBtn {
+  background-color: #4caf50;
+  color: white;
+  padding: 14px 30px;
+  font-size: 17px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+#notification {
+  margin-top: 20px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 15px;
+  display: none;
+  transition: all 0.4s ease;
+}
+
+.success {
+  background-color: #d4edda;
+  color: #2e7d32;
+  border-left: 6px solid #2e7d32;
+}
+
+.error {
+  background-color: #fddede;
+  color: #c62828;
+  border-left: 6px solid #c62828;
+}
+
+.info {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border-left: 6px solid #1565c0;
+}

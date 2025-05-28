@@ -1,0 +1,129 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(to right, #74ebd5, #acb6e5);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.quiz-container {
+  background: #fff;
+  padding: 25px 35px;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 550px;
+  text-align: center;
+  position: relative;
+}
+
+.quiz-container h1 {
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+#question {
+  font-size: 22px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+#choices {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#choices li {
+  background: #f1f1f1;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 500;
+}
+
+#choices li:hover {
+  background: #d0e2ff;
+}
+
+#status {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #555;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+#nextBtn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  background: #00c853;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+#nextBtn:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+
+#result-box {
+  margin-top: 30px;
+}
+
+#result-box button {
+  margin-top: 20px;
+  background: #3f51b5;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Notification Box */
+#notify {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ffecb3;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: bold;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+.hidden { display: none; }
+.alert { padding: 10px; border-radius: 5px; text-align: center; margin: 10px 0; }
+.alert.success { background-color: #d4edda; color: #155724; }
+.alert.error { background-color: #f8d7da; color: #721c24; }
+.alert.info { background-color: #cce5ff; color: #004085; }

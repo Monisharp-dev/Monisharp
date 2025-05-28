@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QuickBrain Mini</title>
+  <link rel="stylesheet" href="quiz.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="quiz-container">
+    <h1><i data-lucide="brain-circuit"></i> QuickBrain Mini</h1>
+
+    <div id="notify" class="hidden alert"></div>
+
+    <div id="quiz-box">
+      <div id="question"></div>
+      <ul id="choices"></ul>
+      <div id="status">
+        <i data-lucide="alarm-clock"></i> <span id="timer">30</span> sec 
+        | <i data-lucide="star"></i> Score: <span id="score">0</span>
+      </div>
+      <button id="nextBtn" disabled><i data-lucide="arrow-right-circle"></i> Next</button>
+    </div>
+
+    <div id="result-box" class="hidden">
+      <h2><i data-lucide="trophy"></i> Your Final Score: <span id="final-score"></span></h2>
+    
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script>
+    lucide.createIcons();
+  </script>
+  <script src="quiz.js"></script>
+</body>
+</html>
