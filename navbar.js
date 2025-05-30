@@ -173,7 +173,7 @@ const navbarSidebarHTML = `
 
       <div class="sidebar-section">INFORMATION</div>
       <nav class="nav-links">
-        <a href="#"><i class="fas fa-coins"></i> How to Earn ${quickBrainBadge}</a>
+        <a href="howtoearn.html"><i class="fas fa-coins"></i> How to Earn ${quickBrainBadge}</a>
         <a href="about.html"><i class="fas fa-envelope"></i> About Us</a>
         <a href="contact.html"><i class="fas fa-phone-alt"></i> Contact Us</a>
       </nav>

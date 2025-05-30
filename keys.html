@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>LocalStorage Keys Viewer</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h2 { margin-top: 30px; }
+    ul { list-style: none; padding: 0; }
+    li { background: #f0f0f0; margin: 5px 0; padding: 10px; border-radius: 5px; }
+    button { margin-top: 10px; padding: 10px; border: none; background: #007bff; color: white; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #0056b3; }
+    pre { background: #eaeaea; padding: 10px; border-radius: 5px; }
+  </style>
+</head>
+<body>
+
+  <h1>LocalStorage Keys Viewer</h1>
+
+  <h2>Current Keys</h2>
+  <ul id="keyList"></ul>
+  <button onclick="copyKeys()">📋 Copy All Keys</button>
+
+  <h2>Deleted Keys</h2>
+  <ul id="deletedKeyList"></ul>
+
+  <script>
+    // Display all current keys
+    function displayKeys() {
+      const keyList = document.getElementById("keyList");
+      keyList.innerHTML = "";
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key !== "__deletedKeys__") {
+          const li = document.createElement("li");
+          li.textContent = key;
+          keyList.appendChild(li);
+        }
+      }
+    }
+
+    // Copy keys to clipboard
+    function copyKeys() {
+      let keys = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key !== "__deletedKeys__") {
+          keys.push(key);
+        }
+      }
+      navigator.clipboard.writeText(keys.join("\n")).then(() => {
+        alert("Keys copied to clipboard!");
+      });
+    }
+
+    // Simulate viewing deleted keys
+    function loadDeletedKeys() {
+      const deleted = JSON.parse(localStorage.getItem("__deletedKeys__") || "[]");
+      const list = document.getElementById("deletedKeyList");
+      list.innerHTML = "";
+      deleted.forEach(k => {
+        const li = document.createElement("li");
+        li.textContent = k;
+        list.appendChild(li);
+      });
+    }
+
+    // Hook into localStorage.removeItem to track deletions
+    (function trackDeletions() {
+      const originalRemove = localStorage.removeItem;
+      localStorage.removeItem = function(key) {
+        if (key !== "__deletedKeys__") {
+          let deleted = JSON.parse(localStorage.getItem("__deletedKeys__") || "[]");
+          if (!deleted.includes(key)) deleted.push(key);
+          localStorage.setItem("__deletedKeys__", JSON.stringify(deleted));
+        }
+        return originalRemove.call(this, key);
+      };
+    })();
+
+    // Initial load
+    displayKeys();
+    loadDeletedKeys();
+  </script>
+
+</body>
+</html>
