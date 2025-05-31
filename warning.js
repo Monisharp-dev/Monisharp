@@ -1,14 +1,8 @@
 // Map of user IDs to their messages
 const userMessages = {
-  "etokwudog": "You are ALREADY A MEMBER in Bounty News. That task was specifically for newusrrs only. You have not been credited",
-  "opalekesoromdayo": "₦100 cash has been credited to your account for performing task very well",
-  "Jamesudom2510": "You are ALREADY A MEMBER in Bounty News. That task was specifically for newusrrs only. You have not been credited",
-  "favyjay28": "You are ALREADY A MEMBER in Bounty News. That task was specifically for newusrrs only. You have not been credited",
-  "ajaniisraelojasope11": "₦50 has been credited to your task balance instead if ₦100 because you did not link your WhatsApp account to Wabot",
-  "gomoarukhe": "You are already a member on bounty news and you earned ₦50 for partially completing a task.",
-  "itoyadominion5": "You did not connect your WhatsApp account in the Waplus task. You are a registered member of Bounty News and hence you were not credited for such task. You successfully completed the AIRTIME task and your account has been credyed with ₦50.",
-  "chukwudik725": "You weren't credited because you are a registered member of Bounty news and hence did noy receive any reward for the task",
-  "sesughdaniel433": "You weren't credited because you are a registered member of Bounty news and hence did noy receive any reward for the task"
+  "icefieldwaripamoweifreedom": "You are ALREADY A MEMBER in Bounty News. That task was specifically for new users only. You have not been credited for that task",
+  "happybankmoney": "Your account is at risk of being BAN. Please do well to follow task instructions so as to be credited.",
+ "emmakani234": "You are ALREADY A MEMBER in Bounty News. That task was specifically for new users only. You have not been credited for that task"
 };
 
 // Get the current user's ID

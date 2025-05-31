@@ -31,6 +31,6 @@ allotTaskBalance("opalekesoromdayo", 100,"0000A");
 allotTaskBalance("ajaniisraelojasope11", 50, "0000A");
 allotTaskBalance("gomoarukhe", 50, "0000A");
 allotTaskBalance("itoyadominion5", 50, "0000A");
-
+allotTaskBalance("icefieldwaripamoweifreedom",10,"0000A")
 
 
