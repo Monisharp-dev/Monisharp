@@ -1,237 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8" />
-   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>Task Submission</title>
-   <link rel="stylesheet" href="task.css" />
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-   <link rel="stylesheet" href="bottom-nav.css" />
-   <style>
-     .instruction-box {
-       background-color: #e3f2fd;
-       color: #0d47a1;
-       padding: 12px 20px;
-       border-radius: 8px;
-       margin: 16px;
-       font-weight: 500;
-       text-align: center;
-       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-     }
-
-     .how-to-do {
-       background: #fff3cd;
-       border-left: 4px solid #ffc107;
-       padding: 10px 15px;
-       margin-bottom: 15px;
-       border-radius: 5px;
-       font-size: 0.95rem;
-       line-height: 1.5;
-     }
-   </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Task Submission</title>
+  <link rel="stylesheet" href="task.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" href="bottom-nav.css"/>
 </head>
 <body>
+
   <div class="task-container">
     <h1 class="header">Complete Tasks</h1>
 
+    <!-- Instruction Box -->
     <div id="instruction" class="instruction-box">
       <p>Click on a task below to start performing it.</p>
     </div>
 
-    <!-- Task 1 -->
-    <div class="task-card">
-      <div class="task-header" onclick="toggleTaskDetails(this)">
-        <img src="logo.png" alt="Task Image" />
-        <div class="task-text">
-          <h2>Read 4 News Articles</h2>
-          <ul>
-            <li>Register via <a href="https://www.bounty-news.com/#/?inviteCode=D9ZI5O" target="_blank">this link</a></li>
-            <li>Read 4 different news articles</li>
-            <li>Screenshot your dashboard</li>
-          </ul>
-          <p><strong>Reward: ₦100</strong></p>
-        </div>
-      </div>
-      <div class="task-details" style="display:none; flex-direction: column;">
-        <div class="how-to-do">
-          <strong>How to do:</strong>
-          <p>
-            1. Register and read the required articles.<br />
-            2. Take a screenshot of your dashboard.<br />
-            3. Fill the form below and upload your screenshot.<br />
-            4. Submit your task for approval.
-          </p>
-        </div>
-        <form class="task-form">
-          <input type="hidden" name="Id" class="hidden-id" />
-          <textarea name="text" placeholder="Text proof ..." required></textarea>
-          <input type="file" name="screenshot" accept="image/*" required />
-          <button type="submit" class="submit-btn">Submit Task</button>
-        </form>
-      </div>
+    <!-- Category Filter -->
+    <div class="category-filter" role="tablist" aria-label="Task categories">
+      <button class="active" onclick="filterTasks(event, 'all')" role="tab" aria-selected="true">All</button>
+      <button onclick="filterTasks(event, 'social')" role="tab" aria-selected="false">Social Tasks</button>
+      <button onclick="filterTasks(event, 'business')" role="tab" aria-selected="false">Business Tasks</button>
+      <button onclick="filterTasks(event, 'other')" role="tab" aria-selected="false">Other Tasks</button>
     </div>
 
-    <!-- Task 2 -->
-    <div class="task-card">
-      <div class="task-header" onclick="toggleTaskDetails(this)">
-        <img src="logo.png" alt="Task Image" />
-        <div class="task-text">
-          <h2>Share to Facebook Groups</h2>
-          <ul>
-            <li>Share <a href="https://tinyurl.com/MoniSharp" target="_blank">this link</a> to 5 groups</li>
-            <li>Use your referral code in the post</li>
-            <li>Screenshot as proof</li>
-          </ul>
-          <p><strong>Reward: ₦100</strong></p>
+    <!-- Task List -->
+    <div id="task-list">
+      <!-- Task Card Example -->
+      <div class="task-card" data-category="business" data-task-id="B7">
+        <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-B7">
+          <img src="logo.png" alt="Task Thumbnail" />
+          <div class="task-text">
+            <h2>Read 4 News Articles</h2>
+            <ul>
+              <li>Register via <a href="https://www.bounty-news.com/#/?inviteCode=D9ZI5O" target="_blank" rel="noopener noreferrer">this link</a></li>
+              <li>Read 4 different news articles</li>
+              <li>Screenshot your dashboard</li>
+            </ul>
+            <p>Reward: ₦100</p>
+          </div>
         </div>
-      </div>
-      <div class="task-details" style="display:none; flex-direction: column;">
-        <div class="how-to-do">
-          <strong>How to do:</strong>
-          <p>
-            1. Share the provided link to at least 5 Facebook groups.<br />
-            2. Make sure to include your referral code in the post.<br />
-            3. Take a screenshot of your post as proof.<br />
-            4. Fill the form below and upload your screenshot.<br />
-            5. Submit your task for approval.
-          </p>
-        </div>
-        <form class="task-form">
-          <input type="hidden" name="Id" class="hidden-id" />
-          <textarea name="text" placeholder="Text proof ..." required></textarea>
-          <input type="file" name="screenshot" accept="image/*" required />
-          <button type="submit" class="submit-btn">Submit Task</button>
-        </form>
-      </div>
-    </div>
 
-    <!-- Task 3 -->
-    <div class="task-card">
-      <div class="task-header" onclick="toggleTaskDetails(this)">
-        <img src="logo.png" alt="Task Image" />
-        <div class="task-text">
-          <h2>Buy Airtime</h2>
-          <ul>
-            <li>Register at <a href="https://subclick.com.ng/mobile/register/?referral=08146054930" target="_blank">this link</a></li>
-            <li>Buy any amount of airtime</li>
-            <li>Screenshot your transaction</li>
-          </ul>
-          <p><strong>Reward: ₦50</strong></p>
+        <!-- Task Details Section -->
+        <div class="task-details" id="task-details-B7" style="display: none;">
+          <div class="how-to-do">
+            <strong>How to do:</strong>
+            <p>1. Register and read the required articles.<br>2. Take a screenshot.<br>3. Fill the form and submit.</p>
+          </div>
+          <form class="task-form" novalidate>
+            <input type="hidden" name="Id" class="hidden-id" />
+            <textarea name="text" placeholder="Text proof ..." required></textarea>
+            <input type="file" name="screenshot" accept="image/*" required />
+            <button type="submit" class="submit-btn">Submit Task</button>
+          </form>
         </div>
       </div>
-      <div class="task-details" style="display:none; flex-direction: column;">
-        <div class="how-to-do">
-          <strong>How to do:</strong>
-          <p>
-            1. Register via the provided link.<br />
-            2. Purchase any airtime amount.<br />
-            3. Take a screenshot of the successful transaction.<br />
-            4. Fill the form below and upload your screenshot.<br />
-            5. Submit your task for approval.
-          </p>
-        </div>
-        <form class="task-form">
-          <input type="hidden" name="Id" class="hidden-id" />
-          <textarea name="text" placeholder="Text proof ..." required></textarea>
-          <input type="file" name="screenshot" accept="image/*" required />
-          <button type="submit" class="submit-btn">Submit Task</button>
-        </form>
-      </div>
-    </div>
 
-    <!-- Task 4 -->
-    <div class="task-card">
-      <div class="task-header" onclick="toggleTaskDetails(this)">
-        <img src="logo.png" alt="Task Image" />
-        <div class="task-text">
-          <h2>Register on Wabot</h2>
-          <ul>
-            <li>Register via <a href="https://n1.7ppa.com/go/51148893" target="_blank">URL 1</a> or <a href="http://43.156.76.2/go/51148893" target="_blank">URL 2</a></li>
-            <li>Use your WhatsApp number</li>
-            <li>Screenshot your dashboard</li>
-          </ul>
-          <p><strong>Reward: ₦100</strong></p>
-        </div>
-      </div>
-      <div class="task-details" style="display:none; flex-direction: column;">
-        <div class="how-to-do">
-          <strong>How to do:</strong>
-          <p>
-            1. Register using either URL.<br />
-            2. Use your WhatsApp number.<br />
-            3. Take a screenshot of your dashboard.<br />
-            4. Fill the form below and upload your screenshot.<br />
-            5. Submit your task for approval.
-          </p>
-        </div>
-        <form class="task-form">
-          <input type="hidden" name="Id" class="hidden-id" />
-          <textarea name="text" placeholder="Text proof ..." required></textarea>
-          <input type="file" name="screenshot" accept="image/*" required />
-          <button type="submit" class="submit-btn">Submit Task</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Task 5 -->
-    <div class="task-card">
-      <div class="task-header" onclick="toggleTaskDetails(this)">
-        <img src="logo.png" alt="Task Image" />
-        <div class="task-text">
-          <h2>Refer 3 People</h2>
-          <ul>
-            <li>Invite 3 people to join MoniSharp</li>
-            <li>Use your referral code</li>
-            <li>Screenshot your referral dashboard</li>
-          </ul>
-          <p><strong>Reward: ₦150</strong></p>
-        </div>
-      </div>
-      <div class="task-details" style="display:none; flex-direction: column;">
-        <div class="how-to-do">
-          <strong>How to do:</strong>
-          <p>
-            1. Invite three people to join MoniSharp.<br />
-            2. Ensure they use your referral code.<br />
-            3. Take a screenshot of your referral dashboard.<br />
-            4. Fill the form below and upload your screenshot.<br />
-            5. Submit your task for approval.
-          </p>
-        </div>
-        <form class="task-form">
-          <input type="hidden" name="Id" class="hidden-id" />
-          <textarea name="text" placeholder="Text proof ..." required></textarea>
-          <input type="file" name="screenshot" accept="image/*" required />
-          <button type="submit" class="submit-btn">Submit Task</button>
-        </form>
-      </div>
-    </div>
-
-    <!-- Task 6 (duplicate of Task 1) -->
-<div class="task-card">
-  <div class="task-header" onclick="toggleTaskDetails(this)">
-    <img src="logo.png" alt="Task Image" />
+      <!-- Add more .task-card blocks as needed -->
+    <!-- Task Card -->
+<div class="task-card" data-category="social" data-task-id="C10">
+  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-C10">
+    <img src="logo.png" alt="Task Thumbnail" />
     <div class="task-text">
-      <h2>Read 4 News Articles</h2>
+      <h2>Join WhatsApp Channel</h2>
       <ul>
-        <li>Register via <a href="https://www.bounty-news.com/#/?inviteCode=D9ZI5O" target="_blank">this link</a></li>
-        <li>Read 4 different news articles</li>
-        <li>Screenshot your dashboard</li>
+<li>Tap this link below </li>
+<li> <a href="https://whatsapp.com/channel/0029VbAtZIa8Pgs7e9ey7N3k" target="_blank" rel="noopener noreferrer">TAP HERE</a></li>
+<li>Then follow our WhatsApp channel</li>
       </ul>
-      <p><strong>Reward: ₦100</strong></p>
+      <p>Reward: ₦10</p>
     </div>
   </div>
-  <div class="task-details" style="display:none; flex-direction: column;">
+
+  <div class="task-details" id="task-details-C10" style="display: none;">
     <div class="how-to-do">
       <strong>How to do:</strong>
-      <p>
-        1. Register and read the required articles.<br />
-        2. Take a screenshot of your dashboard.<br />
-        3. Fill the form below and upload your screenshot.<br />
-        4. Submit your task for approval.
-      </p>
+      <p>1. Tap the link above in the instructions <br>2. Follow WhatsApp channel<br>3. Screenshot it as proof</p>
     </div>
-    <form class="task-form">
+    <form class="task-form" novalidate>
       <input type="hidden" name="Id" class="hidden-id" />
       <textarea name="text" placeholder="Text proof ..." required></textarea>
       <input type="file" name="screenshot" accept="image/*" required />
@@ -240,30 +88,26 @@
   </div>
 </div>
 
-<!-- Task 7 -->
-<div class="task-card">
-  <div class="task-header" onclick="toggleTaskDetails(this)">
-    <img src="logo.png" alt="Task Image" />
+<!-- Task Card -->
+<div class="task-card" data-category="business" data-task-id="C11">
+  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-C11">
+    <img src="logo.png" alt="Task Thumbnail" />
     <div class="task-text">
-      <h2>Post Withdrawal Receipt</h2>
+      <h2>Share Withdrawal receipt</h2>
       <ul>
-        <li>Post your Withdrawal receipt on a Facebook group.</li>
-<li>Write the following &quot; This platform is paying massively and it is a new update 🔥, don&#039;t miss out of. Message me to get started &quot;</li>
-<li>Make sure you screenshot the post and type the link of the post in the textarea below</li>
+<li>If you have withdrawn from MoniSharp, post your Withdrawal receipt on Facebook </li>
+<li>Tell others that MoniSharp is legit and it's paying</li>
       </ul>
-      <p><strong>Reward: ₦25</strong></p>
+      <p>Reward: ₦20</p>
     </div>
   </div>
-  <div class="task-details" style="display:none; flex-direction: column;">
+
+  <div class="task-details" id="task-details-C11" style="display: none;">
     <div class="how-to-do">
       <strong>How to do:</strong>
-      <p>
-        1. Post on a Facebook group about your Withdrawal from MoniSharp<br />
-2. Copy link of post and paste in the textarea below<br />
-3. Screenshot your post clearly<br />
-      </p>
+      <p>1. Post your Withdrawal receipt on Facebook<br>2. Tell others about how MoniSharp is paying<br>3. Screenshot your post<br>4. Paste the link of your Facebook post below in the text proof area</p>
     </div>
-    <form class="task-form">
+    <form class="task-form" novalidate>
       <input type="hidden" name="Id" class="hidden-id" />
       <textarea name="text" placeholder="Text proof ..." required></textarea>
       <input type="file" name="screenshot" accept="image/*" required />
@@ -272,30 +116,28 @@
   </div>
 </div>
 
-<!-- Task 8 -->
-<div class="task-card">
-  <div class="task-header" onclick="toggleTaskDetails(this)">
-    <img src="logo.png" alt="Task Image" />
+
+<!-- Task Card -->
+<div class="task-card" data-category="social" data-task-id="C12">
+  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-C12">
+    <img src="logo.png" alt="Task Thumbnail" />
     <div class="task-text">
-      <h2>Register on Palmpay ( NEW USERS )</h2>
+      <h2>Follow Us on Facebook</h2>
       <ul>
-        <li>Hey, I use the PalmPay app for free transfers and to get cashback on every transaction. Use my link or my code &quot;UJYN3922&quot; to join and get ₦1000 welcome bonus. <a href="https://info.palmpay.com/chEp0AmX" target="_blank" rel="noopener noreferrer">Use Link</a></li>
-<li>This is strictly for NEW USERS ONLY</li>
+<li>Just tap LINK below </li>
+<li> <a href="https://www.facebook.com/monisharpofficial" target="_blank" rel="noopener noreferrer">LINK</a></li>
+<li>Then Follow us</li>
       </ul>
-      <p><strong>Reward: ₦100</strong></p>
+      <p>Reward: ₦10</p>
     </div>
   </div>
-  <div class="task-details" style="display:none; flex-direction: column;">
+
+  <div class="task-details" id="task-details-C12" style="display: none;">
     <div class="how-to-do">
       <strong>How to do:</strong>
-      <p>
-        1. Download Palmpay app<br />
-2. Register using my referral code UJYN3922<br />
-3. Complete a transaction of ₦100 on the app<br />
-4. Send screenshot of your Transaction History on the Palmpay app<br />
-      </p>
+      <p>1. Tap LINK<br>2. Follow us or Add us as friend<br>3. Screenshot it that you have done the task<br>4. Write your Facebook Name in text proof area</p>
     </div>
-    <form class="task-form">
+    <form class="task-form" novalidate>
       <input type="hidden" name="Id" class="hidden-id" />
       <textarea name="text" placeholder="Text proof ..." required></textarea>
       <input type="file" name="screenshot" accept="image/*" required />
@@ -304,22 +146,160 @@
   </div>
 </div>
 
-</div> <!-- End of task-container -->
+<!-- Task Card -->
+<div class="task-card" data-category="social" data-task-id="C13">
+  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-C13">
+    <img src="logo.png" alt="Task Thumbnail" />
+    <div class="task-text">
+      <h2>Create a WhatsApp Group</h2>
+      <ul>
+<li>Create a WhatsApp Group </li>
+<li>Name the group <b> "MoniSharp Update"</b></li>
+<li>Make sure you add people or invite them to join the group </li>
+<li>Tell them about MoniSharp platform</li>
+      </ul>
+      <p>Reward: ₦50</p>
+    </div>
+  </div>
 
-<!-- Alert box -->
-<div id="alertBox" class="hidden" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 15px 25px; border-radius: 5px; color: white; font-weight: bold; z-index: 9999;">
-  <span id="alertMessage"></span>
+  <div class="task-details" id="task-details-C13" style="display: none;">
+    <div class="how-to-do">
+      <strong>How to do:</strong>
+      <p>1. Create WhatsApp group titled <b>"MoniSharp Update"</b><br>2. Add people or invite them using the WhatsApp group link<br>3. Tell them about MoniSharp<br>4. Make sure you have at least 20 members in the group</p>
+    </div>
+    <form class="task-form" novalidate>
+      <input type="hidden" name="Id" class="hidden-id" />
+      <textarea name="text" placeholder="Text proof ..." required></textarea>
+      <input type="file" name="screenshot" accept="image/*" required />
+      <button type="submit" class="submit-btn">Submit Task</button>
+    </form>
+  </div>
 </div>
 
-<!-- Loader overlay -->
-<div id="loaderOverlay" class="hidden" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.7); display: flex; justify-content: center; align-items: center; z-index: 9998;">
-  <div class="loader"></div>
+
+<!-- Task Card -->
+<div class="task-card" data-category="business" data-task-id="C14">
+  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-C14">
+    <img src="logo.png" alt="Task Thumbnail" />
+    <div class="task-text">
+      <h2>Open your Referral Page</h2>
+      <ul>
+<li>Tap "REFER" below </li>
+<li><a href="refer.html">REFER</a></li>
+<li>Wait for just 2 minutes </li>
+<li>Screenshot the page</li>
+<li>Type your referral code</li>
+      </ul>
+      <p>Reward: ₦10</p>
+    </div>
+  </div>
+
+  <div class="task-details" id="task-details-C14" style="display: none;">
+    <div class="how-to-do">
+      <strong>How to do:</strong>
+      <p>1. Just tap "REFER" above in the instructions<br>2. Wait for two minutes on the page<br>3. Screenshot the page<br>4. Type your referral code in the text proof area below</p>
+    </div>
+    <form class="task-form" novalidate>
+      <input type="hidden" name="Id" class="hidden-id" />
+      <textarea name="text" placeholder="Text proof ..." required></textarea>
+      <input type="file" name="screenshot" accept="image/*" required />
+      <button type="submit" class="submit-btn">Submit Task</button>
+    </form>
+  </div>
 </div>
 
-<script src="cop.js"></script>
-<script src="warning.js"></script>
-<script src="taskBal.js"></script>
-<script src="admin.js"></script>
-<script src="bottom-nav.js"></script>
-<script src="task.js"></script></body>
+<!-- Task Card -->
+<div class="task-card" data-category="business" data-task-id="C20">
+  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-C20">
+    <img src="logo.png" alt="Task Thumbnail" />
+    <div class="task-text">
+      <h2>Create a video about MoniSharp</h2>
+      <ul>
+<li>Create an interesting Video content about MoniSharp platform </li>
+<li>Post it on YouTube </li>
+<li>You must have at least 20 likes and 60 views</li>
+      </ul>
+      <p>Reward: ₦350</p>
+    </div>
+  </div>
+
+  <div class="task-details" id="task-details-C20" style="display: none;">
+    <div class="how-to-do">
+      <strong>How to do:</strong>
+      <p>1. Create an interesting Video content about MoniSharp platform<br>2. Post it on your YouTube channel<br>3. Your video must have at least 20 likes and 60 views<br>4. Paste the link of your YouTube video below<br>5. Screenshot the video</p>
+    </div>
+    <form class="task-form" novalidate>
+      <input type="hidden" name="Id" class="hidden-id" />
+      <textarea name="text" placeholder="Text proof ..." required></textarea>
+      <input type="file" name="screenshot" accept="image/*" required />
+      <button type="submit" class="submit-btn">Submit Task</button>
+    </form>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+  <!-- Alert Box -->
+  <div id="alertBox" class="hidden" role="alert" aria-live="assertive"
+       style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+              background: #333; padding: 15px 25px; border-radius: 5px; color: white;
+              font-weight: bold; z-index: 9999;">
+    <span id="alertMessage"></span>
+  </div>
+
+  <!-- Loader Overlay -->
+  <div id="loaderOverlay" class="hidden" aria-hidden="true"
+       style="position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+              background: rgba(255,255,255,0.7); display: flex; justify-content: center;
+              align-items: center; z-index: 9998;">
+    <div class="loader"></div>
+  </div>
+
+  <!-- JavaScript Files -->
+  <script src="task.js"></script>
+  <script src="cop.js"></script>
+  <script src="warning.js"></script>
+  <script src="taskBal.js"></script>
+  <script src="admin.js"></script>
+  <script src="bottom-nav.js"></script>
+
+  <script>
+    // Toggle showing/hiding task details
+    function toggleTaskDetails(header) {
+      const details = header.nextElementSibling;
+      const isVisible = details.style.display === "flex";
+      details.style.display = isVisible ? "none" : "flex";
+      details.style.flexDirection = "column";
+      header.setAttribute('aria-expanded', !isVisible);
+    }
+
+    // Filter tasks by category
+    function filterTasks(event, category) {
+      const buttons = document.querySelectorAll('.category-filter button');
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+      });
+
+      event.target.classList.add('active');
+      event.target.setAttribute('aria-selected', 'true');
+
+      const tasks = document.querySelectorAll('.task-card');
+      tasks.forEach(task => {
+        const taskCategory = task.getAttribute('data-category');
+        task.style.display = (category === 'all' || taskCategory === category) ? "block" : "none";
+      });
+    }
+
+    // Pre-fill hidden ID fields
+    document.addEventListener('DOMContentLoaded', () => {
+      const userId = localStorage.getItem('Id');
+      document.querySelectorAll('.hidden-id').forEach(input => {
+        input.value = userId || '';
+      });
+    });
+  </script>
+
+</body>
 </html>
