@@ -8,7 +8,7 @@ const allowedIds = [
   "bokoh5061", "ebubechiwinner066", "emmanuelisaacbamgbose", "oluwatofunmienochoke",
   "ebubechiwinner066", "edwardjared723", "ayibakurokuro", "usohisrael2", "tmosco4real",
   "olamilekanjoseph601", "gomoarukhe", "Ibbello1507", "ifeanyichukwuoguejiofor", "sermborleeh",
-  "godspoweramos01", "happybankmoney", "safiyaibrahimbahago","muslimatkehinde05"
+  "godspoweramos01", "happybankmoney", "safiyaibrahimbahago","muslimatkehinde05","etokwudog"
 ]; // Replace with your specific Ids
 
 // Get the current user's Id from localStorage
