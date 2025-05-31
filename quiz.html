@@ -11,28 +11,38 @@
   <div class="quiz-container">
     <h1><i data-lucide="brain-circuit"></i> QuickBrain Mini</h1>
 
+    <!-- Notification Box -->
     <div id="notify" class="hidden alert"></div>
 
+    <!-- Quiz Box -->
     <div id="quiz-box">
-      <div id="question"></div>
-      <ul id="choices"></ul>
-      <div id="status">
-        <i data-lucide="alarm-clock"></i> <span id="timer">30</span> sec 
-        | <i data-lucide="star"></i> Score: <span id="score">0</span>
+      <h2 id="question">Loading question...</h2>
+      <ul id="choices" class="choices">
+        <!-- Choices will be dynamically inserted here -->
+      </ul>
+
+      <div class="info">
+        <span><i data-lucide="alarm-clock"></i> <span id="timer">30</span> sec</span> |
+        <span><i data-lucide="star"></i> Score: <span id="score">0</span></span>
       </div>
-      <button id="nextBtn" disabled><i data-lucide="arrow-right-circle"></i> Next</button>
+
+      <button id="nextBtn" class="nextBtn" disabled>
+        <i data-lucide="arrow-right-circle"></i> Next
+      </button>
     </div>
 
+    <!-- Result Box -->
     <div id="result-box" class="hidden">
       <h2><i data-lucide="trophy"></i> Your Final Score: <span id="final-score"></span></h2>
-    
+     <b> PLEASE DO NOT CLOSE THE PAGE YET. HOLD ON ...</b>
     </div>
   </div>
 
+  <!-- JavaScript Files -->
+  <script src="quiz.js" defer></script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <script>
     lucide.createIcons();
   </script>
-  <script src="quiz.js"></script>
 </body>
 </html>
