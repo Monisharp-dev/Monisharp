@@ -2,7 +2,8 @@
 const userMessages = {
   "icefieldwaripamoweifreedom": "You are ALREADY A MEMBER in Bounty News. That task was specifically for new users only. You have not been credited for that task",
   "happybankmoney": "Your account is at risk of being BAN. Please do well to follow task instructions so as to be credited.",
- "emmakani234": "You are ALREADY A MEMBER in Bounty News. That task was specifically for new users only. You have not been credited for that task"
+ "emmakani234": "You are ALREADY A MEMBER in Bounty News. That task was specifically for new users only. You have not been credited for that task",
+ "etokwudog": "You were mistakenly credited with ₦150 into your task balance. We have retrieved the money from your Withdrawal. Sorry for the inconvenience this has caused you."
 };
 
 // Get the current user's ID
