@@ -3,7 +3,7 @@ const userMessages = {
   "icefieldwaripamoweifreedom": "You are ALREADY A MEMBER in Bounty News. That task was specifically for new users only. You have not been credited for that task",
   "happybankmoney": "Your account is at risk of being BAN. Please do well to follow task instructions so as to be credited.",
  "emmakani234": "You are ALREADY A MEMBER in Bounty News. That task was specifically for new users only. You have not been credited for that task",
- "etokwudog": "You were mistakenly credited with ₦150 into your task balance. We have retrieved the money from your Withdrawal. Sorry for the inconvenience this has caused you.",
+ "etokwudog": "Thank you for completing the tasks but the Facebook group you created, you were supposed to have at least 20 members not 1 member. Also please when you are instructed to create a post, please create a new post for that task. Do not send an old screenshot for a task again.Thank you",
  "emmakani234": "One of your task was rejected. You were expected ti have at LEAST 20 members in the WhatsApp group not 4 as provided on the screenshot you upload. You have been credited for other tasks approved. Thank you !"
 };
 
