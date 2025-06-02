@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Information Page</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="Help.css" />
+  <link rel="stylesheet" href="bottom-nav.css" />
+  <link rel="stylesheet" href="navbar.css" />
+  <link rel="stylesheet" href="image.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+<body>
+
+  <div id="content">
+    <div class="container">
+      <img src="logo.png" alt="MoniSharp Logo" />
+
+      <h1>Information Page</h1>
+
+      <!-- Section: Account Limit -->
+      <div class="section">
+        <div class="title" onclick="toggleContent('section8')">
+          Can I Create More Than One Account on This Platform?
+        </div>
+        <div id="section8" class="content">
+          <p>
+            The answer is a big <b>NO</b>. You cannot create more than one account. Doing so will result in both accounts being 
+            <b>PERMANENTLY DEACTIVATED</b>. All earnings and deposits will be forfeited and not refunded.
+          </p>
+        </div>
+      </div>
+
+      <!-- Section: Contact Us -->
+      <div class="section">
+        <div class="title" onclick="toggleContent('section5')">Contact Us</div>
+        <div id="section5" class="content">
+          <p>
+            If you need any assistance or have any questions, feel free to reach out to us through the 
+            <a href="contact.html">Contact</a> page. Our support team is here to help!
+          </p>
+        </div>
+      </div>
+
+      <!-- Section: Referral Requirement -->
+      <div class="section">
+        <div class="title" onclick="toggleContent('section9')">Is It Compulsory to Refer?</div>
+        <div id="section9" class="content">
+          <p>
+            <b>NO!</b> Referring is not compulsory. You can still earn from other features available on the platform.
+          </p>
+        </div>
+      </div>
+
+      <!-- Section: Withdrawal Delay -->
+      <div class="section">
+        <div class="title" onclick="toggleContent('section6')">Delay in Withdrawals</div>
+        <div id="section6" class="content">
+          <p>
+            Withdrawals are processed within <b>6 to 48 hours</b> to check for fraudulent activities. Very soon, withdrawals will become faster. 
+            If you do not receive payment after 48 hours, please file a <a href="contact.html">report</a>.
+          </p>
+        </div>
+      </div>
+
+      <!-- Section: How to Earn -->
+      <div class="section">
+        <div class="title" onclick="toggleContent('section7')">How to Earn on This Platform</div>
+        <div id="section7" class="content">
+          <p>
+            We have prepared a comprehensive guide to help users understand how to utilize the earning features of this platform. 
+            Tap <a href="howtoearn.html">here</a> to view the guide.
+          </p>
+        </div>
+      </div>
+
+      <!-- Section: Withdraw Task Earnings -->
+      <div class="section">
+        <div class="title" onclick="toggleContent('section3')">How to Withdraw Task Earnings</div>
+        <div id="section3" class="content">
+          <p>
+            Simply open the menu and navigate to <a href="Taskwithdrawal.html">Task Withdrawal</a>. You will be redirected to the withdrawal page shortly.
+          </p>
+        </div>
+      </div>
+
+      <!-- Section: Tips to Maximize -->
+      <div class="section">
+        <div class="title" onclick="toggleContent('section1')">Tips to Maximize Your Earnings</div>
+        <div id="section1" class="content">
+          <ul>
+            <li>Ensure you have a stable and fast internet connection to avoid interruptions.</li>
+            <li>Participate in the weekly quiz contest.</li>
+            <li>Claim your daily reward regularly.</li>
+            <li>Follow our WhatsApp channel for the latest updates.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- External Scripts -->
+  <script src="image.js"></script>
+  <script src="navbar.js"></script>
+  <script src="bottom-nav.js"></script>
+  <script src="Help.js"></script>
+
+</body>
+</html>
