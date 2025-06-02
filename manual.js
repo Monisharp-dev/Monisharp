@@ -9,7 +9,7 @@ const allowedIds = [
   "edwardjared723", "ayibakurokuro", "usohisrael2", "tmosco4real",
   "olamilekanjoseph601", "gomoarukhe", "Ibbello1507", "ifeanyichukwuoguejiofor", "sermborleeh",
   "godspoweramos01", "happybankmoney", "safiyaibrahimbahago", "muslimatkehinde05",
-  "etokwudog", "popoolaisrael73", "jnrfred74", "etukubonganthony"
+  "etokwudog", "popoolaisrael73", "jnrfred74", "etukubonganthony","destinysylvanus74","osuolalemubarak7","imajerry1819","adebayobose235","twostorage554"
 ];
 
 // Remove duplicates (optional but clean)
