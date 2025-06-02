@@ -176,7 +176,7 @@ const navbarSidebarHTML = `
   <a href="howtoearn.html"><i class="fas fa-coins"></i> How to Earn ${quickBrainBadge}</a>
   <a href="about.html"><i class="fas fa-envelope"></i> About Us</a>
   <a href="contact.html"><i class="fas fa-phone-alt"></i> Contact Us</a>
-  <a href="help.html"><i class="fas fa-question-circle"></i> Help</a>
+  <a href="Help.html"><i class="fas fa-question-circle"></i> Help</a>
 </nav>
     </div>
   </div>
