@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     console.log("Login attempt started.");
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const email = document.getElementById("login_email").value.trim();
+    const password = document.getElementById("login_password").value.trim();
 
     if (!email || !password) {
       console.warn("Missing email or password.");
