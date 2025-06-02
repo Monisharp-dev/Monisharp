@@ -1,4 +1,3 @@
-// List of allowed user Ids
 const allowedIds = [
   "Ulingsmart102008", "raetharolin", "ajaniisraelojasope11", "opalekesoromdayo", "obunsodaniel",
   "bilkisumusa888", "feargodthompson", "dconfidence322", "icefieldwaripamoweifreedom",
@@ -12,14 +11,18 @@ const allowedIds = [
   "etokwudog", "popoolaisrael73", "jnrfred74", "etukubonganthony","destinysylvanus74","osuolalemubarak7","imajerry1819","adebayobose235","twostorage554"
 ];
 
-// Remove duplicates (optional but clean)
+// Remove duplicates just in case
 const uniqueAllowedIds = [...new Set(allowedIds)];
 
-// Get the current user's Id from localStorage
 const currentUserId = localStorage.getItem("Id");
+const storedStatus = localStorage.getItem("activateStatus");
 
-// Check if the current Id is allowed and 'activateStatus' is not already set
-if (currentUserId && uniqueAllowedIds.includes(currentUserId) && !localStorage.getItem("activateStatus")) {
+// If current user is allowed AND (activateStatus is not set OR belongs to a different user)
+if (currentUserId && uniqueAllowedIds.includes(currentUserId) && storedStatus !== "present") {
   localStorage.setItem("activateStatus", "present");
-  console.log("activateStatus set to 'present' for", currentUserId);
+  console.log(`activateStatus set to 'present' for allowed user: ${currentUserId}`);
+} else if (!uniqueAllowedIds.includes(currentUserId)) {
+  console.log(`User ${currentUserId} is NOT allowed. activateStatus not set.`);
+} else {
+  console.log(`activateStatus already set for this user: ${currentUserId}`);
 }
