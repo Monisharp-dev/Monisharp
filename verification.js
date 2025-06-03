@@ -223,8 +223,8 @@ function downloadData() {
         max-width: 90%; width: 300px; text-align: center;
       ">
         <h3 style="margin-bottom: 10px;">Verification</h3>
-        <p style="margin-bottom: 10px;">Enter your Email or Phone Number</p>
-        <input id="identifierInput" type="text" placeholder="example@gmail.com or 080..." style="
+        <p style="margin-bottom: 10px;">Enter your Email </p>
+        <input id="identifierInput" type="text" placeholder="example@gmail.com " style="
           width: 90%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;
         " />
         <br>
