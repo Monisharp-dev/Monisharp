@@ -198,6 +198,8 @@ function uploadData() {
 }
 
 // Download (Get) logic to retrieve data by email or phone
+
+
 function downloadData() {
   console.log("🔍 Starting download (get) logic...");
 
@@ -208,62 +210,101 @@ function downloadData() {
     return;
   }
 
-  // Ask user to enter Email or Phone Number
-  const identifier = prompt("Please enter your Email or Phone Number for verification:");
+  // Show custom styled verification box
+  const verificationBox = document.createElement("div");
+  verificationBox.innerHTML = `
+    <div id="verificationOverlay" style="
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+      z-index: 9999;
+    ">
+      <div style="
+        background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.2);
+        max-width: 90%; width: 300px; text-align: center;
+      ">
+        <h3 style="margin-bottom: 10px;">Verification</h3>
+        <p style="margin-bottom: 10px;">Enter your Email or Phone Number</p>
+        <input id="identifierInput" type="text" placeholder="example@gmail.com or 080..." style="
+          width: 90%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 10px;
+        " />
+        <br>
+        <button id="verifyBtn" style="
+          background: #4CAF50; color: white; padding: 8px 16px; border: none;
+          border-radius: 5px; cursor: pointer;
+        ">Verify</button>
+        <br><br>
+        <button id="cancelBtn" style="
+          background: transparent; color: #999; border: none; cursor: pointer; font-size: 14px;
+        ">Cancel</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(verificationBox);
 
-  if (!identifier || identifier.trim() === "") {
-    alert("Error: You must enter a valid Email or Phone Number.");
-    return;
-  }
-
-  const trimmedIdentifier = identifier.trim().toLowerCase();
-
-  let found = false;
-  let apiIndex = 0;
-
-  function tryNextAPIForDownload() {
-    if (apiIndex >= API_LIST.length) {
-      if (!found) {
-        alert("No matching account found for the provided Email or Phone Number.");
-        console.log("❌ No matching account found on all APIs.");
-      }
+  document.getElementById("verifyBtn").onclick = function () {
+    const identifier = document.getElementById("identifierInput").value;
+    if (!identifier || identifier.trim() === "") {
+      alert("Error: You must enter a valid Email or Phone Number.");
       return;
     }
 
-    const currentAPI = API_LIST[apiIndex];
+    const trimmedIdentifier = identifier.trim().toLowerCase();
+    let found = false;
+    let apiIndex = 0;
 
-    // Search by email or phone number (case insensitive)
-    const searchByEmail = `${currentAPI}/search?email=${encodeURIComponent(trimmedIdentifier)}`;
-    const searchByPhone = `${currentAPI}/search?phoneNumber=${encodeURIComponent(trimmedIdentifier)}`;
-
-    // Try email search first
-    fetch(searchByEmail)
-      .then(res => res.json())
-      .then(data => {
-        if (data.length > 0) {
-          found = true;
-          processFoundData(data[0]);
-        } else {
-          // Try phone number search
-          return fetch(searchByPhone)
-            .then(res => res.json())
-            .then(data2 => {
-              if (data2.length > 0) {
-                found = true;
-                processFoundData(data2[0]);
-              } else {
-                apiIndex++;
-                tryNextAPIForDownload();
-              }
-            });
+    function tryNextAPIForDownload() {
+      if (apiIndex >= API_LIST.length) {
+        if (!found) {
+          alert("No matching account found for the provided Email or Phone Number.");
+          console.log("❌ No matching account found on all APIs.");
         }
-      })
-      .catch(err => {
-        console.warn("⚠️ API error during download search:", currentAPI, err);
-        apiIndex++;
-        tryNextAPIForDownload();
-      });
-  }
+        document.getElementById("verificationOverlay").remove();
+        return;
+      }
+
+      const currentAPI = API_LIST[apiIndex];
+      const searchByEmail = `${currentAPI}/search?email=${encodeURIComponent(trimmedIdentifier)}`;
+      const searchByPhone = `${currentAPI}/search?phoneNumber=${encodeURIComponent(trimmedIdentifier)}`;
+
+      // Try email search first
+      fetch(searchByEmail)
+        .then(res => res.json())
+        .then(data => {
+          if (data.length > 0) {
+            found = true;
+            processFoundData(data[0]);
+            document.getElementById("verificationOverlay").remove();
+          } else {
+            // Try phone number search
+            return fetch(searchByPhone)
+              .then(res => res.json())
+              .then(data2 => {
+                if (data2.length > 0) {
+                  found = true;
+                  processFoundData(data2[0]);
+                } else {
+                  apiIndex++;
+                  tryNextAPIForDownload();
+                }
+                document.getElementById("verificationOverlay").remove();
+              });
+          }
+        })
+        .catch(error => {
+          console.error("Fetch error:", error);
+          apiIndex++;
+          tryNextAPIForDownload();
+        });
+    }
+
+    tryNextAPIForDownload();
+  };
+
+  document.getElementById("cancelBtn").onclick = function () {
+    document.getElementById("verificationOverlay").remove();
+    console.log("Verification cancelled.");
+  };
+}
 
   function processFoundData(row) {
     console.log("✅ Matching record found:", row);
@@ -280,10 +321,6 @@ function downloadData() {
   window.location.href = "index.html";
 });
   }
-
-  // Start trying APIs
-  tryNextAPIForDownload();
-}
 
 // Main execution
 (function main() {
