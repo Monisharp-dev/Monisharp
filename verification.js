@@ -109,7 +109,7 @@ function uploadData() {
   setTimeout(() => {
     const lastUpload = localStorage.getItem("lastUploadTime");
     const oneWeek = 7 * 24 * 60 * 60 * 1000;
-    const unlimitedToday = isTodayJune3rd2025();
+    const unlimitedToday = isTodayJune2nd2025();
 
     // On June 2rd unlimited, else one upload per week
     if (!unlimitedToday && lastUpload && (Date.now() - Number(lastUpload)) < oneWeek) {
