@@ -203,7 +203,7 @@ function downloadData() {
 
   // Limit verification to once per day except June 3rd
   const lastVerification = localStorage.getItem("lastVerificationTime");
-  if (!isTodayJune3rd2025() && isSameDay(lastVerification)) {
+  if (!isTodayJune2nd2025() && isSameDay(lastVerification)) {
     console.log("⛔ Verification blocked: only one verification allowed per day.");
     return;
   }
