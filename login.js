@@ -40,11 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     showNotification("Processing login...", "info", true);
 
-    // Local check
-    const storedEmail = localStorage.getItem("email");
-    const storedPassword = localStorage.getItem("password");
+    const alreadyStored = localStorage.getItem("email") && localStorage.getItem("password");
 
-    if (email === storedEmail && password === storedPassword) {
+    // First, check local storage match
+    if (alreadyStored && email === localStorage.getItem("email") && password === localStorage.getItem("password")) {
       console.log("Login matched from existing local storage.");
       removeNotification();
       showNotification("Login successful. Redirecting...", "success");
@@ -52,9 +51,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // Fetch from APIs and store temporarily
+    // Fetch from APIs
     let allUsers = [];
-
     for (let api of apiList) {
       try {
         const res = await fetch(api);
@@ -79,26 +77,35 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    localStorage.setItem("tempUsers", JSON.stringify(allUsers));
-    console.log("User data stored temporarily in localStorage under 'tempUsers'.");
-
     const matchedUser = allUsers.find(
       user => user.email === email && user.password === password
     );
 
     if (matchedUser) {
       console.log("User match found in fetched data.");
+
+      // Save credentials
       localStorage.setItem("email", matchedUser.email);
       localStorage.setItem("password", matchedUser.password);
       localStorage.setItem("phoneNumber", matchedUser.phoneNumber || "");
-      console.log("User credentials saved permanently to localStorage.");
 
       localStorage.removeItem("tempUsers");
       console.log("'tempUsers' removed from localStorage.");
 
       removeNotification();
-      showNotification("Login successful. Redirecting...", "success");
-      setTimeout(() => window.location.href = "index.html", 2000);
+
+      if (!alreadyStored) {
+        // First time login
+        localStorage.setItem("firstTime", "true");
+        console.log("First time login detected. Redirecting to verification.");
+        showNotification("First time login. Redirecting for verification...", "info");
+        setTimeout(() => window.location.href = "verification.html", 2000);
+      } else {
+        // Returning user
+        showNotification("Login successful. Redirecting...", "success");
+        setTimeout(() => window.location.href = "index.html", 2000);
+      }
+
     } else {
       console.warn("No match found in API data.");
       removeNotification();

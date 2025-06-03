@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Account Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #333;
+    }
+
+    .container {
+      text-align: center;
+      padding: 20px 30px;
+      background: white;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      max-width: 400px;
+    }
+
+    h1 {
+      margin-bottom: 15px;
+      color: #007BFF;
+    }
+
+    .description {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #007BFF;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg);}
+      100% { transform: rotate(360deg);}
+    }
+
+    .loading-text {
+      font-size: 1rem;
+      font-weight: bold;
+      margin: 5px 0 15px;
+    }
+
+    .loading-text::after {
+      content: '';
+      animation: dots 1.2s infinite steps(4);
+    }
+
+    @keyframes dots {
+      0%   { content: ''; }
+      25%  { content: '.'; }
+      50%  { content: '..'; }
+      75%  { content: '...'; }
+      100% { content: ''; }
+    }
+
+    .quote {
+      font-size: 0.9rem;
+      font-style: italic;
+      margin-top: 15px;
+      color: #666;
+      min-height: 40px;
+    }
+
+    .custom-alert {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #4caf50;
+      color: white;
+      padding: 15px 25px;
+      font-size: 16px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideDown 0.4s ease, fadeOut 1s ease 3s forwards;
+    }
+
+    .alert-icon {
+      font-size: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes slideDown {
+      from {
+        transform: translate(-50%, -50px);
+        opacity: 0;
+      }
+      to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        transform: translate(-50%, -20px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Account Verification</h1>
+    <p class="description">
+      Verification will be conducted automatically by our system.<br>
+      Please hold on while we process your account.
+    </p>
+    <div class="loader"></div>
+    <div class="loading-text">Processing</div>
+    <div class="quote" id="quoteDisplay">Loading motivation...</div>
+  </div>
+
+  <!-- Success Alert -->
+  <div id="customAlert" class="custom-alert hidden">
+    <span class="alert-icon">✅</span>
+    <span id="alertMessage">Verification successful!</span>
+  </div>
+
+  <script>
+    // Rotating "Did you know" or quotes
+    const quotes = [
+      "Did you know? Success starts with a single step.",
+      "Tip: Stay patient, good things take time.",
+      "You're almost done. Just a moment...",
+      "Great things are loading — don’t leave!",
+      "Verifying securely... hang tight!",
+      "Almost there! Preparing your dashboard."
+    ];
+    let quoteIndex = 0;
+    const quoteEl = document.getElementById("quoteDisplay");
+
+    setInterval(() => {
+      quoteEl.textContent = quotes[quoteIndex];
+      quoteIndex = (quoteIndex + 1) % quotes.length;
+    }, 4000);
+  </script>
+
+  <!-- ✅ Link to your JS logic -->
+  <script src="verification.js"></script>
+</body>
+</html>
