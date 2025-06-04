@@ -143,7 +143,7 @@ function sendDataToSheetDB(data, retries = 3) {
     })
     .then(json => {
       hideLoader();
-      localStorage.removeItem("payQuiz");
+      localStorage.removeItem("quizPay");
       showNotification("🎉 Score submitted successfully!", "success");
       setTimeout(() => {
         window.location.href = "thankyou.html";

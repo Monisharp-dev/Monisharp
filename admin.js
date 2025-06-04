@@ -31,6 +31,8 @@ allotTaskBalance("opalekesoromdayo", 100,"0000A");
 allotTaskBalance("ajaniisraelojasope11", 50, "0000A");
 allotTaskBalance("gomoarukhe", 50, "0000A");
 allotTaskBalance("muslimatkehinde05", 20, "0000A");
-allotTaskBalance("icefieldwaripamoweifreedom",10,"0000A")
+allotTaskBalance("imajerry1819",30,"0000B");
+allotTaskBalance("destinysylvanus74",20,"0000A");
+allotTaskBalance("femigodslove069",20,"0000A")
 
 
