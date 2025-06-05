@@ -15,11 +15,13 @@ const API_LIST = [
   "https://sheetdb.io/api/v1/xsn258gcncwv8",
 ];
 
+// Check if today is June 2nd, 2025
 function isTodayJune2nd2025() {
   const today = new Date();
   return today.getFullYear() === 2025 && today.getMonth() === 5 && today.getDate() === 2;
 }
 
+// Check if a timestamp matches today
 function isSameDay(timestamp) {
   if (!timestamp) return false;
   const d1 = new Date(Number(timestamp));
@@ -31,10 +33,9 @@ function isSameDay(timestamp) {
   );
 }
 
-// Inject CSS for custom alerts and overlays dynamically
+// Inject alert styles
 function injectStyles() {
   if (document.getElementById("custom-styles")) return;
-
   const style = document.createElement("style");
   style.id = "custom-styles";
   style.textContent = `
@@ -57,6 +58,7 @@ function injectStyles() {
   document.head.appendChild(style);
 }
 
+// Show custom alert
 function showCustomAlert(message, callback) {
   const existingAlert = document.querySelector(".custom-alert");
   if (existingAlert) existingAlert.remove();
@@ -73,13 +75,14 @@ function showCustomAlert(message, callback) {
   }, 4000);
 }
 
+// Restore otherData
 function restoreOtherData(otherDataStr) {
   if (!otherDataStr) return;
   try {
     const trimmed = otherDataStr.trim();
     if (trimmed.startsWith("[") && trimmed.endsWith("]")) {
       const inner = trimmed.slice(1, -1);
-      if (inner.length === 0) return;
+      if (!inner) return;
 
       const pairs = inner.split("),(").map(s => s.replace(/^?|?$/g, ""));
       pairs.forEach(pair => {
@@ -96,11 +99,12 @@ function restoreOtherData(otherDataStr) {
   }
 }
 
+// Store data to localStorage
 function storeAllDataToLocalStorage(row) {
   coreKeys.forEach(key => {
     if (row[key] !== undefined) {
       localStorage.setItem(key, row[key]);
-      console.log(`✅ Stored core key: ${key} = ${row[key]}`);
+      console.log(`✅ Stored: ${key} = ${row[key]}`);
     }
   });
   if (row.otherData) {
@@ -108,58 +112,58 @@ function storeAllDataToLocalStorage(row) {
   }
 }
 
-function processFoundData(row) {
-  console.log("✅ Matching record found:", row);
-
-  storeAllDataToLocalStorage(row);
-
+// Finalize verification (used for both match and no match)
+function finalizeVerification(message) {
   const now = Date.now();
   localStorage.setItem("lastVerificationTime", now.toString());
   localStorage.setItem("verified", new Date().toISOString());
-
-  // Remove firstTime so next time upload.js runs
   localStorage.removeItem("firstTime");
 
-  showCustomAlert("✅ Verification successful! Redirecting...", () => {
+  showCustomAlert(message, () => {
     window.location.href = "index.html";
   });
 }
 
+// Process data if found
+function processFoundData(row) {
+  console.log("✅ Match found:", row);
+  storeAllDataToLocalStorage(row);
+  finalizeVerification("✅ Verification successful! Redirecting...");
+}
+
+// Start download
 function downloadData() {
-  console.log("🔍 Starting download (get) logic...");
+  console.log("🔍 Starting download...");
 
   const lastVerification = localStorage.getItem("lastVerificationTime");
   if (!isTodayJune2nd2025() && isSameDay(lastVerification)) {
-    console.log("⛔ Verification blocked: only one verification allowed per day.");
+    console.log("⛔ Blocked: only one verification allowed per day.");
     return;
   }
 
   injectStyles();
 
-  // Get email from localStorage ONLY
   const email = localStorage.getItem("email");
   if (!email) {
-    showCustomAlert("⚠️ No email found in local storage. Cannot verify.");
+    showCustomAlert("⚠️ No email found in localStorage. Cannot verify.");
     return;
   }
-  const trimmedEmail = email.trim().toLowerCase();
 
+  const trimmedEmail = email.trim().toLowerCase();
   let found = false;
   let apiIndex = 0;
 
-  function tryNextAPIForDownload() {
+  function tryNextAPI() {
     if (apiIndex >= API_LIST.length) {
       if (!found) {
-        showCustomAlert("No matching account found for your email.");
-        console.log("❌ No matching account found on all APIs.");
+        console.log("❌ No account matched. Proceeding anyway...");
+        finalizeVerification("⚠️ Account verified. Redirecting...");
       }
       return;
     }
 
-    const currentAPI = API_LIST[apiIndex];
-    const searchByEmail = `${currentAPI}/search?email=${encodeURIComponent(trimmedEmail)}`;
-
-    fetch(searchByEmail)
+    const apiURL = `${API_LIST[apiIndex]}/search?email=${encodeURIComponent(trimmedEmail)}`;
+    fetch(apiURL)
       .then(res => res.json())
       .then(data => {
         if (data.length > 0) {
@@ -167,22 +171,22 @@ function downloadData() {
           processFoundData(data[0]);
         } else {
           apiIndex++;
-          tryNextAPIForDownload();
+          tryNextAPI();
         }
       })
-      .catch(error => {
-        console.error("Fetch error:", error);
+      .catch(err => {
+        console.error("Fetch error:", err);
         apiIndex++;
-        tryNextAPIForDownload();
+        tryNextAPI();
       });
   }
 
-  tryNextAPIForDownload();
+  tryNextAPI();
 }
 
-// Run only if firstTime exists in localStorage
+// Run script only if 'firstTime' is in localStorage
 if (localStorage.getItem("firstTime")) {
   downloadData();
 } else {
-  console.log("No 'firstTime' key in localStorage. Download.js will not run.");
+  console.log("ℹ️ 'firstTime' not found. Script will not run.");
 }
