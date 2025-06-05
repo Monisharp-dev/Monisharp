@@ -8,7 +8,7 @@ const allowedIds = [
   "edwardjared723", "ayibakurokuro", "usohisrael2", "tmosco4real",
   "olamilekanjoseph601", "gomoarukhe", "Ibbello1507", "ifeanyichukwuoguejiofor", "sermborleeh",
   "godspoweramos01", "happybankmoney", "safiyaibrahimbahago", "muslimatkehinde05",
-  "etokwudog", "popoolaisrael73", "jnrfred74", "etukubonganthony","destinysylvanus74","osuolalemubarak7","imajerry1819","adebayobose235","twostorage554","anthony87630269","femigodslove069","mayrhejaneluv","chukwukajames131","whizzyboss67"
+  "etokwudog", "popoolaisrael73", "jnrfred74", "etukubonganthony","destinysylvanus74","osuolalemubarak7","imajerry1819","adebayobose235","twostorage554","anthony87630269","femigodslove069","mayrhejaneluv","chukwukajames131","whizzyboss67","idrisamuda06"
 ];
 
 // Remove duplicates just in case
