@@ -64,7 +64,6 @@ async function processStoredEmail() {
 
   const id = extractIdFromEmail(email);
   const localKey = "Id";
-  const firstTimeKey = "firstTime";
 
   // Check if already stored
   if (localStorage.getItem(localKey) === id) {
@@ -78,24 +77,12 @@ async function processStoredEmail() {
     if (exists) {
       console.log(`ID '${id}' already exists in API. Saving to localStorage.`);
       localStorage.setItem(localKey, id);
-
-      // Add timestamp to firstTime and store it
-      const timestamp = new Date().toISOString(); // Current timestamp in ISO format
-      localStorage.setItem(firstTimeKey, `done at ${timestamp}`);
-      console.log(`Stored 'firstTime' in localStorage with timestamp: ${timestamp}`);
-
       return;
     } else {
       const success = await postIdToApi(apiUrl, id);
       if (success) {
         console.log(`ID '${id}' successfully posted and saved in localStorage.`);
         localStorage.setItem(localKey, id);
-
-        // Add timestamp to firstTime and store it
-        const timestamp = new Date().toISOString(); // Current timestamp in ISO format
-        localStorage.setItem(firstTimeKey, `done at ${timestamp}`);
-        console.log(`Stored 'firstTime' in localStorage with timestamp: ${timestamp}`);
-
         return;
       } else {
         console.warn(`Posting ID '${id}' failed on API: ${apiUrl}`);

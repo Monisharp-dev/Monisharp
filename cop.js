@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", () => {
         processUserActivation();
       })
       .catch(() => {
-        fetchAllData(index + 1, attemptCount + 1);
+        fetchAllData((index + 1) % apiURLs.length, attemptCount + 1);
       });
   }
 

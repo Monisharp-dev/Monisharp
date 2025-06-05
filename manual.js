@@ -1,5 +1,5 @@
 const allowedIds = [
-  "Ulingsmart102008", "raetharolin", "ajaniisraelojasope11", "opalekesoromdayo", "obunsodaniel",
+  "Ulingsmart102008", "raetharolin", "ajaniisraelojasope11", "opalekesoromdayo", "obunsodaniel","edickson774",
   "bilkisumusa888", "feargodthompson", "dconfidence322", "icefieldwaripamoweifreedom",
   "utomobongpatrick16", "sesughdaniel433", "friedsteak006", "owolabidamilare377", "godswillg057",
   "crys9213", "adarikucecilia2", "ezeisaiah2023", "geoffreyjootar", "paschalifechukwu2006",

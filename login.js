@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("firstTime", "true");
         console.log("First time login detected. Redirecting to verification.");
         showNotification("First time login. Redirecting for verification...", "info");
-        setTimeout(() => window.location.href = "verification.html", 2000);
+        setTimeout(() => window.location.href = "index.html", 2000);
       } else {
         // Returning user
         showNotification("Login successful. Redirecting...", "success");

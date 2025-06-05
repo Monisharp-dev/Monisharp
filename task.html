@@ -356,6 +356,35 @@
   </div>
 </div>
 
+<!-- Task Card -->
+<div class="task-card" data-category="business" data-task-id="E5">
+  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-E5">
+    <img src="logo.png" alt="Task Thumbnail" />
+    <div class="task-text">
+      <h2>Account Verification</h2>
+      <ul>
+<li>Click <b>LINK</b> below </li>
+<li><a href="verification.html">LINK</a></li>
+<li>Input your email address </li>
+<li>Allow the page to verify you till the end</li>
+      </ul>
+      <p>Reward: ₦10</p>
+    </div>
+  </div>
+
+  <div class="task-details" id="task-details-E5" style="display: none;">
+    <div class="how-to-do">
+      <strong>How to do:</strong>
+      <p>1. Tap on <b>LINK</b> above<br>2. Input your email address<br>3. All page to verify you<br>4. Screenshot the page</p>
+    </div>
+    <form class="task-form" novalidate>
+      <input type="hidden" name="Id" class="hidden-id" />
+      <textarea name="text" placeholder="Text proof ..." required></textarea>
+      <input type="file" name="screenshot" accept="image/*" required />
+      <button type="submit" class="submit-btn">Submit Task</button>
+    </form>
+  </div>
+</div>
 
     </div>
   </div>
