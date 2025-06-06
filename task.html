@@ -16,7 +16,8 @@
 
     <!-- Instruction Box -->
     <div id="instruction" class="instruction-box">
-      <p>Click on a task below to start performing it.</p>
+      <p>Click on a task below to start performing it.<br>
+      <b>NEW TASKS ARE BELOW THE OLD ONES </b></p>
     </div>
 
     <!-- Category Filter -->
@@ -34,10 +35,11 @@
         <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-B7">
           <img src="logo.png" alt="Task Thumbnail" />
           <div class="task-text">
-            <h2>Read 4 News Articles</h2>
+            <h2>Read 4 News Articles ( NEW USERS ONLY)</h2>
             <ul>
               <li>Register via <a href="https://www.bounty-news.com/#/?inviteCode=D9ZI5O" target="_blank" rel="noopener noreferrer">this link</a></li>
               <li>Read 4 different news articles</li>
+              <li>You must be <b>NEW</b> to the platform</li>
               <li>Screenshot your dashboard</li>
             </ul>
             <p>Reward: ₦20</p>
@@ -385,6 +387,40 @@
     </form>
   </div>
 </div>
+
+<!-- Task Card -->
+<div class="task-card" data-category="social" data-task-id="E6">
+  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-E6">
+    <img src="logo.png" alt="Task Thumbnail" />
+    <div class="task-text">
+      <h2>Follow MoniSharp Page</h2>
+      <ul>
+<li>Follow our page on Facebook by tapping LINK below </li>
+<li> <a href="https://www.facebook.com/profile.php?id=61577308040632" target="_blank" rel="noopener noreferrer">LINK</a></li>
+<li><b>OR</b></li>
+<li>Search for <i>MoniSharp</i> on Facebook </li>
+<li>Send screenshot</li>
+      </ul>
+      <p>Reward: ₦10</p>
+    </div>
+  </div>
+
+  <div class="task-details" id="task-details-E6" style="display: none;">
+    <div class="how-to-do">
+      <strong>How to do:</strong>
+      <p>1. Follow <i> MoniSharp</i> Page ok Facebook by tapping <b>LINK</b> above in the instructions<br>2. Screenshot it</p>
+    </div>
+    <form class="task-form" novalidate>
+      <input type="hidden" name="Id" class="hidden-id" />
+      <textarea name="text" placeholder="Text proof ..." required></textarea>
+      <input type="file" name="screenshot" accept="image/*" required />
+      <button type="submit" class="submit-btn">Submit Task</button>
+    </form>
+  </div>
+</div>
+
+
+
 
     </div>
   </div>
