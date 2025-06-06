@@ -1,5 +1,5 @@
 // List of specific user IDs allowed to see the message
-const allowedUserIds = ["test", "67890", "user1q"]; // Replace with actual Ids
+const allowedUserIds = ["idrisamuda06", "67890", "user1q"]; // Replace with actual Ids
 
 // Get user ID from localStorage
 const monisharpUserId = localStorage.getItem("Id");
