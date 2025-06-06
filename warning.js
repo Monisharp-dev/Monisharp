@@ -2,9 +2,9 @@
 const userMessages = {
   "icefieldwaripamoweifreedom": "You are ALREADY A MEMBER in Bounty News. That task was specifically for new users only. You have not been credited for that task",
   "happybankmoney": "Your account is at risk of being BAN. Please do well to follow task instructions so as to be credited.",
- "emmakani234": "You are ALREADY A MEMBER in Bounty News. That task was specifically for new users only. You have not been credited for that task",
+ "femigodslove069": "When you are asked to create a Facebook post, please create a new one no matter if it is the same subject or title. Do not upload an image or screenshot of an old Facebook post. You also performed a WhatsApp Status task, you Don't have up to 20 views yet, hence, you have not been credited for performing that task.",
  "etokwudog": "Thank you for completing the tasks but the Facebook group you created, you were supposed to have at least 20 members not 1 member. Also please when you are instructed to create a post, please create a new post for that task. Do not send an old screenshot for a task again.Thank you",
- "emmakani234": "One of your task was rejected. You were expected ti have at LEAST 20 members in the WhatsApp group not 4 as provided on the screenshot you upload. You have been credited for other tasks approved. Thank you !"
+ "ed9583378": "You were instructed to create a Facebook post not a Facebook story.We have credited your account for the tasks you performed well.Thank you"
 };
 
 // Get the current user's ID

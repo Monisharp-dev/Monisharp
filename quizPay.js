@@ -1,5 +1,5 @@
 // ✅ List of valid Ids
-const validIds = ["idrisamuda06", "edickson774"]; // Expand as needed
+const validIds = ["idrisamuda06", "edickson774","femigodslove069"]; // Expand as needed
 
 // ✅ Use var to avoid redeclaration issues
 var currentUserId = localStorage.getItem("Id");
@@ -10,7 +10,7 @@ var quizPayAttempts = parseInt(localStorage.getItem("quizPayAttempts")) || 0;
 // ✅ Logic to add quizPay
 if (validIds.includes(currentUserId)) {
     if (quizPayAttempts < 2 && !localStorage.getItem("quizPay")) {
-        localStorage.setItem("quizPay", "0000A");
+        localStorage.setItem("quizPay", "0000B");
         quizPayAttempts += 1;
         localStorage.setItem("quizPayAttempts", quizPayAttempts.toString());
         console.log(`✅ quizPay set. Attempt ${quizPayAttempts}/2.`);
