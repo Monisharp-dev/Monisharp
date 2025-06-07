@@ -1,27 +1,81 @@
 const allowedIds = [
-  "Ulingsmart102008", "raetharolin", "ajaniisraelojasope11", "opalekesoromdayo", "obunsodaniel","edickson774",
-  "bilkisumusa888", "feargodthompson", "dconfidence322", "icefieldwaripamoweifreedom",
-  "utomobongpatrick16", "sesughdaniel433", "friedsteak006", "owolabidamilare377", "godswillg057",
-  "crys9213", "adarikucecilia2", "ezeisaiah2023", "geoffreyjootar", "paschalifechukwu2006",
-  "kehindeige527", "emmakani234", "agujiobisamuel", "josephjoeboy445", "mujaheedpresdor001",
-  "bokoh5061", "ebubechiwinner066", "emmanuelisaacbamgbose", "oluwatofunmienochoke",
-  "edwardjared723", "ayibakurokuro", "usohisrael2", "tmosco4real",
-  "olamilekanjoseph601", "gomoarukhe", "Ibbello1507", "ifeanyichukwuoguejiofor", "sermborleeh",
-  "godspoweramos01", "happybankmoney", "safiyaibrahimbahago", "muslimatkehinde05",
-  "etokwudog", "popoolaisrael73", "jnrfred74", "etukubonganthony","destinysylvanus74","osuolalemubarak7","imajerry1819","adebayobose235","twostorage554","anthony87630269","femigodslove069","mayrhejaneluv","chukwukajames131","whizzyboss67","idrisamuda06","damilolaabolade332","sunsuwaamagai2020","fasootovictor3","ed9583378","abelscoliom11","Hephzyehi","ayomidemilekan23"
+  "Hephzyehi",
+  "Ibbello1507",
+  "Ulingsmart102008",
+  "abelscoliom11",
+  "adarikucecilia2",
+  "adebayobose235",
+  "agujiobisamuel",
+  "ajaniisraelojasope11",
+  "anthony87630269",
+  "ayibakurokuro",
+  "ayomidemilekan23",
+  "bilkisumusa888",
+  "bokoh5061",
+  "chukwukajames131",
+  "crys9213",
+  "damilolaabolade332",
+  "dconfidence322",
+  "destinysylvanus74",
+  "ebubechiwinner066",
+  "ed9583378",
+  "edickson774",
+  "edickson778",
+  "edwardjared723",
+  "emmakani234",
+  "emmanuelisaacbamgbose",
+  "etokwudog",
+  "etukubonganthony",
+  "ezeisaiah2023",
+  "fasootovictor3",
+  "feargodthompson",
+  "femigodslove069",
+  "friedsteak006",
+  "geoffreyjootar",
+  "godspoweramos01",
+  "godswillg057",
+  "gomoarukhe",
+  "gyess12ee",
+  "happybankmoney",
+  "icefieldwaripamoweifreedom",
+  "idrisamuda06",
+  "ifeanyichukwuoguejiofor",
+  "imajerry1819",
+  "jnrfred74",
+  "josephjoeboy445",
+  "kehindeige527",
+  "mayrhejaneluv",
+  "mujaheedpresdor001",
+  "muslimatkehinde05",
+  "obunsodaniel",
+  "olamilekanjoseph601",
+  "oluwatofunmienochoke",
+  "opalekesoromdayo",
+  "osuolalemubarak7",
+  "owolabidamilare377",
+  "paschalifechukwu2006",
+  "popoolaisrael73",
+  "raetharolin",
+  "safiyaibrahimbahago",
+  "sermborleeh",
+  "sesughdaniel433",
+  "sunsuwaamagai2020",
+  "tmosco4real",
+  "twostorage554",
+  "usohisrael2",
+  "utomobongpatrick16",
+  "victorumoren113",
+  "whizzyboss67",
+  "winnerfelix094"
 ];
-
-// Remove duplicates just in case
-const uniqueAllowedIds = [...new Set(allowedIds)];
 
 const currentUserId = localStorage.getItem("Id");
 const storedStatus = localStorage.getItem("activateStatus");
 
-// If current user is allowed AND (activateStatus is not set OR belongs to a different user)
-if (currentUserId && uniqueAllowedIds.includes(currentUserId) && storedStatus !== "present") {
+if (currentUserId && allowedIds.includes(currentUserId) && storedStatus !== "present") {
   localStorage.setItem("activateStatus", "present");
   console.log(`activateStatus set to 'present' for allowed user: ${currentUserId}`);
-} else if (!uniqueAllowedIds.includes(currentUserId)) {
+} else if (!allowedIds.includes(currentUserId)) {
   console.log(`User ${currentUserId} is NOT allowed. activateStatus not set.`);
 } else {
   console.log(`activateStatus already set for this user: ${currentUserId}`);
