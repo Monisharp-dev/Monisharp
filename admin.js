@@ -35,10 +35,11 @@ allotTaskBalance("imajerry1819",30,"0000B");
 allotTaskBalance("destinysylvanus74",20,"0000A");
 allotTaskBalance("chukwukajames131",30,"0000F");
 allotTaskBalance("femigodslove069",20,"0000C");
-allotTaskBalance("etokwudog",10,"0000K");
-allotTaskBalance("idrisamuda06",30,"0000B");
+allotTaskBalance("etokwudog",10,"0000L");
+allotTaskBalance("idrisamuda06",10,"0000C");
 allotTaskBalance("damilolaabolade332",20,"0000B");
-allotTaskBalance("whizzyboss67",10,"0000B");
-allotTaskBalance("ed9583378",25,"0000B");
-allotTaskBalance("sunsuwaamagai2020",10,"0000B")
-
+allotTaskBalance("whizzyboss67",10,"0000C");
+allotTaskBalance("ed9583378",10,"0000C");
+allotTaskBalance("sunsuwaamagai2020",10,"0000B");
+allotTaskBalance("usohisrael2",20,"0000A");
+allotTaskBalance("imajerry1819",10,"0000A")
