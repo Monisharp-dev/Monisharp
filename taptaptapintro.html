@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Welcome to Tap-Tap-Tap</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+   
+  <link rel="stylesheet" href="navbar.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #ffffff, #e0f7fa);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+      animation: fadeIn 1s ease-in;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-top: 30px;
+      color: #00796b;
+      animation: fadeInDown 1s ease-in-out;
+    }
+
+    p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin-bottom: 15px;
+      animation: fadeInUp 1.2s ease-in-out;
+    }
+
+    .section {
+      margin-top: 30px;
+      max-width: 700px;
+      text-align: left;
+      animation: fadeInUp 1.5s ease-in-out;
+    }
+
+    .section h2 {
+      font-size: 1.6rem;
+      color: #009688;
+      margin-bottom: 10px;
+    }
+
+    .section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .section li {
+      margin: 10px 0;
+      font-size: 1.05rem;
+    }
+
+    .section li i {
+      color: #00bcd4;
+      margin-right: 8px;
+    }
+
+    .highlight {
+      color: #00796b;
+      font-weight: bold;
+    }
+
+    .continue-btn {
+      margin-top: 40px;
+      background-color: #00796b;
+      color: #fff;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .continue-btn:hover {
+      background-color: #004d40;
+    }
+
+    /* Toast styling */
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #009688;
+      color: white;
+      padding: 15px 20px;
+      border-radius: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      font-size: 1rem;
+      display: none;
+      z-index: 9999;
+      animation: fadeInOut 3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(-20px); }
+      10% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-20px); }
+    }
+  </style>
+</head>
+<body>
+  <h1><i class="fas fa-hand-pointer"></i> Welcome to Tap-Tap-Tap!</h1>
+  <p><strong>Tap-Tap-Tap</strong> is a fast-paced, fun, and rewarding challenge where you race against time to earn as many points as you can. Each tap gives you <span class="highlight">100 points</span>, and you get <span class="highlight">2 hours daily</span> to compete. The higher your points, the better your chances of winning amazing rewards weekly!</p>
+
+  <div class="section">
+    <h2><i class="fas fa-coins"></i> How to Join</h2>
+    <ul>
+      <li><i class="fas fa-check-circle"></i> Entry fee is only <span class="highlight">₦100</span> for the entire week.</li>
+      <li><i class="fas fa-stopwatch"></i> Once you tap <strong>Start</strong>, your 2-hour session begins.</li>
+      <li><i class="fas fa-fingerprint"></i> Tap as fast as you can! Every tap counts toward your weekly score.</li>
+      <li><i class="fas fa-trophy"></i> The top scorers every week are rewarded.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2><i class="fas fa-bolt"></i> Boosters (Optional)</h2>
+    <ul>
+      <li><i class="fas fa-star"></i> <strong>Premium Booster</strong> – ₦400 (Adds +50 points instantly)</li>
+      <li><i class="fas fa-gem"></i> <strong>Gold Booster</strong> – ₦600 (Adds +150 points)</li>
+      <li><i class="fas fa-fire"></i> <strong>Local Booster</strong> – ₦50 (Adds +20 points)</li>
+    </ul>
+    <p>Boosters can help you climb the leaderboard faster, but they are totally optional!</p>
+  </div>
+
+  <div class="section">
+    <h2><i class="fas fa-shield-alt"></i> Fair Play & Time Limit</h2>
+    <ul>
+      <li><i class="fas fa-clock"></i> You only get <span class="highlight">2 hours daily</span> – use it wisely!</li>
+      <li><i class="fas fa-check-double"></i> All taps and times are tracked securely.</li>
+    </ul>
+    <p>Play fair, tap fast, and boost smartly for a better chance to win.</p>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">Redirecting you now...</div>
+
+  <!-- Continue Button -->
+  <button class="continue-btn" onclick="handleContinue()">
+    <i class="fas fa-play-circle"></i> Continue
+  </button>
+
+  <script>
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.style.display = 'block';
+
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 2800);
+    }
+
+    function handleContinue() {
+      const isActivated = localStorage.getItem("tapActivated");
+      showToast("Redirecting you now...");
+
+      setTimeout(() => {
+        if (isActivated) {
+          window.location.href = "tap-tap game.html";
+        } else {
+          window.location.href = "tap-start.html";
+        }
+      }, 3000); // Wait 3 seconds before redirect
+    }
+  </script>
+  <script src="navbar.js"></script>
+</body>
+</html>

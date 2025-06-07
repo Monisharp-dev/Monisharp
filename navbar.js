@@ -4,10 +4,12 @@ const profileImage = localStorage.getItem("profileImage") || "logo.png";
 const badgeKeys = {
   dailyReward: "dailyRewardSeen",
   quickBrainNew: "quickBrainNewSeen",
+  tapSeen: "tapseen",
 };
 const badgeDurations = {
   dailyReward: 3,
   quickBrainNew: 5,
+  tapSeen: 5,
 };
 
 function shouldShowBadge(key, duration) {
@@ -19,13 +21,21 @@ function shouldShowBadge(key, duration) {
   const seen = new Date(seenDate);
   const now = new Date();
   const diffDays = Math.floor((now - seen) / (1000 * 60 * 60 * 24));
+  // Show badge only if within duration days since first seen
   return diffDays < duration;
 }
 
 const dailyBadge = shouldShowBadge(badgeKeys.dailyReward, badgeDurations.dailyReward)
-  ? `<span class="new-badge">NEW</span>` : ``;
+  ? `<span class="new-badge">NEW</span>`
+  : ``;
+
 const quickBrainBadge = shouldShowBadge(badgeKeys.quickBrainNew, badgeDurations.quickBrainNew)
-  ? `<span class="new-badge">NEW</span>` : ``;
+  ? `<span class="new-badge">NEW</span>`
+  : ``;
+
+const tapBadge = shouldShowBadge(badgeKeys.tapSeen, badgeDurations.tapSeen)
+  ? `<span class="new-badge">NEW</span>`
+  : ``;
 
 const navbarSidebarHTML = `
   <style>
@@ -171,20 +181,27 @@ const navbarSidebarHTML = `
         <a href="leaderboard.html"><i class="fas fa-trophy"></i> Leaderboard ${quickBrainBadge}</a>
       </nav>
 
-    <div class="sidebar-section">INFORMATION</div>
-<nav class="nav-links">
-  <a href="howtoearn.html"><i class="fas fa-coins"></i> How to Earn ${quickBrainBadge}</a>
-  <a href="about.html"><i class="fas fa-envelope"></i> About Us</a>
-  <a href="contact.html"><i class="fas fa-phone-alt"></i> Contact Us</a>
-  <a href="Help.html"><i class="fas fa-question-circle"></i> Help</a>
-</nav>
+      <div class="sidebar-section">TAP TO EARN</div>
+      <nav class="nav-links">
+        <a href="taptaptapintro.html"><i class="fas fa-play-circle"></i> Tap Intro ${tapBadge}</a>
+        <a href="shop.html"><i class="fas fa-store"></i> Tap Shop ${tapBadge}</a>
+        <a href="tap winners.html"><i class="fas fa-users"></i> Tap Gane Scoreboard</a>
+      </nav>
+
+      <div class="sidebar-section">INFORMATION</div>
+      <nav class="nav-links">
+        <a href="howtoearn.html"><i class="fas fa-coins"></i> How to Earn ${quickBrainBadge}</a>
+        <a href="about.html"><i class="fas fa-envelope"></i> About Us</a>
+        <a href="contact.html"><i class="fas fa-phone-alt"></i> Contact Us</a>
+        <a href="Help.html"><i class="fas fa-question-circle"></i> Help</a>
+      </nav>
     </div>
   </div>
 
   <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
 `;
 
-document.body.insertAdjacentHTML('afterbegin', navbarSidebarHTML);
+document.body.insertAdjacentHTML("afterbegin", navbarSidebarHTML);
 
 function toggleSidebar() {
   const sidebar = document.getElementById("sidebar");

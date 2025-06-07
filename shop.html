@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Game Shop - Tap Tap Tap</title>
+  <link rel="stylesheet" href="shop.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <style>
+      .deposit-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 10px 18px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease;
+}
+
+.deposit-btn:hover {
+  background-color: #218838;
+}
+  </style>
+</head>
+<body>
+  <div class="shop-container">
+    <h1><i class="bi bi-shop"></i> Game Shop</h1>
+    
+    <!-- Deposit Balance Display -->
+    <p class="balance">Deposit Balance: ₦<span id="mainBalance">0</span></p>
+    <button class="deposit-btn" onclick="window.location.href='deposit.html'">
+      <i class="bi bi-wallet2"></i> DEPOSIT NOW
+    </button>
+
+    <!-- Gold Booster -->
+    <div class="booster-card gold">
+      <h2><i class="bi bi-crown-fill"></i> Gold Booster</h2>
+      <ul class="booster-features">
+        <li><i class="bi bi-controller"></i> Rounds: <strong>6</strong></li>
+        <li><i class="bi bi-lightning-fill"></i> Score Multiplier: <strong>×3</strong></li>
+        <li><i class="bi bi-clock-history"></i> Extra Time: <strong>30 minutes</strong></li>
+        <li><i class="bi bi-cash-stack"></i> Price: <strong>₦600</strong></li>
+      </ul>
+      <button onclick="purchase('gold', 600)">Pay Now</button>
+    </div>
+
+    <!-- Premium Booster -->
+    <div class="booster-card premium">
+      <h2><i class="bi bi-gem"></i> Premium Booster</h2>
+      <ul class="booster-features">
+        <li><i class="bi bi-controller"></i> Rounds: <strong>3</strong></li>
+        <li><i class="bi bi-lightning-fill"></i> Score Multiplier: <strong>×2</strong></li>
+        <li><i class="bi bi-clock-history"></i> Extra Time: <strong>20 minutes</strong></li>
+        <li><i class="bi bi-cash-stack"></i> Price: <strong>₦400</strong></li>
+      </ul>
+      <button onclick="purchase('premium', 400)">Pay Now</button>
+    </div>
+
+    <!-- Local Booster -->
+    <div class="booster-card local">
+      <h2><i class="bi bi-leaf"></i> Local Booster</h2>
+      <ul class="booster-features">
+        <li><i class="bi bi-controller"></i> Rounds: <strong>1</strong></li>
+        <li><i class="bi bi-lightning-fill"></i> Score Multiplier: <strong>×1</strong></li>
+        <li><i class="bi bi-clock-history"></i> Extra Time: <strong>10 minutes</strong></li>
+        <li><i class="bi bi-cash-stack"></i> Price: <strong>₦50</strong></li>
+      </ul>
+      <button onclick="purchase('local', 50)">Pay Now</button>
+    </div>
+
+    <!-- 4-Hour Extra Time Booster -->
+    <div class="booster-card hours4">
+      <h2><i class="bi bi-alarm"></i> 4-Hour Extra Time</h2>
+      <ul class="booster-features">
+        <li><i class="bi bi-clock"></i> Adds <strong>4 full hours</strong> to today’s game time</li>
+        <li><i class="bi bi-cash-stack"></i> Price: <strong>₦800</strong></li>
+      </ul>
+      <button onclick="purchase('extra4hrs', 800)">Pay Now</button>
+    </div>
+  </div>
+
+  <div id="notificationBox" class="notification-box hidden">
+    <i id="notifIcon" class="bi"></i>
+    <span id="notifMessage"></span>
+  </div>
+
+  <script src="shop.js"></script>
+</body>
+</html>

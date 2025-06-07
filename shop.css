@@ -1,0 +1,149 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #0e0e1b;
+  color: #fff;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+
+.shop-container {
+  max-width: 700px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  color: #0f0;
+}
+
+.balance {
+  font-size: 1.2em;
+  margin-bottom: 20px;
+}
+
+.booster-card {
+  background: #1a1a2f;
+  border-radius: 20px;
+  padding: 20px;
+  margin: 15px 0;
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+  transition: transform 0.2s;
+}
+.booster-card:hover {
+  transform: scale(1.03);
+}
+
+.booster-card h2 {
+  font-size: 1.6em;
+  margin: 10px 0;
+}
+
+.booster-card p {
+  margin: 5px;
+}
+
+.price {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: #ffd700;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  margin: 10px 5px;
+  border-radius: 10px;
+  background: #0f0;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #0c0;
+}
+
+.alt-pay {
+  background: #0099ff;
+  color: #fff;
+}
+.alt-pay:hover {
+  background: #007acc;
+}
+
+/* Prompt Styles */
+.prompt {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999;
+}
+.hidden {
+  display: none;
+}
+.prompt-box {
+  background: #222;
+  padding: 30px;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+}
+.prompt-box h3 {
+  margin-bottom: 15px;
+}
+.prompt-box .close-btn {
+  background: #f33;
+  margin-top: 15px;
+}
+.prompt-box .pay-btn {
+  display: inline-block;
+  background: #0f0;
+  color: #000;
+  padding: 10px 20px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.notification-box {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  color: white;
+  padding: 14px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  z-index: 9999;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.notification-box.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.notification-box.success {
+  background: #28a745;
+}
+
+.notification-box.error {
+  background: #dc3545;
+}
+
+.notification-box i {
+  font-size: 18px;
+}

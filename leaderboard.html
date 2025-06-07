@@ -1,70 +1,92 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Leaderboard - QuickBrain Mini</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(to right, #d4f7dc, #ffffff, #cce4ff);
+      background: linear-gradient(to right, #e0f7e9, #ffffff, #d0e7ff);
       color: #1a1a1a;
       margin: 0;
       padding: 0;
     }
+
     header {
       background-color: #1e90ff;
       color: white;
-      padding: 1rem;
+      padding: 1.5rem 1rem;
       text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
+
     h1 {
       margin: 0;
-      font-size: 1.8rem;
+      font-size: 2rem;
+      font-weight: 600;
     }
+
     .container {
-      padding: 1rem;
-      max-width: 1000px;
+      padding: 2rem 1rem;
+      max-width: 1100px;
       margin: auto;
+      overflow-x: auto;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      background-color: #ffffff;
       border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      background-color: #ffffff;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      min-width: 800px;
     }
-    th, td {
-      padding: 1rem;
-      text-align: left;
-      border-bottom: 1px solid #f0f0f0;
-    }
-    th {
+
+    thead th {
       background-color: #00a859;
       color: white;
       font-weight: 600;
+      text-transform: uppercase;
+      padding: 1rem;
+      text-align: left;
     }
-    tr:last-child td {
-      border-bottom: none;
+
+    tbody td {
+      padding: 1rem;
+      border-bottom: 1px solid #f0f0f0;
     }
-    tr:hover {
-      background-color: #f9f9f9;
+
+    tbody tr:hover {
+      background-color: #f5faff;
     }
+
     .placeholder {
       text-align: center;
       padding: 2rem;
-      color: #555;
+      color: #888;
+      font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        overflow-x: auto;
+      }
     }
   </style>
 </head>
 <body>
   <header>
     <h1>QuickBrain Mini Leaderboard</h1>
-  </header>  <div class="container">
+  </header>
+
+  <div class="container">
     <table id="leaderboard-table">
       <thead>
         <tr>
@@ -80,46 +102,81 @@
         <tr><td colspan="6" class="placeholder">Loading leaderboard...</td></tr>
       </tbody>
     </table>
-  </div>  <script>
-    const today = new Date();
-    const day = today.getDay(); // Sunday = 0, Saturday = 6
+  </div>
 
-    if (day === 6) {
-      console.log("Today is Saturday. Fetching leaderboard data...");
+  <script>
+    const STORAGE_KEY = "quickbrain_leaderboard";
+    const EXPIRY_KEY = "quickbrain_leaderboard_expiry";
+    const API_URL = "https://sheetdb.io/api/v1/g8xwcmnmohv57";
 
-      fetch("https://sheetdb.io/api/v1/g8xwcmnmohv57")
-        .then(res => res.json())
+    const now = new Date();
+    const todayIsSaturday = now.getDay() === 6;
+
+    const isExpired = () => {
+      const expiry = localStorage.getItem(EXPIRY_KEY);
+      return !expiry || new Date().getTime() > parseInt(expiry);
+    };
+
+    const saveToLocalStorage = (data) => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      const expiryTime = new Date().getTime() + 2 * 24 * 60 * 60 * 1000; // 2 days
+      localStorage.setItem(EXPIRY_KEY, expiryTime.toString());
+    };
+
+    const loadFromLocalStorage = () => {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : null;
+    };
+
+    const renderLeaderboard = (data) => {
+      const tbody = document.getElementById("leaderboard-body");
+      tbody.innerHTML = "";
+
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="placeholder">No entries yet.</td></tr>`;
+        return;
+      }
+
+      data.forEach(entry => {
+        const row = `
+          <tr>
+            <td>${entry.name || "N/A"}</td>
+            <td>${entry.score || "0"}</td>
+            <td>${entry.status || "Pending"}</td>
+            <td>${entry.earned || "0"}</td>
+            <td>${entry.time || "-"}</td>
+            <td>${entry.dateSubmitted || "-"}</td>
+          </tr>`;
+        tbody.innerHTML += row;
+      });
+    };
+
+    const fetchAndStoreData = () => {
+      fetch(API_URL)
+        .then(response => response.json())
         .then(data => {
-          const tbody = document.getElementById("leaderboard-body");
-          tbody.innerHTML = "";
-
-          if (data.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="placeholder">No entries yet.</td></tr>`;
-            return;
-          }
-
-          data.forEach(entry => {
-            const row = `
-              <tr>
-                <td>${entry.name || "N/A"}</td>
-                <td>${entry.score || "0"}</td>
-                <td>${entry.status || "Pending"}</td>
-                <td>₦${entry.earned || "0"}</td>
-                <td>${entry.time || "-"}</td>
-                <td>${entry.dateSubmitted || "-"}</td>
-              </tr>`;
-            tbody.innerHTML += row;
-          });
-
-          console.log("Leaderboard updated successfully.");
+          saveToLocalStorage(data);
+          renderLeaderboard(data);
+          console.log("Fetched and stored fresh leaderboard data.");
         })
         .catch(error => {
-          document.getElementById("leaderboard-body").innerHTML = `<tr><td colspan="6" class="placeholder">Error loading data</td></tr>`;
           console.error("Error fetching leaderboard:", error);
+          document.getElementById("leaderboard-body").innerHTML = `<tr><td colspan="6" class="placeholder">Error loading data.</td></tr>`;
         });
+    };
+
+    // Logic begins
+    if (todayIsSaturday) {
+      if (isExpired()) {
+        fetchAndStoreData();
+      } else {
+        console.log("Using cached leaderboard data.");
+        renderLeaderboard(loadFromLocalStorage());
+      }
     } else {
-      console.log("Today is not Saturday. Skipping leaderboard update.");
-      document.getElementById("leaderboard-body").innerHTML = `<tr><td colspan="6" class="placeholder">Leaderboard updates every Saturday.</td></tr>`;
+      document.getElementById("leaderboard-body").innerHTML =
+        `<tr><td colspan="6" class="placeholder">Leaderboard updates every Saturday.</td></tr>`;
     }
-  </script></body>
+  </script>
+</body>
 </html>

@@ -53,14 +53,14 @@ document.getElementById("copyBtn").onclick = () => {
   }
 };
 
-// Modified: Allow all requests on 12 May 2025 and reset timer
+// Allow all requests on 7 June2025 and reset timer
 function shouldMakeApiRequest() {
   const today = new Date();
-  const isMay27 = today.getFullYear() === 2025 && today.getMonth() === 4 && today.getDate() === 27; // May is month 4
+  const isJune7 = today.getFullYear() === 2025 && today.getMonth() === 4 && today.getDate() === 7;
 
-  if (isMay27) {
-    console.log("Bypassing 24hr check: Today is 27 May 2025");
-    localStorage.removeItem("lastApiRequest"); // Reset timer to allow early request on May 28
+  if (isJune7) {
+    console.log("Bypassing 24hr check: Today is 7 June2025");
+    localStorage.removeItem("lastApiRequest");
     return true;
   }
 
@@ -83,11 +83,16 @@ function shouldMakeApiRequest() {
   return false;
 }
 
-// Referral update function
+// Updated referral update function with referGroup logic
 async function updateReferrals(refereeCode) {
   if (!localStorage.getItem("activateStatus")) {
     showToast("Account not activated. Please activate to update referrals.");
     console.warn("activateStatus not found. Blocking referral update.");
+    return;
+  }
+
+  if (!referralCode) {
+    console.warn("No referralCode found. Cannot update referGroup.");
     return;
   }
 
@@ -105,16 +110,41 @@ async function updateReferrals(refereeCode) {
         console.log("Previous referral count:", user.referrals);
         console.log("Updating referral count to:", newCount);
 
+        // Handle referGroup array
+        let referGroup = [];
+        try {
+          if (user.referGroup) {
+            referGroup = JSON.parse(user.referGroup);
+            if (!Array.isArray(referGroup)) referGroup = [];
+          }
+        } catch {
+          referGroup = [];
+        }
+
+        if (!referGroup.includes(referralCode)) {
+          referGroup.push(referralCode);
+        }
+
+        // Update both referrals and referGroup
         await fetch(`${url}/referralCode/${refereeCode}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: { referrals: newCount } })
+          body: JSON.stringify({
+            data: {
+              referrals: newCount,
+              referGroup: JSON.stringify(referGroup)
+            }
+          })
         });
 
         referralNumber.textContent = newCount;
         localStorage.setItem("referrals", newCount);
-        showToast("Referral count updated!");
+        localStorage.setItem(`referGroup_${refereeCode}`, JSON.stringify(referGroup));
 
+        showToast("Referral count and referGroup updated!");
+        console.log("Updated referGroup stored locally:", referGroup);
+
+        // ✅ Only remove refereeCode after everything is successful
         localStorage.removeItem("refereeCode");
         console.log("Referee code removed from localStorage.");
 
@@ -123,7 +153,7 @@ async function updateReferrals(refereeCode) {
         console.log("No matching user found in this API.");
       }
     } catch (err) {
-      console.error("API error:", url, err);
+      console.error("API error while updating referral data:", err);
     }
   }
 }

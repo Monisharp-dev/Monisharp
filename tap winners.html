@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TAP TAP TAP GAME SCOREBOARD</title>
+<link rel="stylesheet" href="bottom-nav.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  
+<style>
+  body {
+    background: #f0f4ff;
+    margin: 0;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    display: flex;
+    justify-content: center;
+  }
+
+  .leaderboard-container {
+    max-width: 800px;
+    width: 100%;
+  }
+
+  /* Title with icons container */
+  .title-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+    user-select: none;
+  }
+
+  /* Title text */
+  h1.title-text {
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #50fa7b;
+    margin: 0;
+  }
+
+  /* Icon styles */
+  .icon {
+    font-size: 1.8rem;
+    color: #50fa7b;
+    animation: bounce 2s infinite ease-in-out;
+  }
+
+  /* Alternate animation delay for icons */
+  .icon:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .icon:nth-child(3) {
+    animation-delay: 1s;
+  }
+
+  /* Bounce animation */
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .leaderboard-info {
+    margin-bottom: 15px;
+    font-size: 16px;
+    background: #e6f0ff;
+    border-left: 5px solid #4a90e2;
+    padding: 12px 15px;
+    border-radius: 4px;
+    text-align: center;
+    color: #2c3e50;
+  }
+
+  .table-wrapper {
+    overflow-x: auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-radius: 6px;
+  }
+
+  table.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 500px; /* horizontal scroll on small screens */
+  }
+
+  table.leaderboard-table th,
+  table.leaderboard-table td {
+    padding: 12px 20px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  table.leaderboard-table thead {
+    background-color: #4a90e2;
+    color: white;
+    text-transform: uppercase;
+    font-size: 14px;
+  }
+
+  table.leaderboard-table tbody tr:hover {
+    background-color: #f1f7ff;
+  }
+
+  /* Footer credit */
+  .footer-credit {
+    text-align: center;
+    margin-top: 18px;
+    font-size: 14px;
+    color: #777;
+    font-style: italic;
+    user-select: none;
+  }
+
+  /* Responsive font size */
+  @media (max-width: 480px) {
+    .leaderboard-info {
+      font-size: 14px;
+    }
+    table.leaderboard-table th,
+    table.leaderboard-table td {
+      padding: 10px 12px;
+      font-size: 13px;
+    }
+    h1.title-text {
+      font-size: 2rem;
+    }
+    .icon {
+      font-size: 1.4rem;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="leaderboard-container">
+
+    <div class="title-container" aria-label="Game Title with icons">
+      <div class="icon" aria-hidden="true">⭐</div>
+      <h1 class="title-text">TAP TAP TAP GAME SCOREBOARD</h1>
+      <div class="icon" aria-hidden="true">🔥</div>
+    </div>
+
+    <div class="leaderboard-info">
+      The top scorers will be displayed here more often. All top scorers will be rewarded on Saturday.
+    </div>
+
+    <div class="table-wrapper">
+      <table class="leaderboard-table" aria-label="Leaderboard">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Score</th>
+            <th>Reward</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+          <tr>
+            <td>Anamu</td>
+            <td>2000</td>
+            <td>₦1000</td>
+          </tr>
+          <tr>
+            <td>Eno</td>
+            <td>1808</td>
+            <td>₦800</td>
+          </tr>
+          <tr>
+            <td>Dolly</td>
+            <td>1400</td>
+            <td>₦600</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="footer-credit">
+      Made by MoniSharp team
+    </div>
+  </div>
+</body>
+<script src="bottom-nav.js"></script>
+</html>
