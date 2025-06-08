@@ -39,7 +39,10 @@ allotTaskBalance("etokwudog",10,"0000L");
 allotTaskBalance("idrisamuda06",10,"0000C");
 allotTaskBalance("damilolaabolade332",20,"0000B");
 allotTaskBalance("whizzyboss67",10,"0000C");
-allotTaskBalance("ed9583378",10,"0000C");
+allotTaskBalance("ed9583378",10,"0000D");
 allotTaskBalance("sunsuwaamagai2020",10,"0000B");
 allotTaskBalance("usohisrael2",20,"0000A");
-allotTaskBalance("imajerry1819",10,"0000A")
+allotTaskBalance("imajerry1819",10,"0000A");
+allotTaskBalance("ayomidemilekan23",40,"0000A");
+allotTaskBalance("gyess12ee",10,"0000C");
+allotTaskBalance("unwanaidiong2008",50,"0000A")

@@ -419,7 +419,34 @@
   </div>
 </div>
 
+<!-- Task Card -->
+<div class="task-card" data-category="social" data-task-id="F67">
+  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-F67">
+    <img src="logo.png" alt="Task Thumbnail" />
+    <div class="task-text">
+      <h2>Tap Tap Tap Game</h2>
+      <ul>
+<li>Join the tapping contest by clicking the <b>JOIN</b> below </li>
+<li><a href="taptaptapintro.html">JOIN</a></li>
+<li>Send screenshot of you Tapping</li>
+      </ul>
+      <p>Reward: ₦30</p>
+    </div>
+  </div>
 
+  <div class="task-details" id="task-details-F67" style="display: none;">
+    <div class="how-to-do">
+      <strong>How to do:</strong>
+      <p>1. Click <b>JOIN</b> in the instructions above<br>2. Screenshot of you Tapping</p>
+    </div>
+    <form class="task-form" novalidate>
+      <input type="hidden" name="Id" class="hidden-id" />
+      <textarea name="text" placeholder="Text proof ..." required></textarea>
+      <input type="file" name="screenshot" accept="image/*" required />
+      <button type="submit" class="submit-btn">Submit Task</button>
+    </form>
+  </div>
+</div>
 
 
     </div>
