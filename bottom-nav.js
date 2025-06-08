@@ -1,6 +1,6 @@
 const bottomNavHTML = `
   <nav class="bottom-nav">
-    <a href="#" class="active">
+    <a href="index.html" class="active">
       <i class="fas fa-home"></i>
       <span>Home</span>
     </a>
@@ -11,6 +11,10 @@ const bottomNavHTML = `
     <a href="refer.html">
       <i class="fas fa-wallet"></i>
       <span>Refer</span>
+    </a>
+    <a href="deposit.html">
+      <i class="fas fa-money-check-alt"></i>
+      <span>Deposit</span>
     </a>
     <a href="profile.html">
       <i class="fas fa-user"></i>

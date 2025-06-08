@@ -124,6 +124,9 @@
       <label>Upload Proof of Payment (screenshot)</label>
       <input type="file" id="imageUrl" accept="image/*" required />
 
+      <!-- Hidden Purpose Field -->
+      <input type="hidden" id="purpose" name="purpose" value="Deposit" />
+
       <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Deposit</button>
     </form>
 
@@ -163,6 +166,7 @@
     const Id = document.getElementById("userId").value;
     const amount = document.getElementById("amount").value.trim();
     const date = document.getElementById("date").value;
+    const purpose = document.getElementById("purpose").value;
     const imageUrlFile = document.getElementById("imageUrl").files[0];
 
     if (!Id || !amount || !imageUrlFile) {
@@ -192,6 +196,7 @@
         Id,
         amount,
         date,
+        purpose,
         imageUrl
       };
 
