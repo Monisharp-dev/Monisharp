@@ -7,6 +7,7 @@ const allowedIds = [
   "adebayobose235",
   "agujiobisamuel",
   "ajaniisraelojasope11",
+  "akinoye7600",
   "anthony87630269",
   "ayibakurokuro",
   "ayomidemilekan23",
