@@ -1,14 +1,34 @@
-const balanceKey = "mainBalance";
+const balanceKeyPrefix = "depositBalance_";  // prefix for deposit balance keys
 const boosterKey = "purchasedBoosters"; // stores boosters purchased (gold, premium, local)
 const extraTimeKey = "extraTimeBoosters"; // stores count of extra 4hr boosters
 
-function getBalance() {
-  return parseInt(localStorage.getItem(balanceKey)) || 0;
+// Get current user Id from localStorage
+function getCurrentUserId() {
+  return localStorage.getItem("Id") || null;
 }
 
-function setBalance(value) {
-  localStorage.setItem(balanceKey, value);
-  document.getElementById("mainBalance").textContent = value;
+// Get deposit balance for current user
+function getDepositBalance() {
+  const userId = getCurrentUserId();
+  if (!userId) return 0; // no user Id found
+
+  const key = balanceKeyPrefix + userId;
+  return parseFloat(localStorage.getItem(key)) || 0;
+}
+
+// Set deposit balance for current user and update UI element if exists
+function setDepositBalance(value) {
+  const userId = getCurrentUserId();
+  if (!userId) return;
+
+  const key = balanceKeyPrefix + userId;
+  localStorage.setItem(key, value.toFixed(2));
+
+  // Optional: Update UI element if you have one with id 'depositBalanceDisplay'
+  const depositBalanceDisplay = document.getElementById("depositBalanceDisplay");
+  if (depositBalanceDisplay) {
+    depositBalanceDisplay.textContent = value.toFixed(2);
+  }
 }
 
 function notifyUser(message, success = true) {
@@ -21,17 +41,16 @@ function notifyUser(message, success = true) {
   box.className = `notification-box show ${success ? "success" : "error"}`;
   icon.className = `bi ${success ? "bi-check-circle-fill" : "bi-x-circle-fill"}`;
 
-  // Auto-hide after 4 seconds
   setTimeout(() => {
     box.classList.remove("show");
   }, 4000);
 }
 
 function purchase(boosterType, price) {
-  let balance = getBalance();
+  let balance = getDepositBalance();
 
   if (balance < price) {
-    notifyUser("Insufficient balance. Please fund your account.", false);
+    notifyUser("Insufficient deposit balance. Please fund your account.", false);
     return;
   }
 
@@ -45,9 +64,8 @@ function purchase(boosterType, price) {
       return;
     }
 
-    // Deduct and store booster
     balance -= price;
-    setBalance(balance);
+    setDepositBalance(balance);
 
     purchased[boosterType] = {
       time: new Date().toISOString(),
@@ -58,9 +76,8 @@ function purchase(boosterType, price) {
     notifyUser(`${boosterType.charAt(0).toUpperCase() + boosterType.slice(1)} Booster purchased successfully!`);
 
   } else if (boosterType === "extra4hrs") {
-    // Multiple purchases allowed for extra 4-hour time
     balance -= price;
-    setBalance(balance);
+    setDepositBalance(balance);
 
     let extra = parseInt(localStorage.getItem(extraTimeKey)) || 0;
     extra++;
@@ -76,7 +93,8 @@ function getEndOfDayISO() {
   return now.toISOString();
 }
 
-// Initialize balance on load
+// Initialize deposit balance on load
 window.onload = () => {
-  setBalance(getBalance());
+  const depositBalance = getDepositBalance();
+  setDepositBalance(depositBalance);
 };

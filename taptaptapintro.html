@@ -170,29 +170,58 @@
   </button>
 
   <script>
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.style.display = 'block';
+ function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.style.display = 'block';
 
-      setTimeout(() => {
-        toast.style.display = 'none';
-      }, 2800);
-    }
+  setTimeout(() => {
+    toast.style.display = 'none';
+  }, 2800);
+}
 
-    function handleContinue() {
-      const isActivated = localStorage.getItem("tapActivated");
-      showToast("Redirecting you now...");
+function handleContinue() {
+  // Get the user Id from localStorage (assuming it's stored with this key)
+  const userId = localStorage.getItem("Id");  // change if your Id key is different
+  if (!userId) {
+    showToast("User not identified.");
+    return;
+  }
 
-      setTimeout(() => {
-        if (isActivated) {
+  // Build the user-specific tapActivated key
+  const tapKey = `tapActivated_${userId}`;
+  const tapDataRaw = localStorage.getItem(tapKey);
+
+  if (tapDataRaw) {
+    try {
+      const tapData = JSON.parse(tapDataRaw);
+      const now = Date.now();
+
+      if (now < tapData.expiresAt) {
+        // Still active, redirect to game
+        showToast("Redirecting you now...");
+        setTimeout(() => {
           window.location.href = "tap-tap game.html";
-        } else {
-          window.location.href = "tap-start.html";
-        }
-      }, 3000); // Wait 3 seconds before redirect
+        }, 3000);
+        return;
+      } else {
+        // Expired, remove key
+        localStorage.removeItem(tapKey);
+      }
+    } catch (e) {
+      // Malformed data? Remove it
+      localStorage.removeItem(tapKey);
     }
+  }
+
+  // If no valid tapActivated, redirect to start
+  showToast("Redirecting you now...");
+  setTimeout(() => {
+    window.location.href = "tap-start.html";
+  }, 3000);
+}
   </script>
+  <script src="tapAdmin.js"></script>
   <script src="navbar.js"></script>
 </body>
 </html>
