@@ -62,6 +62,7 @@ const allowedIds = [
   "safiyaibrahimbahago",
   "sermborleeh",
   "sesughdaniel433",
+  "sikinsam24",
   "sunsuwaamagai2020",
   "tmosco4real",
   "twostorage554",
