@@ -16,7 +16,7 @@ const dateKey = 'tapGameStartDate';
 const boosterKey = 'purchasedBoosters';
 const extraTimeKey = 'extraTimeBoosters';
 
-let baseTime = 2 * 60 * 60 * 1000; // 2 hrs
+const baseTime = 2 * 60 * 60 * 1000; // 2 hrs
 let currentEndTime = 0;
 
 function getTodayDateStr() {
@@ -55,6 +55,7 @@ function getBoosterBonusTime() {
   let totalBonus = 0;
   let activeBoosters = [];
 
+  // Reset booster active classes
   Object.values(boosterEls).forEach(el => el?.classList.remove('active'));
 
   if (purchased.gold && parseISODate(purchased.gold.expiresAt) === today) {
@@ -124,9 +125,10 @@ function startGame() {
   localStorage.setItem(startKey, currentEndTime);
   localStorage.setItem(dateKey, todayStr);
 
-  score = 0;
+  // Do NOT reset score on new start in the same day
+  const existingScore = localStorage.getItem(gameKey);
+  score = existingScore ? parseInt(existingScore) : 0;
   scoreEl.textContent = score;
-  localStorage.setItem(gameKey, score);
 
   tapBtn.disabled = false;
   hideStartBtn();
@@ -141,26 +143,30 @@ function startCountdown(endTime) {
   currentEndTime = endTime;
 
   countdown = setInterval(() => {
-    const { totalBonus } = getBoosterBonusTime();
+    const { totalBonus, activeBoosters } = getBoosterBonusTime();
     const now = Date.now();
     const storedDate = localStorage.getItem(dateKey);
     const today = getTodayDateStr();
 
     if (storedDate !== today) {
+      // Day changed or no active game today
       clearInterval(countdown);
       tapBtn.disabled = true;
       timerEl.textContent = '00:00:00';
+      showStartBtn();
       return;
     }
 
+    // Recalculate expected start time (end - base - boosters)
     const expectedStartTime = currentEndTime - (baseTime + totalBonus);
     const updatedEnd = expectedStartTime + baseTime + totalBonus;
 
+    // Extend currentEndTime if booster time added dynamically
     if (updatedEnd > currentEndTime) {
       console.log("⏩ Booster added. Extending time.");
       currentEndTime = updatedEnd;
       localStorage.setItem(startKey, currentEndTime);
-      showBoosterNotification(getBoosterBonusTime().activeBoosters);
+      showBoosterNotification(activeBoosters);
     }
 
     const remaining = currentEndTime - now;
@@ -171,6 +177,7 @@ function startCountdown(endTime) {
       timerEl.textContent = '00:00:00';
       localStorage.removeItem(dateKey);
       customAlert("⏰ Time's up! Buy a booster to revive the game.", 'error');
+      showStartBtn();
       return;
     }
 
@@ -185,9 +192,11 @@ function startCountdown(endTime) {
 function hideStartBtn() {
   startBtn.style.display = 'none';
 }
+
 function showStartBtn() {
   startBtn.style.display = 'inline-block';
 }
+
 function updateScore() {
   score++;
   scoreEl.textContent = score;
@@ -212,14 +221,13 @@ window.onload = () => {
       tapBtn.disabled = false;
       hideStartBtn();
       startCountdown(endTime);
-      return;
     } else {
       tapBtn.disabled = true;
       hideStartBtn();
       timerEl.textContent = '00:00:00';
 
-      // ⛑️ Booster revival if purchased AFTER timeout
-      const { totalBonus } = getBoosterBonusTime();
+      // Booster revival after timeout
+      const { totalBonus, activeBoosters } = getBoosterBonusTime();
       if (totalBonus > 0) {
         const revivedEnd = now + totalBonus;
         localStorage.setItem(startKey, revivedEnd);
@@ -227,7 +235,7 @@ window.onload = () => {
         tapBtn.disabled = false;
         hideStartBtn();
         startCountdown(revivedEnd);
-        showBoosterNotification(getBoosterBonusTime().activeBoosters);
+        showBoosterNotification(activeBoosters);
         customAlert("⛑️ Game revived with new booster!", 'success');
       } else {
         showStartBtn();
@@ -238,7 +246,7 @@ window.onload = () => {
     showStartBtn();
   }
 
-  getBoosterBonusTime(); // refresh booster display
+  getBoosterBonusTime(); // refresh booster UI
 };
 
 tapBtn.addEventListener('click', updateScore);

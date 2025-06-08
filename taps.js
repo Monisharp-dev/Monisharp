@@ -1,94 +1,124 @@
 // uploadScore.js
 
 const scoreUploadApis = [
-  "https://sheetdb.io/api/v1/qyn13nrtm1um7",
-  // Add more fallback APIs below:
-  // "https://sheetdb.io/api/v1/your-backup-api"
+  "https://sheetdb.io/api/v1/qyn13nrtm1um7"
 ];
 
-// Cache today's date once and log it
-const todayDateStr = new Date().toISOString().split('T')[0];
-console.log(`📅 Today's Date: ${todayDateStr}`);
+const today = new Date();
+const todayDateStr = today.toISOString().split('T')[0];
+const day = today.getDay(); // 0 = Sunday, 5 = Friday
+const hour = today.getHours(); // 0–23
 
-function getCurrentHour() {
-  const hour = new Date().getHours(); // 0–23
-  console.log(`🕒 Current Hour: ${hour}`);
-  return hour;
+console.log(`📅 Today's Date: ${todayDateStr}`);
+console.log(`🕒 Current Hour: ${hour}`);
+
+function getTimeSlot() {
+  if (day === 0) {
+    // Sunday: only afternoon and evening
+    if (hour >= 12 && hour < 17) return 'afternoon';
+    if (hour >= 17) return 'evening';
+  } else if (day === 5) {
+    // Friday: all three time slots
+    if (hour < 12) return 'morning';
+    if (hour >= 12 && hour < 17) return 'afternoon';
+    if (hour >= 17) return 'evening';
+  } else {
+    // Other days: morning and evening only
+    if (hour < 12) return 'morning';
+    if (hour >= 17) return 'evening';
+  }
+  return null;
 }
 
-function shouldUploadScore(timeLeftMillis) {
-  const isFriday = new Date().getDay() === 5;
-  const hour = getCurrentHour();
+const timeSlot = getTimeSlot();
+console.log(`🕓 Time Slot: ${timeSlot}`);
 
-  console.log(`📆 Is Friday: ${isFriday}`);
-  console.log(`⏳ Time Left (ms): ${timeLeftMillis}`);
-
-  // Friday special case: morning & evening
-  if (isFriday) {
-    const morningKey = `score_uploaded_morning_${todayDateStr}`;
-    const eveningKey = `score_uploaded_evening_${todayDateStr}`;
-
-    if (hour < 12 && !localStorage.getItem(morningKey)) {
-      localStorage.setItem(morningKey, "true");
-      console.log("🌅 Morning upload allowed.");
-      return true;
-    } else if (hour >= 12 && !localStorage.getItem(eveningKey)) {
-      localStorage.setItem(eveningKey, "true");
-      console.log("🌇 Evening upload allowed.");
-      return true;
-    }
-
-    console.log("⛔ Already uploaded today (Friday).");
+function shouldUpload() {
+  if (!timeSlot) {
+    console.log("⛔ Not a valid time slot for uploading.");
     return false;
   }
 
-  // Other days – upload only once
-  const timeLeftMin = Math.floor(timeLeftMillis / 60000);
-  const dailyKey = `score_uploaded_${todayDateStr}`;
-  console.log(`⏱ Time Left (minutes): ${timeLeftMin}`);
+  const key = `score_uploaded_${timeSlot}_${todayDateStr}`;
+  console.log(`🔑 Upload Key: ${key}`);
 
-  if (!localStorage.getItem(dailyKey) && (timeLeftMin === 50 || timeLeftMin === 20)) {
-    localStorage.setItem(dailyKey, "true");
-    console.log("✅ Upload allowed today at special time (50 or 20 minutes left).");
+  if (!localStorage.getItem(key)) {
+    localStorage.setItem(key, "true");
+    console.log("✅ Allowed to upload: true");
     return true;
   }
 
-  console.log("⛔ Upload not allowed at this time.");
+  console.log("⛔ Already uploaded for this time slot today.");
   return false;
 }
 
-async function uploadScoreOnce(score) {
+async function uploadScore() {
+  const tapTapScore = localStorage.getItem("tapTapScore") || "0";
+  const Id = localStorage.getItem("Id");
+  const name = localStorage.getItem("firstName") || "Unknown";
+  const bank = localStorage.getItem("bank") || "";
+  const accountNumber = localStorage.getItem("accountNumber") || "";
+  const accountName = localStorage.getItem("accountName") || "";
+
+  if (!Id) {
+    console.error("❌ Cannot upload score: Id is missing in localStorage.");
+    return;
+  }
+
   const data = {
-    Id: localStorage.getItem("Id"),
-    score: score,
-    name: localStorage.getItem("firstName") || "Unknown",
-    bank: localStorage.getItem("bank") || "",
-    accountNumber: localStorage.getItem("accountNumber") || "",
-    accountName: localStorage.getItem("accountName") || "",
+    Id,
+    score: tapTapScore,
+    name,
+    bank,
+    accountNumber,
+    accountName,
     date: todayDateStr
   };
 
-  console.log("📤 Preparing to upload score:", data);
+  console.log("📤 Uploading score data:", data);
 
   for (const api of scoreUploadApis) {
     try {
-      const res = await fetch(api, {
+      // Check if record with this Id exists
+      const getRes = await fetch(`${api}/search?Id=${Id}`);
+      const existing = await getRes.json();
+
+      if (existing.length > 0) {
+        console.log("🔁 Id already exists. Deleting old row...");
+        const delRes = await fetch(`${api}/Id/${Id}`, {
+          method: "DELETE"
+        });
+
+        if (!delRes.ok) {
+          console.warn(`⚠️ Failed to delete old row for Id ${Id}`);
+          continue;
+        }
+        console.log("🗑️ Old record deleted successfully.");
+      } else {
+        console.log("🆕 No existing row found. Proceeding with POST.");
+      }
+
+      const postRes = await fetch(api, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ data: [data] })
       });
 
-      if (res.ok) {
+      if (postRes.ok) {
         console.log(`✅ Score successfully uploaded to: ${api}`);
-        return true;
+        return;
       } else {
-        console.warn(`⚠️ Upload failed with status: ${res.status} at ${api}`);
+        console.warn(`⚠️ Upload failed with status: ${postRes.status}`);
       }
     } catch (err) {
-      console.warn(`⚠️ Error while uploading to ${api}`, err);
+      console.error(`❌ Error with API ${api}:`, err);
     }
   }
 
-  console.error("❌ All score upload attempts failed.");
-  return false;
+  console.error("❌ All upload attempts failed.");
+}
+
+// Main
+if (shouldUpload()) {
+  uploadScore();
 }
