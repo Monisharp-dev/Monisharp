@@ -45,4 +45,7 @@ allotTaskBalance("usohisrael2",20,"0000A");
 allotTaskBalance("imajerry1819",10,"0000A");
 allotTaskBalance("ayomidemilekan23",40,"0000A");
 allotTaskBalance("gyess12ee",10,"0000C");
-allotTaskBalance("unwanaidiong2008",50,"0000A")
+allotTaskBalance("unwanaidiong2008",20,"0000B");
+allotTaskBalance("akinoye7600",60,"0000B");
+allotTaskBalance("victorumoren113",10,"0000A");
+allotTaskBalance("hesabasi",20,"0000A")
