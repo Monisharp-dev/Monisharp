@@ -34,7 +34,7 @@ allotTaskBalance("muslimatkehinde05", 20, "0000A");
 allotTaskBalance("imajerry1819",30,"0000B");
 allotTaskBalance("destinysylvanus74",20,"0000A");
 allotTaskBalance("chukwukajames131",30,"0000F");
-allotTaskBalance("femigodslove069",20,"0000C");
+allotTaskBalance("femigodslove069",40,"0000D");
 allotTaskBalance("etokwudog",10,"0000L");
 allotTaskBalance("idrisamuda06",10,"0000C");
 allotTaskBalance("damilolaabolade332",20,"0000B");
@@ -48,4 +48,5 @@ allotTaskBalance("gyess12ee",10,"0000C");
 allotTaskBalance("unwanaidiong2008",20,"0000B");
 allotTaskBalance("akinoye7600",60,"0000B");
 allotTaskBalance("victorumoren113",10,"0000A");
-allotTaskBalance("hesabasi",20,"0000A")
+allotTaskBalance("hesabasi",20,"0000A");
+allotTaskBalance("usohisrael2",10,"0000B")
