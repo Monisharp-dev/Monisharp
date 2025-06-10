@@ -1,5 +1,5 @@
 // List of specific user IDs allowed to see the message
-const allowedUserIds = ["idrisamuda06", "67890", "user1q"]; // Replace with actual Ids
+const allowedUserIds = ["67890", "davidoton713"]; // Replace with actual Ids
 
 // Get user ID from localStorage
 const monisharpUserId = localStorage.getItem("Id");
@@ -55,9 +55,8 @@ if (allowedUserIds.includes(monisharpUserId)) {
   notify.className = "mono-notify";
   notify.innerHTML = `
     <div>
-      ✅ Your quiz contest deposit has been approved.<br>
-      Go now to <a href="join.html">join the quiz contest</a> before it's Saturday!
-    </div>
+      ❌ Your deposit has been DISAPPROVED <br>
+      It was not approved because you submitted a mismatching Payment proof. Your account is at risk of being suspended. </div>
     <button class="close-btn" onclick="this.parentElement.remove()">×</button>
   `;
   document.body.appendChild(notify);

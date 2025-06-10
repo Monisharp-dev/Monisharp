@@ -1,10 +1,11 @@
 // Map of user IDs to their messages
 const userMessages = {
-  "icefieldwaripamoweifreedom": "You are ALREADY A MEMBER in Bounty News. That task was specifically for new users only. You have not been credited for that task",
-  "happybankmoney": "Your account is at risk of being BAN. Please do well to follow task instructions so as to be credited.",
+  "unwanaidiong2008": "Please do well to follow instructions. The WhatsApp task you perform. You were instructed to have at least 20 views but instead in the screenshot you provided, we noticed no one viewed it. Hence, you were not rewarded for the task. ",
+  "victorumoren113": "Please do well to follow instructions. The WhatsApp task you perform. You were instructed to have at least 20 views but instead in the screenshot you provided, we noticed your viewers were not up to 20. Hence, you were not rewarded for the task.You have been credited for the Account Verification Task",
  "femigodslove069": "When you are asked to create a Facebook post, please create a new one no matter if it is the same subject or title. Do not upload an image or screenshot of an old Facebook post. You also performed a WhatsApp Status task, you Don't have up to 20 views yet, hence, you have not been credited for performing that task.",
  "etokwudog": "Thank you for completing the tasks but the Facebook group you created, you were supposed to have at least 20 members not 1 member. Also please when you are instructed to create a post, please create a new post for that task. Do not send an old screenshot for a task again.Thank you",
- "ed9583378": "Please follow instructions carefully. The WhatsApp group you created had only 2 members instead of 20 as instructed.We have credited your account with one-fourth of the payment."
+ "ed9583378": "Please follow instructions carefully. The WhatsApp group you created had only 2 members instead of 20 as instructed.We have credited your account with one-fourth of the payment.",
+ "davidoton713": "Sir, the 14 tasks you performed were COMPLETELY rejected. You submitted screenshot s that do not relate to the Task you perform. Please be informed that if this continues, you will be ban from the Task Page."
 };
 
 // Get the current user's ID

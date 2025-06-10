@@ -1,12 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>TAP TAP TAP GAME SCOREBOARD</title>
-<link rel="stylesheet" href="bottom-nav.css">
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TAP TAP TAP GAME SCOREBOARD</title>
+  <link rel="stylesheet" href="bottom-nav.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
   <link rel="stylesheet" href="tap winners.css">
+  <style>
+    .refresh-container {
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .refresh-btn {
+      background-color: #00b894;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .refresh-btn[disabled] {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+
+    .refresh-btn:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #333;
+      color: #fff;
+      padding: 5px 10px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      white-space: nowrap;
+      z-index: 999;
+    }
+  </style>
 </head>
 <body>
   <div class="leaderboard-container">
@@ -15,6 +52,13 @@
       <div class="icon" aria-hidden="true">⭐</div>
       <h1 class="title-text">TAP TAP TAP GAME SCOREBOARD</h1>
       <div class="icon" aria-hidden="true">🔥</div>
+    </div>
+
+    <!-- Refresh Button -->
+    <div class="refresh-container">
+      <button id="refreshBtn" class="refresh-btn" data-tooltip="Click to refresh results or see latest progress">
+        <i class="fas fa-sync-alt"></i> Refresh Results
+      </button>
     </div>
 
     <div class="leaderboard-info">
@@ -31,46 +75,7 @@
           </tr>
         </thead>
         <tbody id="leaderboard-body">
-            <tr>
-                <td>Abina</td>
-                <td>680703</td>
-                <td>₦2500</td>
-            </tr>
-            <tr>
-                <td>Tepo</td>
-                <td>51690</td>
-                <td>₦2000</td>
-            </tr>
-            <tr>
-                <td>Godgift Warilabofa</td>
-                <td>37460</td>
-                <td>₦1500</td>
-            </tr>
-            <tr>
-                <td>Divine</td>
-                <td>28768</td>
-                <td>₦1000</td>
-            </tr>
-            <tr>
-                <td>Goodness</td>
-                <td>27580</td>
-                <td>₦500</td>
-            </tr>
-          <tr>
-            <td>Abel</td>
-            <td>10030</td>
-            <td>₦300</td>
-          </tr>
-          <tr>
-            <td>Eno</td>
-            <td>6008</td>
-            <td>₦150</td>
-          </tr>
-          <tr>
-            <td>Dolly</td>
-            <td>2800</td>
-            <td>₦0</td>
-          </tr>
+          <!-- JS will populate this -->
         </tbody>
       </table>
     </div>
@@ -81,7 +86,11 @@
   </div>
 </body>
 <script src="bottom-nav.js"></script>
+<script src="tap-leaderboard.js"></script> <!-- JavaScript logic will go here -->
 </html>
+
+
+
 
 
 
