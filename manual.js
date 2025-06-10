@@ -53,6 +53,7 @@ const allowedIds = [
   "mujaheedpresdor001",
   "muslimatkehinde05",
   "obunsodaniel",
+  "ojetunbiseun",
   "olamilekanjoseph601",
   "oluwatofunmienochoke",
   "opalekesoromdayo",
