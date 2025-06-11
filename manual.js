@@ -21,6 +21,7 @@ const allowedIds = [
   "davidoton713",
   "dconfidence322",
   "destinysylvanus74",
+  "diyoabdulgafar24",
   "ebubechiwinner066",
   "ed9583378",
   "edickson774",

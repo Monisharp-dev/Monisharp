@@ -52,4 +52,5 @@ allotTaskBalance("hesabasi", 20, "0000A");
 allotTaskBalance("usohisrael2", 10, "0000B");
 allotTaskBalance("adarikucecilia2", 10, "DVXUO");
 allotTaskBalance("aademola1630", 20, "54UMK");
-allotTaskBalance("ojetunbiseun", 10, "8T3PX")
+allotTaskBalance("ojetunbiseun", 10, "8T3PX");
+allotTaskBalance("mophaserbeolokun", 10, "OB9YD")
