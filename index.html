@@ -9,10 +9,11 @@
   <link rel="stylesheet" href="preview.css" />
   <link rel="stylesheet" href="navbar.css" />
   <link rel="stylesheet" href="bottom-nav.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 </head>
 <body>
-   <!-- Dashboard Main Content -->
+
+  <!-- Dashboard Main Content -->
   <main class="dashboard">
     <!-- Main Balance -->
     <section class="balance-card">
@@ -20,69 +21,85 @@
       <h1>₦0.00</h1>
     </section>
 
-    <!-- Info Cards -->
+    <!-- Referral and Deposit Balances -->
     <section class="info-cards">
       <div class="info-card">
         <p>Referral Balance</p>
         <h2>₦0.00</h2>
       </div>
       <div class="info-card">
-  <p>Deposit Balance</p>
-  <h2 id="depositBalance">₦0.00</h2>
-</div>
- </section>
-    
-    <!-- Task Balance Card -->
-<section class="info-cards">
-  <div class="info-card">
-    <p>Task Balance</p>
-    <h2 id="taskBalance">₦0.00</h2>
-  </div>
-</section>
-<br>
-<br>
-<br>
-<br>
+        <p>Deposit Balance</p>
+        <h2 id="depositBalance">₦0.00</h2>
+      </div>
+    </section>
+
+    <!-- Task Balance -->
+    <section class="info-cards">
+      <div class="info-card">
+        <p>Task Balance</p>
+        <h2 id="taskBalance">₦0.00</h2>
+      </div>
+    </section>
   </main>
 
-  
-  <!-- Scripts -->
+  <!-- Balance Initialization and Calculation -->
   <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const mainBalanceEl = document.querySelector(".balance-card h1");
-    const referralBalanceEl = document.querySelector(".info-cards .info-card:nth-child(1) h2");
-    const depositBalanceEl = document.getElementById("depositBalance");
+    document.addEventListener("DOMContentLoaded", () => {
+      const mainBalanceEl = document.querySelector(".balance-card h1");
+      const referralBalanceEl = document.querySelector(".info-cards .info-card:nth-child(1) h2");
+      const depositBalanceEl = document.getElementById("depositBalance");
 
-    let mainBalance = parseFloat(localStorage.getItem("mainBalance")) || 0;
-    const referrals = parseInt(localStorage.getItem("referrals")) || 0;
-    const lastReferralCount = parseInt(localStorage.getItem("lastReferralCount")) || 0;
+      // Step 1: Initialize balances for new users
+      if (!localStorage.getItem("hasInitializedBalances")) {
+        localStorage.setItem("mainBalance", "0");
+        localStorage.setItem("referralBalance", "0");
+        localStorage.setItem("referrals", "0");
+        localStorage.setItem("lastReferralCount", "0");
+        localStorage.setItem("hasInitializedBalances", "true");
+      }
 
-    const bonusPerReferral = 100;
-    const referralBalance = referrals * bonusPerReferral;
+      // Step 2: Load balances
+      let mainBalance = parseFloat(localStorage.getItem("mainBalance")) || 0;
+      const referralsRaw = localStorage.getItem("referrals");
+      const lastReferralCount = parseInt(localStorage.getItem("lastReferralCount")) || 0;
+      const referrals = referralsRaw !== null ? parseInt(referralsRaw) : 0;
+      const bonusPerReferral = 100;
+      const referralBalance = referrals * bonusPerReferral;
 
-    // Update main balance if there are new referrals
-    if (referrals > lastReferralCount) {
-      const newBonus = (referrals - lastReferralCount) * bonusPerReferral;
-      mainBalance += newBonus;
+      // Step 3: Add new referral bonuses
+      if (
+        referralsRaw !== null &&
+        !isNaN(referrals) &&
+        referrals > lastReferralCount &&
+        referrals > 0
+      ) {
+        const newBonus = (referrals - lastReferralCount) * bonusPerReferral;
+        mainBalance += newBonus;
+        localStorage.setItem("mainBalance", mainBalance.toFixed(2));
+        localStorage.setItem("referralBalance", referralBalance.toFixed(2));
+        localStorage.setItem("lastReferralCount", referrals);
+      }
 
-      localStorage.setItem("mainBalance", mainBalance.toFixed(2));
-      localStorage.setItem("referralBalance", referralBalance.toFixed(2));
-      localStorage.setItem("lastReferralCount", referrals);
-    }
+      // Step 4: Display balances in UI
+      mainBalanceEl.textContent = `₦${mainBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+      referralBalanceEl.textContent = `₦${referralBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
-    // Update UI
-    mainBalanceEl.textContent = `₦${mainBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-    referralBalanceEl.textContent = `₦${referralBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+      // Step 5: Deposit balance
+      const userId = localStorage.getItem("Id");
+      const depositBalanceKey = `depositBalance_${userId}`;
+      const depositBalance = parseFloat(localStorage.getItem(depositBalanceKey)) || 0;
+      depositBalanceEl.textContent = `₦${depositBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
-    // Update Deposit Balance
-    const userId = localStorage.getItem("Id");
-    const depositBalanceKey = `depositBalance_${userId}`;
-    const depositBalance = parseFloat(localStorage.getItem(depositBalanceKey)) || 0;
+      // Debug Logs
+      console.log("Main Balance:", mainBalance);
+      console.log("Referrals:", referrals);
+      console.log("Last Referral Count:", lastReferralCount);
+      console.log("Referral Balance:", referralBalance);
+      console.log("Deposit Balance:", depositBalance);
+    });
+  </script>
 
-    depositBalanceEl.textContent = `₦${depositBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-  });
-</script>
-  <!-- operational js -->
+  <!-- Operational Scripts -->
   <script src="block access.js"></script>
   <script src="manual.js"></script>
   <script src="id.js"></script>
@@ -95,18 +112,15 @@
   <script src="first time Cop.js"></script>
   <script src="Local manager.js"></script>
   <script src="monitor.js"></script>
-  
-  <!-- structural js  -->
+
+  <!-- Structural Scripts -->
   <script src="navbar.js"></script>
   <script src="bottom-nav.js"></script>
   <script src="preview.js"></script>
   <script src="corrector.js"></script>
-    <script src="online.js"></script>
-    <script src="notification.js"></script>
-    <script src="specific notification.js"></script>
+  <script src="online.js"></script>
+  <script src="notification.js"></script>
+  <script src="specific notification.js"></script>
+
 </body>
 </html>
-
-
-
-
