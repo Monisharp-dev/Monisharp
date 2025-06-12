@@ -18,6 +18,7 @@ const allowedIds = [
   "blessingsalami081",
   "bokoh5061",
   "bolashakiratafeez",
+  "buchiflex13",
   "chrisfaith323",
   "chukwukajames131",
   "crys9213",

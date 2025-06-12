@@ -1,5 +1,5 @@
 // List of specific user IDs allowed to see the message
-const allowedUserIds = ["67890", "khaddyabdullai"]; // Replace with actual Ids
+const allowedUserIds = ["67890", "buchiflex13"]; // Replace with actual Ids
 
 // Get user ID from localStorage
 const monisharpUserId = localStorage.getItem("Id");
@@ -55,7 +55,7 @@ if (allowedUserIds.includes(monisharpUserId)) {
   notify.className = "mono-notify";
   notify.innerHTML = `
     <div>
-      ❌ Your Withdrawal was REJECTED. The balance you received was not yours at all. It was a glitch from our system.</div>
+      ❌ Your deposit was not successful because you intentionally uploaed the same recipt you used in activating your account. It doesn't work that way</div>
     <button class="close-btn" onclick="this.parentElement.remove()">×</button>
   `;
   document.body.appendChild(notify);
