@@ -85,5 +85,5 @@
 })();
 showWelcomeNotification(`
   <strong>🎉 Welcome Back!</strong><br>
-  Don't miss the opportunity to get ₦2500 very fast by just <b> TAPPING</b>.Tap <a href="taptaptapintro.html">HERE</a> to get started 🤸</strong>!
+  New Tasks have been added ✅. Go to <a href="task.html"> TASK PAGE</a> and perfom tasks 🤸</strong>!
 `);
