@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LuckySpin Rewards</title>
+
+    <!-- Google Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Style CSS -->
+    <link rel="stylesheet" href="wheel spin.css" />
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+     
+    <style>
+      .info-box {
+        background-color: #fff5cc;
+        border: 1px solid #ffd966;
+        padding: 10px 15px;
+        margin: 15px auto;
+        border-radius: 10px;
+        max-width: 90%;
+        font-size: 15px;
+        color: #333;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <h1>LuckySpin Rewards</h1>
+
+      <!-- INFO BOX -->
+      <div class="info-box">
+        🎯 Each spin costs ₦10. It will be deducted from your <b>Deposit balance</b> first, or from <b>Task Balance</b> if insufficient.
+      </div>
+
+      <div class="container">
+        <div class="pointer"></div>
+        <canvas id="wheel"></canvas>
+        <button id="spin-btn">Spin</button>
+        <img src="spinner-arrow-.svg" alt="spinner-arrow" />
+      </div>
+
+      <div id="final-value">
+        <p>Click On The Spin Button To Start</p>
+      </div>
+    </div>
+
+    <!-- ALERT BOX -->
+    <div class="alert-box" id="alertBox"></div>
+
+    <!-- Chart JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+    <!-- Chart JS Plugin for displaying text over chart -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.1.0/chartjs-plugin-datalabels.min.js"></script>
+
+    <!-- Script Js -->
+    <script src="wheel spin.js"></script>
+   
+  </body>
+</html>

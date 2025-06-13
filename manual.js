@@ -60,6 +60,7 @@ const allowedIds = [
   "jibarnabas17",
   "jnrfred74",
   "josephjoeboy445",
+  "judeephraim2007",
   "kehindeige527",
   "khaddyabdullai",
   "mayrhejaneluv",
@@ -80,6 +81,7 @@ const allowedIds = [
   "raetharolin",
   "raphaelumoh5",
   "safiyaibrahimbahago",
+  "sarchibong92",
   "sermborleeh",
   "sesughdaniel433",
   "sikinsam24",
@@ -93,7 +95,8 @@ const allowedIds = [
   "utomobongpatrick16",
   "victorumoren113",
   "whizzyboss67",
-  "winnerfelix094"
+  "winnerfelix094",
+  "wisdomeyo75"
 ];
 
 const currentUserId = localStorage.getItem("Id");
