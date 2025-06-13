@@ -1,0 +1,141 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    
+}
+
+body {
+    height: 100vh;
+    background-image: linear-gradient(-225deg, #65379B 0%, #886AEA 53%, #6457C6 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.wrapper {
+    width: 90%;
+    max-width: 500px;
+    background-color: #ffffff;
+    padding: 3em 2em;
+    border-radius: 1em;
+    box-shadow: 0 4em 5em rgba(27, 8, 53, 0.2);
+    position: relative;
+}
+
+.wrapper > h1 {
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 1.5em;
+    color: #333;
+}
+
+.container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1;
+    margin: auto;
+    overflow: hidden;
+}
+
+#wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+    position: relative;
+}
+
+#spin-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 70px;
+    width: 70px;
+    border-radius: 50%;
+    background: #484848;
+    color: #ffffff;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    z-index: 10;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: background 0.3s;
+}
+
+#spin-btn:hover {
+    background: #333333;
+}
+
+.pointer {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 1.5em solid transparent;
+    border-right: 1.5em solid transparent;
+    border-bottom: 2em solid #ff3e3e;
+    z-index: 20;
+}
+
+#final-value {
+    font-size: 1.2em;
+    text-align: center;
+    margin-top: 1.8em;
+    font-weight: 600;
+    color: #222;
+}
+
+/* ==========================
+   Dynamic Alert Styles (JS)
+   ========================== */
+.alert-box {
+    position: absolute;
+    top: -60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #4caf50;
+    color: white;
+    padding: 0.8em 1.5em;
+    border-radius: 8px;
+    font-size: 1em;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s ease;
+    z-index: 99;
+}
+
+.alert-box.error {
+    background-color: #f44336;
+}
+
+.alert-box.info {
+    background-color: #2196f3;
+}
+
+.alert-box.show {
+    top: 10px;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .wrapper {
+        padding: 2em 1em;
+        font-size: 14px;
+    }
+
+    #spin-btn {
+        height: 60px;
+        width: 60px;
+        font-size: 1em;
+    }
+}

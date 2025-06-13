@@ -21,7 +21,6 @@ function shouldShowBadge(key, duration) {
   const seen = new Date(seenDate);
   const now = new Date();
   const diffDays = Math.floor((now - seen) / (1000 * 60 * 60 * 24));
-  // Show badge only if within duration days since first seen
   return diffDays < duration;
 }
 
@@ -175,7 +174,6 @@ const navbarSidebarHTML = `
 
       <div class="sidebar-section">QUIZZES</div>
       <nav class="nav-links">
-        <a href="daily.html"><i class="fas fa-gift"></i> Daily Reward ${dailyBadge}</a>
         <a href="intro.html"><i class="fas fa-brain"></i> What's QuickBrain Mini ${quickBrainBadge}</a>
         <a href="join.html"><i class="fas fa-sign-in-alt"></i> Join QuickBrain Mini ${quickBrainBadge}</a>
         <a href="leaderboard.html"><i class="fas fa-trophy"></i> Leaderboard ${quickBrainBadge}</a>
@@ -185,7 +183,12 @@ const navbarSidebarHTML = `
       <nav class="nav-links">
         <a href="taptaptapintro.html"><i class="fas fa-play-circle"></i> Tap Intro ${tapBadge}</a>
         <a href="shop.html"><i class="fas fa-store"></i> Tap Shop ${tapBadge}</a>
-        <a href="tap winners.html"><i class="fas fa-users"></i> Tap Gane Scoreboard</a>
+        <a href="tap winners.html"><i class="fas fa-users"></i> Tap Game Scoreboard</a>
+      </nav>
+
+      <div class="sidebar-section">GAMES</div>
+      <nav class="nav-links">
+        <a href="wheelspin.html"><i class="fas fa-bullseye"></i> Spin & Win Game</a>
       </nav>
 
       <div class="sidebar-section">INFORMATION</div>
