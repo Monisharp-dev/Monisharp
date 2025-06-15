@@ -25,5 +25,5 @@ function allotDepositBalance(userId, amount, uniqueKey) {
 }
 
 // Example usage:
-allotDepositBalance("oduduabasibassey608", 100, "0000A");
+allotDepositBalance("omoizehappy", 200, "0000A");
 
