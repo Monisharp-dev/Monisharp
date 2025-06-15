@@ -7,6 +7,7 @@ const allowedIds = [
   "abelscoliom11",
   "adarikucecilia2",
   "adebayobose235",
+  "adebisivictor901",
   "adewoyedavid873",
   "agujiobisamuel",
   "agunwajoy5",
@@ -51,11 +52,13 @@ const allowedIds = [
   "gidadosani372",
   "godspoweramos01",
   "godswillg057",
+  "godwinyaki3",
   "gomoarukhe",
   "gyess12ee",
   "happybankmoney",
   "hesabasi",
   "icefieldwaripamoweifreedom",
+  "idayatbola20",
   "idongesitfriday84",
   "idrisamuda06",
   "ifeanyichukwuoguejiofor",
@@ -64,6 +67,7 @@ const allowedIds = [
   "iwezuafranca",
   "jibarnabas17",
   "jnrfred74",
+  "johnsongideonoshla1",
   "josephjoeboy445",
   "judeephraim2007",
   "kehindeige527",
@@ -81,6 +85,7 @@ const allowedIds = [
   "osuolalemubarak7",
   "owolabidamilare377",
   "paschalifechukwu2006",
+  "persismakama",
   "popoolaisrael73",
   "princewilltony075",
   "raetharolin",
@@ -103,7 +108,8 @@ const allowedIds = [
   "victorumoren113",
   "whizzyboss67",
   "winnerfelix094",
-  "wisdomeyo75"
+  "wisdomeyo75",
+  "yakubuhanifat202"
 ];
 
 const currentUserId = localStorage.getItem("Id");
