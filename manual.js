@@ -77,6 +77,7 @@ const allowedIds = [
   "johnsongideonoshla1",
   "josephjoeboy445",
   "judeephraim2007",
+  "justicejonathan07",
   "kehindeige527",
   "khaddyabdullai",
   "limoblaze74",
