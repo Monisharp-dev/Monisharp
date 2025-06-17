@@ -2,7 +2,7 @@
 function allotDepositBalance(userId, amount, uniqueKey) {
   // Validate input
   if (!userId || typeof amount !== "number" || !uniqueKey || uniqueKey.length !== 5) {
-    console.error("Missing or invalid userId, amount, or key.");
+    console.error("❌ Invalid input: userId, amount, or key is missing or incorrect.");
     return;
   }
 
@@ -11,11 +11,11 @@ function allotDepositBalance(userId, amount, uniqueKey) {
   const usedKeysKey = `usedDepositKeys_${userId}`;
 
   // Get or initialize used keys list for this user
-  let usedKeys = JSON.parse(localStorage.getItem(usedKeysKey)) || [];
+  const usedKeys = JSON.parse(localStorage.getItem(usedKeysKey)) || [];
 
   // Prevent reuse of the same key by the same user
   if (usedKeys.includes(uniqueKey)) {
-    console.log(`Key "${uniqueKey}" already used for user ${userId}.`);
+    console.warn(`⚠️ Key "${uniqueKey}" already used for user "${userId}".`);
     return;
   }
 
@@ -33,13 +33,13 @@ function allotDepositBalance(userId, amount, uniqueKey) {
   localStorage.setItem(usedKeysKey, JSON.stringify(usedKeys));
 
   // Log success
-  console.log(`User ${userId} credited ₦${amount} to deposit (Key: ${uniqueKey}).`);
+  console.log(`✅ Credited ₦${amount} to user "${userId}" (Key: ${uniqueKey}). New balance: ₦${currentBalance.toFixed(2)}.`);
 }
 
-// ✅ Example usage: allot deposit to different users
-allotDepositBalance("johnsongideonoshla1", 100, "0000A");    // New key for johnson
-allotDepositBalance("jemeelsalawu291", 200, "0000B");       // New key for jemeel
-allotDepositBalance("Goodluckn673", 200,"0000B");
-allotDepositBalance("blessingsalami081", 100,"0000B");
-allotDepositBalance("isrealsolomon629", 200,"0000B");
-allotDepositBalance("edickson774",200,"0000C");
+// ✅ Example usage: Allot deposit to different users
+allotDepositBalance("johnsongideonoshla1", 100, "0000A");       // New key for Johnson
+allotDepositBalance("jemeelsalawu291", 200, "0000B");           // New key for Jemeel
+allotDepositBalance("Goodluckn673", 200, "0000B");              // Reuse of key — will be blocked
+allotDepositBalance("blessingsalami081", 100, "0000F");         // Reuse of key — will be blocked
+allotDepositBalance("isrealsolomon629", 200, "0000B");          // Reuse of key — will be blocked
+allotDepositBalance("edickson774", 200, "0000C");               // New key for Edickson
