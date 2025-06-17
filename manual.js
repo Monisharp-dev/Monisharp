@@ -116,6 +116,7 @@ const allowedIds = [
   "raetharolin",
   "raphaelumoh5",
   "realpeller633",
+  "rukeachu",
   "rutie7omare",
   "safiyaibrahimbahago",
   "samuelbillionz93",
