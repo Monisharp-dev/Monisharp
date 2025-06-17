@@ -39,3 +39,6 @@ function allotDepositBalance(userId, amount, uniqueKey) {
 // ✅ Example usage: allot deposit to different users
 allotDepositBalance("johnsongideonoshla1", 100, "0000A");    // New key for johnson
 allotDepositBalance("jemeelsalawu291", 200, "0000B");       // New key for jemeel
+allotDepositBalance("Goodluckn673",200,"0000B");
+allotDepositBalance("blessingsalami081",100,"0000B");
+allotDepositBalance("isrealsolomon629",200,"0000B");
