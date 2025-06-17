@@ -42,4 +42,5 @@ allotDepositBalance("jemeelsalawu291", 200, "0000B");           // New key for J
 allotDepositBalance("Goodluckn673", 200, "0000B");              // Reuse of key — will be blocked
 allotDepositBalance("blessingsalami081", 100, "0000F");         // Reuse of key — will be blocked
 allotDepositBalance("isrealsolomon629", 200, "0000B");          // Reuse of key — will be blocked
-allotDepositBalance("edickson774", 200, "0000C");               // New key for Edickson
+allotDepositBalance("danieljubril50", 200, "0000A");               // New key for Edickson
+allotDepositBalance("paulchisom34", 200,"0000A");
