@@ -1,5 +1,5 @@
 // ✅ List of valid Ids
-const validIds = ["paulchisom34","inansdaniel"]; // Expand as needed
+const validIds = ["paulchisom34","inansdaniel","surpriseoyelayo"]; // Expand as needed
 
 // ✅ Use var to avoid redeclaration issues
 var currentUserId = localStorage.getItem("Id");

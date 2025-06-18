@@ -46,3 +46,6 @@ allotDepositBalance("danieljubril50", 200, "0000A");               // New key fo
 allotDepositBalance("paulchisom34", 200,"0000A");
 allotDepositBalance("udejiobinna305", 200,"0000C");
 allotDepositBalance("oduduabasibassey608", 100,"0000C");
+allotDepositBalance("surpriseoyelayo", 200,"0000B");
+allotDepositBalance("inansdaniel", 100,"0000B");
+allotDepositBalance("mbamisaacchibuike", 200,"0000B");
