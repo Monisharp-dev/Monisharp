@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
   notifyBox.style.display = "none";
   document.body.appendChild(notifyBox);
 
-  function showActivationNotice() {
+  function showCountdownWithRedirect() {
     notifyBox.style.display = "flex";
     notifyBox.innerHTML = `
       <div class="notification-content">
@@ -93,6 +93,53 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
   }
+  function showCountdownWithRedirect() {
+  notifyBox.style.display = "flex";
+  notifyBox.innerHTML = `
+    <div class="notification-content">
+      <p>Activate your account with ₦200!
+      <br>Please hold on while we initialize the app...</p>
+      <div class="notice-timing">
+        <span id="countdown">80</span> seconds remaining
+      </div>
+      <button id="redirectBtn" disabled style="
+        margin-top: 16px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        background-color: #333;
+        color: #fff;
+        cursor: not-allowed;
+        opacity: 0.5;
+        transition: all 0.3s ease;
+        display: none;
+      ">Continue</button>
+    </div>
+  `;
+
+  const countdownEl = document.getElementById("countdown");
+  const redirectBtn = document.getElementById("redirectBtn");
+
+  let remaining = 80;
+  const timer = setInterval(() => {
+    remaining--;
+    countdownEl.textContent = remaining;
+
+    if (remaining <= 0) {
+      clearInterval(timer);
+      redirectBtn.disabled = false;
+      redirectBtn.style.cursor = "pointer";
+      redirectBtn.style.opacity = "1";
+      redirectBtn.style.display = "inline-block";
+      redirectBtn.textContent = "Proceed";
+      redirectBtn.addEventListener("click", () => {
+        // Redirect or perform action
+        window.location.href = "activate.html"; // change as needed
+      });
+    }
+  }, 1000);
+}
 
   function hideActivationNotice() {
     notifyBox.style.display = "none";
@@ -144,10 +191,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function processUserActivation() {
-    if (!userId) return showActivationNotice();
+    if (!userId) return showCountdownWithRedirect()();
 
     const rawData = localStorage.getItem("copData");
-    if (!rawData) return showActivationNotice();
+    if (!rawData) return showCountdownWithRedirect()();
 
     const users = JSON.parse(rawData);
     const user = users.find(item => item.Id === userId);
@@ -162,10 +209,10 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("copData");
         hideActivationNotice();
       } else {
-        showActivationNotice();
+        showCountdownWithRedirect()();
       }
     } else {
-      showActivationNotice();
+      showCountdownWithRedirect()();
     }
   }
 
@@ -173,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("activateStatus") === "present") {
     hideActivationNotice();
   } else {
-    showActivationNotice(); // Show it first
+    showCountdownWithRedirect()(); // Show it first
 
     if (shouldFetchData()) {
       fetchAllData();
