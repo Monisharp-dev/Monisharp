@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    if (localStorage.getItem('hasSubmitted') === 'true') {
+    if (localStorage.getItem('hasNotGySubmitted') === 'true') {
       showNotification('You have already submitted your payment details.', 'error');
       return;
     }
