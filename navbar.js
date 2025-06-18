@@ -212,3 +212,54 @@ function toggleSidebar() {
   sidebar.classList.toggle("active");
   overlay.classList.toggle("active");
 }
+// Inject tooltip style
+const tooltipStyle = document.createElement("style");
+tooltipStyle.textContent = `
+  .menu-tooltip {
+    position: absolute;
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .menu-tooltip.show {
+    opacity: 1;
+  }
+`;
+document.head.appendChild(tooltipStyle);
+
+// Inject tooltip element into the DOM
+const tooltipDiv = document.createElement("div");
+tooltipDiv.id = "menu-tooltip";
+tooltipDiv.className = "menu-tooltip";
+tooltipDiv.innerText = "Tap this ☰ Menu to explore features!";
+document.body.appendChild(tooltipDiv);
+
+// Function to show tooltip
+function showTooltip() {
+  const menuIcon = document.querySelector(".menu-icon");
+  const tooltip = document.getElementById("menu-tooltip");
+
+  if (!menuIcon || !tooltip) return;
+
+  const rect = menuIcon.getBoundingClientRect();
+  tooltip.style.top = `${rect.bottom + 10 + window.scrollY}px`;
+  tooltip.style.left = `${rect.left + rect.width / 2 - 60}px`; // center tooltip
+  tooltip.classList.add("show");
+
+  setTimeout(() => {
+    tooltip.classList.remove("show");
+  }, 3000); // show for 3 seconds
+}
+
+// Show the tooltip every 30 seconds
+const tooltipInterval = setInterval(showTooltip, 30000);
+
+// Also show it immediately once after 1 second
+setTimeout(showTooltip, 1000);
