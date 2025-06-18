@@ -132,12 +132,21 @@
     <div class="alert" id="alertBox"></div>
   </div>
 
- <script>
-  
+<script>
   const entryForm = document.getElementById("entryForm");
   const alertBox = document.getElementById("alertBox");
-  const SHEETDB_URL = "https://sheetdb.io/api/v1/w1n2aqd7wpcf7";
-  const IMGBB_API = "https://api.imgbb.com/1/upload?key=b08c28e563e88b729eefa384ac7d00db";
+
+  const SHEETDB_URLS = [
+    "https://sheetdb.io/api/v1/w1n2aqd7wpcf7",
+    // Add more SheetDB endpoints if needed
+    // "https://sheetdb.io/api/v1/your-fallback-id"
+  ];
+
+  const IMGBB_KEYS = [
+    "b08c28e563e88b729eefa384ac7d00db",
+    // Add more ImgBB API keys if needed
+    // "d5f988b44d75d2172a185abbe74a07a4"
+  ];
 
   function showAlert(message, type = 'success') {
     alertBox.innerText = message;
@@ -160,6 +169,59 @@
     });
   };
 
+  async function uploadImageWithFallbacks(imageFile) {
+    const formData = new FormData();
+    formData.append("image", imageFile);
+    const expiration = Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60);
+
+    for (const key of IMGBB_KEYS) {
+      try {
+        const url = `https://api.imgbb.com/1/upload?key=${key}&expiration=${expiration}`;
+        const res = await fetch(url, {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        console.log("Trying ImgBB key:", key, "Response:", data);
+
+        if (data.success) {
+          return data.data.url;
+        }
+      } catch (err) {
+        console.error("ImgBB key failed:", key, err);
+      }
+    }
+
+    return null; // All attempts failed
+  }
+
+  async function sendToSheetDBWithFallbacks(data) {
+    for (const url of SHEETDB_URLS) {
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ data })
+        });
+
+        console.log("Trying SheetDB URL:", url, "Status:", res.status);
+
+        if (res.ok) {
+          return true;
+        } else {
+          const text = await res.text();
+          console.warn("SheetDB error:", text);
+        }
+      } catch (err) {
+        console.error("SheetDB failed:", url, err);
+      }
+    }
+
+    return false; // All attempts failed
+  }
+
   entryForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -173,64 +235,32 @@
       return showAlert("All fields are required!", "error");
     }
 
-    const formData = new FormData();
-    formData.append("image", imageUrlFile);
-    const expiration = Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60);
-
     showAlert("Uploading image, please wait...");
 
-    try {
-      console.log("Uploading image to ImgBB...");
-      const res = await fetch(`${IMGBB_API}&expiration=${expiration}`, {
-        method: "POST",
-        body: formData
-      });
-      const data = await res.json();
+    const uploadedImageUrl = await uploadImageWithFallbacks(imageUrlFile);
+    if (!uploadedImageUrl) {
+      return showAlert("Image upload failed across all servers!", "error");
+    }
 
-      console.log("ImgBB Response:", data);
+    console.log("Image uploaded to:", uploadedImageUrl);
 
-      if (!data.success) {
-        console.error("ImgBB upload failed:", data);
-        return showAlert("Image upload failed!", "error");
-      }
+    const sheetData = {
+      Id,
+      amount,
+      date,
+      imageUrl: uploadedImageUrl
+    };
 
-      const imageUrl = data.data.url;
-      console.log("Image uploaded successfully:", imageUrl);
+    showAlert("Saving entry, please wait...");
 
-      const sheetData = {
-        Id: Id,
-        amount: amount,
-        date: date,
-        imageUrl: imageUrl
-      };
-
-      console.log("Sending data to SheetDB:", sheetData);
-      showAlert("Saving entry, please wait...");
-
-      const response = await fetch(SHEETDB_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ data: sheetData })
-      });
-
-      console.log("SheetDB response status:", response.status);
-
-      if (!response.ok) {
-        const responseText = await response.text(); // get error details
-        console.error("SheetDB error:", responseText);
-        throw new Error("Error saving to database");
-      }
-
+    const saved = await sendToSheetDBWithFallbacks(sheetData);
+    if (saved) {
       showAlert("✅ Submitted successfully! Wait for confirmation.", "success");
       entryForm.reset();
-    } catch (error) {
-      console.error("Submission error:", error);
-      showAlert("Something went wrong! Try again later.", "error");
+    } else {
+      showAlert("❌ Submission failed across all backup APIs.", "error");
     }
   });
-
 </script>
 <script src="network Checker.js"></script>
 </body>
