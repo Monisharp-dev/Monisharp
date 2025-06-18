@@ -28,6 +28,6 @@ function activateTapForUser(userId) {
 }
 
 // 👥 List of user Ids to assign
-const userIds = ["favourboy817","umohaniekeme42","michealopeyemi608","inansdaniel","blessingsalami081"];
+const userIds = ["favourboy817","umohaniekeme42","michealopeyemi608","inansdaniel","blessingsalami081","etukubonganthony"];
 
 userIds.forEach(id => activateTapForUser(id));
