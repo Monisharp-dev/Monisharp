@@ -45,3 +45,4 @@ allotDepositBalance("isrealsolomon629", 200, "0000B");          // Reuse of key 
 allotDepositBalance("danieljubril50", 200, "0000A");               // New key for Edickson
 allotDepositBalance("paulchisom34", 200,"0000A");
 allotDepositBalance("udejiobinna305", 200,"0000C");
+allotDepositBalance("oduduabasibassey608", 100,"0000C");
