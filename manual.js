@@ -112,6 +112,7 @@ const allowedIds = [
   "mujaheedpresdor001",
   "muslimatkehinde05",
   "myregworks49",
+  "nelsonubong222",
   "ngoziblessingawah",
   "nnaemekapraise5",
   "obunsodaniel",
