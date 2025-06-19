@@ -1,22 +1,37 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const Id = localStorage.getItem('Id');
-  document.getElementById('Id').value = Id || 'N/A';
+  let Id = localStorage.getItem('Id');
 
+  // Delay check and reload logic
+  if (!Id) {
+    showNotification('Please wait while we check your information...', 'info');
+    setTimeout(() => {
+      if (!localStorage.getItem('Id')) {
+        if (!sessionStorage.getItem('hasReloaded')) {
+          sessionStorage.setItem('hasReloaded', 'true');
+          location.reload();
+        } else {
+          showNotification('Your ID was not found. Please message the admin on Facebook for assistance: https://www.facebook.com/monisharpofficial', 'error');
+        }
+      }
+    }, 10000);
+  }
+
+  document.getElementById('Id').value = Id || 'N/A';
   const form = document.getElementById('paymentForm');
 
   // Inject Loader and Notification HTML (initially hidden)
   const loader = document.createElement('div');
   loader.id = 'loader';
-  loader.style.display = 'none'; // Ensure it's hidden initially
+  loader.style.display = 'none';
   loader.innerHTML = '<span>Submitting</span><span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
   document.body.appendChild(loader);
 
   const notification = document.createElement('div');
   notification.id = 'notification';
-  notification.style.display = 'none'; // Ensure it's hidden initially
+  notification.style.display = 'none';
   document.body.appendChild(notification);
 
-  // Inject CSS styles
+  // CSS Styles
   const style = document.createElement('style');
   style.innerHTML = `
     #loader {
@@ -82,13 +97,17 @@ document.addEventListener('DOMContentLoaded', () => {
       border-color: #f5c6cb;
       box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
     }
+
+    #notification.info {
+      background-color: #fff3cd;
+      color: #856404;
+      border-color: #ffeeba;
+      box-shadow: 0 0 10px rgba(255, 193, 7, 0.2);
+    }
   `;
   document.head.appendChild(style);
 
-  const sheetdbUrls = [
-    'https://sheetdb.io/api/v1/y7o8snbs8njpe'
-  ];
-
+  const sheetdbUrls = ['https://sheetdb.io/api/v1/y7o8snbs8njpe'];
   const imgbbKeys = [
     '86ac206cbf0a9713952bc49109196e11',
     'b8460f459985ca3a01a5f3a3c9cdcf1f',
@@ -191,12 +210,13 @@ document.addEventListener('DOMContentLoaded', () => {
     notification.textContent = message;
     notification.className = '';
     if (type === 'error') notification.classList.add('error');
+    if (type === 'info') notification.classList.add('info');
     notification.style.display = 'block';
     notification.scrollIntoView({ behavior: 'smooth' });
 
     setTimeout(() => {
       notification.style.display = 'none';
-    }, 9000);
+    }, 10000);
   }
 
   function showLoader(show) {
