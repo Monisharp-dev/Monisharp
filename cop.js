@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
     notifyBox.style.display = "flex";
     notifyBox.innerHTML = `
       <div class="notification-content">
-        <p><strong>Activate your account with ₦200 by 
+        <p><strong>Activate your account with ₦300 by 
         <a href="activate.html">clicking here</a>.</strong></p>
       </div>
     `;
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
   notifyBox.style.display = "flex";
   notifyBox.innerHTML = `
     <div class="notification-content">
-      <p>Activate your account with ₦200!
+      <p>Activate your account with ₦300!
       <br>Please hold on while we initialize the app...</p>
       <div class="notice-timing">
         <span id="countdown">80</span> seconds remaining
