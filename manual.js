@@ -66,6 +66,7 @@ const allowedIds = [
   "geoffreyjootar",
   "gidadosani372",
   "gift36385",
+  "godsonsod97",
   "godspoweramos01",
   "godswillg057",
   "godwinyaki3",
