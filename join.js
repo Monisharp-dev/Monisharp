@@ -54,11 +54,19 @@ function showNotification(message, type) {
   console.log("🔔 Notification:", message);
 }
 
-// ✅ Show proceed section
+// ✅ Show proceed section and disable both payment buttons
 function showProceedButton() {
   const proceedSection = document.getElementById("proceedSection");
   proceedSection.classList.remove("hidden");
   proceedSection.scrollIntoView({ behavior: "smooth" });
+
+  const payTaskBtn = document.getElementById("payTask");
+  const payBankBtn = document.getElementById("payBank");
+
+  if (payTaskBtn) payTaskBtn.disabled = true;
+  if (payBankBtn) payBankBtn.disabled = true;
+
+  console.log("✅ Payment buttons disabled after successful payment.");
 }
 
 // ✅ Task balance payment logic
@@ -80,30 +88,55 @@ document.getElementById("payTask").addEventListener("click", () => {
   const balanceStr = localStorage.getItem(taskBalanceKey);
   const currentBalance = parseFloat(balanceStr) || 0;
 
-  console.log(`💰 Current balance for ${taskBalanceKey}: ₦${currentBalance}`);
+  console.log(`💰 Current Task Balance: ₦${currentBalance}`);
 
   if (currentBalance >= 50) {
     const newBalance = currentBalance - 50;
     localStorage.setItem(taskBalanceKey, newBalance.toString());
     localStorage.setItem("quizPay", "present");
 
-    console.log("✅ ₦50 deducted. New balance:", newBalance);
-    showNotification("₦50 deducted! ✅ You can now proceed to the quiz.", "success");
+    console.log("✅ ₦50 deducted from task balance.");
+    showNotification("₦50 deducted from task balance! ✅ You can now proceed to the quiz.", "success");
 
     setTimeout(() => {
       showProceedButton();
     }, 1500);
   } else {
-    console.log("❌ Insufficient balance.");
-    showNotification("❌ Insufficient balance. Please fund your task balance.", "error");
+    showNotification("❌ Insufficient task balance.", "error");
   }
 });
 
-// ✅ Bank payment redirect
+// ✅ Deposit balance payment logic
 document.getElementById("payBank").addEventListener("click", () => {
-  console.log("➡️ Redirecting to bank payment page (quizDed.html)...");
-  showNotification("Redirecting to bank payment page...", "info");
-  setTimeout(() => {
-    window.location.href = "quizDed.html";
-  }, 1000);
+  const id = localStorage.getItem("Id");
+  if (!id) {
+    showNotification("User ID not found. Please log in again.", "error");
+    return;
+  }
+
+  if (isQuizPaid()) {
+    showNotification("✅ You've already paid. Proceed below.", "info");
+    return;
+  }
+
+  const depositKey = `depositBalance_${id}`;
+  const balanceStr = localStorage.getItem(depositKey);
+  const currentBalance = parseFloat(balanceStr) || 0;
+
+  console.log(`💰 Current Deposit Balance: ₦${currentBalance}`);
+
+  if (currentBalance >= 50) {
+    const newBalance = currentBalance - 50;
+    localStorage.setItem(depositKey, newBalance.toString());
+    localStorage.setItem("quizPay", "present");
+
+    console.log("✅ ₦50 deducted from deposit balance.");
+    showNotification("₦50 deducted from deposit balance! ✅ You can now proceed to the quiz.", "success");
+
+    setTimeout(() => {
+      showProceedButton();
+    }, 1500);
+  } else {
+    showNotification("❌ Insufficient deposit balance.", "error");
+  }
 });

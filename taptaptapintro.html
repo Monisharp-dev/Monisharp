@@ -165,63 +165,87 @@
   <div class="toast" id="toast">Redirecting you now...</div>
 
   <!-- Continue Button -->
-  <button class="continue-btn" onclick="handleContinue()">
-    <i class="fas fa-play-circle"></i> Continue
-  </button>
+  <button id="payBtn" class="continue-btn" onclick="handleContinue()">
+  <i class="fas fa-money-bill-wave"></i> Pay ₦100
+</button>
 
-  <script>
- function showToast(message) {
+<script>
+function showToast(message) {
   const toast = document.getElementById('toast');
   toast.textContent = message;
   toast.style.display = 'block';
-
   setTimeout(() => {
     toast.style.display = 'none';
   }, 2800);
 }
 
+// Get next Saturday 11:59 PM timestamp
+function getNextSaturdayMidnight() {
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sunday, 6 = Saturday
+  const diff = (6 - day + 7) % 7; // days until Saturday
+  const nextSaturday = new Date(now.getFullYear(), now.getMonth(), now.getDate() + diff);
+  nextSaturday.setHours(23, 59, 59, 999); // 11:59:59 PM
+  return nextSaturday.getTime();
+}
+
 function handleContinue() {
-  // Get the user Id from localStorage (assuming it's stored with this key)
-  const userId = localStorage.getItem("Id");  // change if your Id key is different
-  if (!userId) {
-    showToast("User not identified.");
+  const userId = localStorage.getItem("Id");
+  if (!userId) return showToast("User not identified.");
+
+  const payKey = `tapPaid_${userId}`;
+  const paidInfo = JSON.parse(localStorage.getItem(payKey));
+  const now = Date.now();
+
+  // Check if already paid and not expired
+  if (paidInfo && now < paidInfo.expiresAt) {
+    // Just go to game
+    window.location.href = "tap-tap game.html";
     return;
   }
 
-  // Build the user-specific tapActivated key
-  const tapKey = `tapActivated_${userId}`;
-  const tapDataRaw = localStorage.getItem(tapKey);
+  // Check balance
+  const balanceKey = `depositBalance_${userId}`;
+  let balance = parseFloat(localStorage.getItem(balanceKey)) || 0;
+  if (balance < 100) return showToast("Insufficient balance.");
 
-  if (tapDataRaw) {
-    try {
-      const tapData = JSON.parse(tapDataRaw);
-      const now = Date.now();
+  // Deduct ₦100
+  balance -= 100;
+  localStorage.setItem(balanceKey, balance.toFixed(2));
 
-      if (now < tapData.expiresAt) {
-        // Still active, redirect to game
-        showToast("Redirecting you now...");
-        setTimeout(() => {
-          window.location.href = "tap-tap game.html";
-        }, 3000);
-        return;
-      } else {
-        // Expired, remove key
-        localStorage.removeItem(tapKey);
-      }
-    } catch (e) {
-      // Malformed data? Remove it
-      localStorage.removeItem(tapKey);
-    }
-  }
+  // Set weekly payment key with expiry on Saturday
+  const expiresAt = getNextSaturdayMidnight();
+  localStorage.setItem(payKey, JSON.stringify({ expiresAt }));
 
-  // If no valid tapActivated, redirect to start
-  showToast("Redirecting you now...");
-  setTimeout(() => {
-    window.location.href = "tap-start.html";
-  }, 3000);
+  // Optional: tap session valid for 2 hours
+  const sessionKey = `tapActivated_${userId}`;
+  const sessionExpiresAt = now + 2 * 60 * 60 * 1000;
+  localStorage.setItem(sessionKey, JSON.stringify({ expiresAt: sessionExpiresAt }));
+
+  // Update button
+  const btn = document.getElementById("payBtn");
+  btn.innerHTML = '<i class="fas fa-play-circle"></i> Proceed to Game';
+  btn.onclick = () => window.location.href = "tap-tap game.html";
+
+  showToast("Payment successful! Proceed to game.");
 }
-  </script>
-  <script src="tapAdmin.js"></script>
+
+document.addEventListener("DOMContentLoaded", () => {
+  const userId = localStorage.getItem("Id");
+  if (!userId) return;
+
+  const payKey = `tapPaid_${userId}`;
+  const paidInfo = JSON.parse(localStorage.getItem(payKey));
+  const now = Date.now();
+
+  // If already paid and not expired, show "Proceed to Game"
+  if (paidInfo && now < paidInfo.expiresAt) {
+    const btn = document.getElementById("payBtn");
+    btn.innerHTML = '<i class="fas fa-play-circle"></i> Proceed to Game';
+    btn.onclick = () => window.location.href = "tap-tap game.html";
+  }
+});
+</script>  
   <script src="navbar.js"></script>
   <script src="network Checker.js"></script>
 </body>
