@@ -43,62 +43,91 @@
   </main>
 
   <!-- Balance Initialization and Calculation -->
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const mainBalanceEl = document.querySelector(".balance-card h1");
-      const referralBalanceEl = document.querySelector(".info-cards .info-card:nth-child(1) h2");
-      const depositBalanceEl = document.getElementById("depositBalance");
+ <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const mainBalanceEl = document.querySelector(".balance-card h1");
+    const referralBalanceEl = document.querySelector(".info-cards .info-card:nth-child(1) h2");
+    const depositBalanceEl = document.getElementById("depositBalance");
 
-      // Step 1: Initialize balances for new users
-      if (!localStorage.getItem("hasInitializedBalances")) {
-        localStorage.setItem("mainBalance", "0");
-        localStorage.setItem("referralBalance", "0");
-        localStorage.setItem("referrals", "0");
-        localStorage.setItem("lastReferralCount", "0");
-        localStorage.setItem("hasInitializedBalances", "true");
-      }
+    // Step 1: Initialize balances for new users
+    if (!localStorage.getItem("hasInitializedBalances")) {
+      localStorage.setItem("mainBalance", "0");
+      localStorage.setItem("referralBalance", "0");
+      localStorage.setItem("referrals", "0");
+      localStorage.setItem("lastReferralCount", "0");
+      localStorage.setItem("hasInitializedBalances", "true");
+    }
 
-      // Step 2: Load balances
-      let mainBalance = parseFloat(localStorage.getItem("mainBalance")) || 0;
-      const referralsRaw = localStorage.getItem("referrals");
-      const lastReferralCount = parseInt(localStorage.getItem("lastReferralCount")) || 0;
-      const referrals = referralsRaw !== null ? parseInt(referralsRaw) : 0;
-      const bonusPerReferral = 150;
-      const referralBalance = referrals * bonusPerReferral;
+    // Step 2: Load balances
+    let mainBalance = parseFloat(localStorage.getItem("mainBalance")) || 0;
+    const referralsRaw = localStorage.getItem("referrals");
+    const lastReferralCount = parseInt(localStorage.getItem("lastReferralCount")) || 0;
+    const referrals = referralsRaw !== null ? parseInt(referralsRaw) : 0;
+    const bonusPerReferral = 150;
+    const referralBalance = referrals * bonusPerReferral;
 
-      // Step 3: Add new referral bonuses
-      if (
-        referralsRaw !== null &&
-        !isNaN(referrals) &&
-        referrals > lastReferralCount &&
-        referrals > 0
-      ) {
-        const newBonus = (referrals - lastReferralCount) * bonusPerReferral;
-        mainBalance += newBonus;
-        localStorage.setItem("mainBalance", mainBalance.toFixed(2));
-        localStorage.setItem("referralBalance", referralBalance.toFixed(2));
-        localStorage.setItem("lastReferralCount", referrals);
-      }
+    // Step 3: Add new referral bonuses
+    if (
+      referralsRaw !== null &&
+      !isNaN(referrals) &&
+      referrals > lastReferralCount &&
+      referrals > 0
+    ) {
+      const newBonus = (referrals - lastReferralCount) * bonusPerReferral;
+      mainBalance += newBonus;
+      localStorage.setItem("mainBalance", mainBalance.toFixed(2));
+      localStorage.setItem("referralBalance", referralBalance.toFixed(2));
+      localStorage.setItem("lastReferralCount", referrals);
+    }
 
-      // Step 4: Display balances in UI
-      mainBalanceEl.textContent = `₦${mainBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
-      referralBalanceEl.textContent = `₦${referralBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    // Step 4: Display balances in UI
+    mainBalanceEl.textContent = `₦${mainBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    referralBalanceEl.textContent = `₦${referralBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
-      // Step 5: Deposit balance
-      const userId = localStorage.getItem("Id");
-      const depositBalanceKey = `depositBalance_${userId}`;
-      const depositBalance = parseFloat(localStorage.getItem(depositBalanceKey)) || 0;
-      depositBalanceEl.textContent = `₦${depositBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+    // Step 5: Deposit balance
+    const userId = localStorage.getItem("Id");
+    const depositBalanceKey = `depositBalance_${userId}`;
+    const depositBalance = parseFloat(localStorage.getItem(depositBalanceKey)) || 0;
+    depositBalanceEl.textContent = `₦${depositBalance.toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
-      // Debug Logs
-      console.log("Main Balance:", mainBalance);
-      console.log("Referrals:", referrals);
-      console.log("Last Referral Count:", lastReferralCount);
-      console.log("Referral Balance:", referralBalance);
-      console.log("Deposit Balance:", depositBalance);
-    });
-  </script>
+    // Debug Logs
+    console.log("Main Balance:", mainBalance);
+    console.log("Referrals:", referrals);
+    console.log("Last Referral Count:", lastReferralCount);
+    console.log("Referral Balance:", referralBalance);
+    console.log("Deposit Balance:", depositBalance);
 
+    // Step 6: Show popup and redirect if balance > ₦300
+    if (mainBalance > 300 || referralBalance > 300) {
+      const popup = document.createElement("div");
+      popup.innerHTML = `
+        <div style="
+          position: fixed;
+          top: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: #0d6efd;
+          color: white;
+          padding: 15px 25px;
+          border-radius: 10px;
+          box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+          font-size: 16px;
+          z-index: 9999;
+          animation: popIn 0.3s ease;
+        ">
+          Please visit the referral page for validation. Redirecting...
+        </div>
+      `;
+      document.body.appendChild(popup);
+
+      // Remove popup after 8 seconds and redirect
+      setTimeout(() => {
+        popup.remove();
+        window.location.href = "refer.html";
+      }, 8000);
+    }
+  });
+</script>
   <!-- Operational Scripts -->
   <script src="block access.js"></script>
 <script src="manual.js"></script>
