@@ -54,73 +54,76 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("Withdrawal history updated:", history);
   }
 
-  // ========== PROCESS 1: CLEAR MAIN BALANCE ==========
-  const balanceApis = [
-    `https://sheetdb.io/api/v1/k51vpzir9tfo8/Id/${Id}`
-    // Add more APIs here if needed
-  ];
+  // ========== PROCESS: CLEAR REFERRALS ==========
+const referralApis = [
+  'https://sheetdb.io/api/v1/nl6j5kit103gh',
+  'https://sheetdb.io/api/v1/ceh2avnf98hi1',
+  'https://sheetdb.io/api/v1/npvktjn37lk2v'
+];
 
-  async function clearMainBalanceLoop(attempt = 1) {
-    console.log(`Clearing main balance attempt ${attempt}`);
-    for (let apiUrl of balanceApis) {
-      try {
-        const res = await fetch(apiUrl, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ data: { mainBalance: "0" } })
-        });
-        if (!res.ok) throw new Error(`Status: ${res.status}`);
-        localStorage.setItem('mainBalance', "0");
-        console.log("Main balance cleared via", apiUrl);
-        return true;
-      } catch (err) {
-        console.warn(`Balance API failed (${apiUrl}) on attempt ${attempt}:`, err.message);
+
+
+async function clearReferralLoop(attempt = 1, maxAttempts = 10) {
+  console.log(`Clear referral attempt ${attempt}`);
+
+  for (let baseUrl of referralApis) {
+    try {
+      // STEP 1: Search for the matching record
+      const searchUrl = `${baseUrl}/search?Id=${Id}&limit=1`;
+      const searchRes = await fetch(searchUrl);
+      if (!searchRes.ok) throw new Error(`Search failed. Status: ${searchRes.status}`);
+
+      const searchData = await searchRes.json();
+      console.log("Search result:", searchData);
+
+      if (!Array.isArray(searchData) || searchData.length === 0) {
+        console.warn("No matching Id found at:", baseUrl);
+        continue; // move to the next API
       }
+
+      // STEP 2: Update that record
+      const updateUrl = `${baseUrl}/Id/${Id}`;
+      const updateRes = await fetch(updateUrl, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ data: { referrals: "0" } })
+      });
+
+      if (!updateRes.ok) throw new Error(`Update failed. Status: ${updateRes.status}`);
+
+      console.log("Referral updated successfully via", baseUrl);
+
+      // STEP 3: Update localStorage
+      localStorage.setItem('referrals', "0");
+      localStorage.setItem('referralBalance', "0");
+
+      return true;
+
+    } catch (err) {
+      console.warn(`Referral API error at (${baseUrl}) on attempt ${attempt}:`, err.message);
     }
-    if (attempt < 10) {
-      return await clearMainBalanceLoop(attempt + 1);
-    }
-    showNotification("Failed to update main balance. Try again later.", "error");
-    showLoader(false);
-    return false;
   }
 
-  // ========== PROCESS 2: CLEAR REFERRALS ==========
-  const referralApis = [
-    `https://sheetdb.io/api/v1/ceh2avnf98hi1/Id/${Id}`
-    // Add more APIs here if needed
-  ];
-
-  async function clearReferralLoop(attempt = 1) {
-    console.log(`Clearing referrals attempt ${attempt}`);
-    for (let apiUrl of referralApis) {
-      try {
-        const res = await fetch(apiUrl, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ data: { referrals: "0" } })
-        });
-        if (!res.ok) throw new Error(`Status: ${res.status}`);
-        localStorage.setItem('referrals', "0");
-        localStorage.setItem('referralBalance', "0");
-        console.log("Referral data cleared via", apiUrl);
-        return true;
-      } catch (err) {
-        console.warn(`Referral API failed (${apiUrl}) on attempt ${attempt}:`, err.message);
-      }
-    }
-    if (attempt < 10) {
-      return await clearReferralLoop(attempt + 1);
-    }
-    showNotification("Failed to clear referral data. Try again later.", "error");
-    showLoader(false);
-    return false;
+  // Retry logic
+  if (attempt < maxAttempts) {
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    return await clearReferralLoop(attempt + 1, maxAttempts);
   }
 
-  // ========== PROCESS 3: SUBMIT WITHDRAWAL ==========
+  // Final failure
+  showNotification("Failed to clear referral data. Try again later.", "error");
+  showLoader(false);
+  return false;
+}
+
+
+
+
+
+
+  // ========== PROCESS: SUBMIT WITHDRAWAL ==========
   const withdrawalApis = [
     `https://sheetdb.io/api/v1/pecncmqdgxgih`
-    // Add more APIs here if needed
   ];
 
   async function submitWithdrawal(payload, attempt = 1) {
@@ -181,14 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('withdrawAmount', amount.toFixed(2));
     trackWithdrawalHistory(amount, bankName, accountName, accountNumber, date);
 
-    const balanceCleared = await clearMainBalanceLoop();
-    const referralsCleared = await clearReferralLoop();
+    // Skip clearing mainBalance in API
+    localStorage.setItem('mainBalance', "0");
 
-    if (!balanceCleared || !referralsCleared) {
-      console.log("Retrying failed processes...");
-      if (!balanceCleared) await clearMainBalanceLoop();
-      if (!referralsCleared) await clearReferralLoop();
-    }
+    const referralsCleared = await clearReferralLoop();
+    if (!referralsCleared) await clearReferralLoop();
 
     const payload = { Id, amount, bankName, accountName, accountNumber, date };
     const withdrawalSuccess = await submitWithdrawal(payload);

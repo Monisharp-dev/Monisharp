@@ -8,6 +8,16 @@
   <link rel="stylesheet" href="navbar.css">
   <link rel="stylesheet" href="bottom-nav.css">
   <link rel="stylesheet" href="withdrawHistory.css">
+  <style>
+      .status-pending {
+  color: orange;
+  font-weight: bold;
+}
+.status-completed {
+  color: green;
+  font-weight: bold;
+}
+  </style>
 </head>
 <body>
   <h2>Withdrawal History</h2>
@@ -29,54 +39,63 @@
     </table>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      let history = JSON.parse(localStorage.getItem('withdrawalHistory')) || [];
-      const tbody = document.querySelector('#historyTable tbody');
-      const now = new Date();
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  let history = [];
 
-      // Update any status from Pending to Completed if > 24 hours
-      history.forEach(record => {
-        const recordDate = new Date(record.date);
-        const hoursPassed = (now - recordDate) / (1000 * 60 * 60);
-        if (record.status === 'Pending' && hoursPassed >= 24) {
-          record.status = 'Completed';
-        }
-      });
+  try {
+    const rawHistory = localStorage.getItem('withdrawalHistory');
+    history = rawHistory ? JSON.parse(rawHistory) : [];
+  } catch (err) {
+    console.error("Invalid JSON in withdrawalHistory:", err);
+    history = [];
+  }
 
-      // Save updated history
-      localStorage.setItem('withdrawalHistory', JSON.stringify(history));
+  const tbody = document.querySelector('#historyTable tbody');
+  const now = new Date();
 
-      // Reverse to show latest first
-      history.reverse();
+  // Update 'Pending' to 'Completed' if over 24 hours old
+  history.forEach(record => {
+    const recordDate = new Date(record.Date || record.date); // fallback if key is `Date`
+    const hoursPassed = (now - recordDate) / (1000 * 60 * 60);
+    if (record.Status === 'Pending' && hoursPassed >= 24) {
+      record.Status = 'Completed';
+    }
+  });
 
-      if (history.length === 0) {
-        const row = document.createElement('tr');
-        const cell = document.createElement('td');
-        cell.colSpan = 6;
-        cell.textContent = "No withdrawal records found.";
-        cell.style.textAlign = "center";
-        row.appendChild(cell);
-        tbody.appendChild(row);
-        return;
-      }
+  // Save updated history
+  localStorage.setItem('withdrawalHistory', JSON.stringify(history));
 
-      history.forEach(record => {
-        const row = document.createElement('tr');
+  history.reverse(); // Show newest first
 
-        row.innerHTML = `
-          <td>₦${parseFloat(record.amount).toFixed(2)}</td>
-          <td>${record.bankName}</td>
-          <td>${record.accountName}</td>
-          <td>${record.accountNumber}</td>
-          <td>${record.date}</td>
-          <td class="status-${record.status}">${record.status}</td>
-        `;
+  if (history.length === 0) {
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 6;
+    cell.textContent = "No withdrawal records found.";
+    cell.style.textAlign = "center";
+    row.appendChild(cell);
+    tbody.appendChild(row);
+    return;
+  }
 
-        tbody.appendChild(row);
-      });
-    });
-  </script>
+  history.forEach(record => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+      <td>₦${parseFloat(record.amount).toFixed(2)}</td>
+      <td>${record.bankName}</td>
+      <td>${record.accountName}</td>
+      <td>${record.accountNumber}</td>
+      <td>${record.date}</td>
+      <td class="status-${record.Status.toLowerCase()}">${record.status}</td>
+    `;
+
+    tbody.appendChild(row);
+  });
+});
+</script>  
+<script src="validate.js"></script>
   <script src="bottom-nav.js"></script>
   <script src="navbar.js"></script>
 </body>

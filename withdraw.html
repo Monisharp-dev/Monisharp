@@ -7,8 +7,6 @@
   <link rel="stylesheet" href="withdraw.css" />
   <link rel="stylesheet" href="bottom-nav.css">
   <link rel="stylesheet" href="navbar.css">
-  <style>
-      /* Loader Styles - Removed per request */
       <style>
   /* Loader Styling */
   #loader {
@@ -57,7 +55,6 @@
     background-color: #f8d7da;
     color: #721c24;
   }
-</style>
   </style>
 </head>
 <body>
@@ -94,15 +91,14 @@
         <input type="text" id="date" disabled />
       </div>
 
-      <button type="submit">Submit Withdrawal</button>
-    </form>
+     <button type="submit" id="submitBtn">Submit Withdrawal</button>    </form>
 
     <div id="notification" class="notification"></div>
   </div>
   
-  
+  <script src="submit.js"></script>
   <script src="bottom-nav.js"></script>
   <script src="navbar.js"></script>
-  <script src="withdraw.js"></script>
+  
 </body>
 </html>

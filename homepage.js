@@ -89,3 +89,15 @@ async function runHomepageLogic(Id, email) {
     console.warn("❌ Failed to post referral data. Will retry on next load.");
   }
 }
+
+
+in the ppsting if Id and referral code to api 
+⚠️ Failed to post to https://sheetdb.io/api/v1/ceh2avnf98hi1. Status: 429
+⚠️ Failed to post to https://sheetdb.io/api/v1/npvktjn37lk2v. Status: 401
+❌ Failed to post referral data. Will retry on next load.
+
+try{
+    to send it like how iy appears in the api
+LI956","referrals":"","referGroup":""},{"Id":"moshoodsaheed58","referralCode":"MO774","referrals":"","referGroup":""},{"Id":"omoizehappy","referralCode":"OM362","referrals":"","referGroup":""}]
+    
+}
