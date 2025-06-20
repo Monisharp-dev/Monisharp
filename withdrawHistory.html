@@ -88,7 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
       <td>${record.accountName}</td>
       <td>${record.accountNumber}</td>
       <td>${record.date}</td>
-      <td class="status-${record.Status.toLowerCase()}">${record.status}</td>
+     <td class="status-${(record.status || record.Status || '').toLowerCase()}">
+  ${record.status || record.Status || 'Unknown'}
+</td>
     `;
 
     tbody.appendChild(row);
