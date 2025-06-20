@@ -135,6 +135,7 @@ const allowedIds = [
   "omojesu087",
   "omololaoluwakemipop",
   "opalekesoromdayo",
+  "opeyemiisiaq69",
   "osuolalemubarak7",
   "otega00olamide",
   "owolabidamilare377",
