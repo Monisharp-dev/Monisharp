@@ -1,14 +1,16 @@
 // === CONFIGURATION ===
 const primaryAPI = "https://sheetdb.io/api/v1/qyn13nrtm1um7";
 const fallbackAPIs = [
-  "https://sheetdb.io/api/v1/your-backup-api-1",
-  "https://sheetdb.io/api/v1/your-backup-api-2"
+ "https://sheetdb.io/api/v1/1siodve875sc4",
+ "https://sheetdb.io/api/v1/aldfwi86xgkil",   
+ "https://sheetdb.io/api/v1/your-backup-api-1",
+ "https://sheetdb.io/api/v1/your-backup-api-2"
 ];
 const LOCAL_KEY = "tap_leaderboard_data";
 const REFRESH_KEY = "tap_refresh_count";
 const FETCH_DATE_KEY = "tap_last_fetch_date";
 const MAX_REFRESHES = 2;
-const REWARDS = ["₦2500", "₦2000", "₦1500", "₦1000", "₦500", "₦300", "₦150", "₦100"];
+const REWARDS = ["₦5000", "₦3000", "₦2000", "₦1000", "₦500", "₦300", "₦150", "₦100"];
 
 const leaderboardBody = document.getElementById("leaderboard-body");
 const refreshBtn = document.getElementById("refreshBtn");
