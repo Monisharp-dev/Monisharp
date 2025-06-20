@@ -41,13 +41,21 @@ allotDepositBalance("johnsongideonoshla1", 100, "0000A");       // New key for J
 allotDepositBalance("jemeelsalawu291", 200, "0000B");           // New key for Jemeel
 allotDepositBalance("Goodluckn673", 200, "0000B");              // Reuse of key — will be blocked
 allotDepositBalance("blessingsalami081", 100, "0000F");         // Reuse of key — will be blocked
-allotDepositBalance("isrealsolomon629", 200, "0000B");          // Reuse of key — will be blocked
+allotDepositBalance("isrealsolomon629", 200, "0000C");          // Reuse of key — will be blocked
 allotDepositBalance("danieljubril50", 200, "0000A");               // New key for Edickson
 allotDepositBalance("paulchisom34", 200,"0000A");
 allotDepositBalance("udejiobinna305", 200,"0000C");
 allotDepositBalance("oduduabasibassey608", 100,"0000C");
-allotDepositBalance("surpriseoyelayo", 200,"0000B");
-allotDepositBalance("inansdaniel", 100,"0000B");
+allotDepositBalance("surpriseoyelayo", 200,"0000C");
+allotDepositBalance("inansdaniel", 100,"0000C");
 allotDepositBalance("mbamisaacchibuike", 200,"0000B");
 allotDepositBalance("edickson190261", 2000,"0000G");
 allotDepositBalance("monisharp66", 2000,"0000B");
+allotDepositBalance("omololaoluwakemipop", 200,"0000C");
+allotDepositBalance("ngoziblessingawah", 100,"0000C");
+
+
+
+
+
+
