@@ -59,10 +59,10 @@ document.getElementById("copyBtn").onclick = () => {
 // Allow all requests on 7 June2025 and reset timer
 function shouldMakeApiRequest() {
   const today = new Date();
-  const isJune7 = today.getFullYear() === 2025 && today.getMonth() === 4 && today.getDate() === 7;
+  const isJune20 = today.getFullYear() === 2025 && today.getMonth() === 4 && today.getDate() === 20;
 
-  if (isJune7) {
-    console.log("Bypassing 24hr check: Today is 7 June2025");
+  if (isJune20) {
+    console.log("Bypassing 24hr check: Today is 20 June2025");
     localStorage.removeItem("lastApiRequest");
     return true;
   }

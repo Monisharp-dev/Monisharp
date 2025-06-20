@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "https://sheetdb.io/api/v1/backup_api_2"
   ];
 
-  // Create style element dynamically
+  // Inject styles
   const style = document.createElement("style");
   style.innerHTML = `
     #notifyBox {
@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
       padding: 20px;
       animation: fadeSlide 0.4s ease-in-out;
     }
-
     .notification-content {
       background-color: #ff9800;
       padding: 30px;
@@ -39,33 +38,34 @@ document.addEventListener("DOMContentLoaded", () => {
       font-family: 'Segoe UI', sans-serif;
       font-weight: 600;
     }
-
-    .notification-content a {
-      color: #fff;
-      text-decoration: underline;
-      font-weight: bold;
-    }
-
     .notice-timing {
       margin-top: 16px;
       font-size: 1rem;
       color: #ffe;
       font-weight: 400;
-      text-align: center;
-      font-family: 'Segoe UI', sans-serif;
     }
-
+    button#redirectBtn {
+      margin-top: 16px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background-color: #333;
+      color: #fff;
+      cursor: not-allowed;
+      opacity: 0.5;
+      display: none;
+      transition: all 0.3s ease;
+    }
     @media (max-width: 500px) {
       .notification-content {
         font-size: 1.2rem;
         padding: 20px;
       }
-
       .notice-timing {
         font-size: 0.9rem;
       }
     }
-
     @keyframes fadeSlide {
       from {
         opacity: 0;
@@ -79,68 +79,46 @@ document.addEventListener("DOMContentLoaded", () => {
   `;
   document.head.appendChild(style);
 
-  // Create notifyBox element
+  // Create notification box
   const notifyBox = document.createElement("div");
   notifyBox.id = "notifyBox";
   notifyBox.style.display = "none";
   document.body.appendChild(notifyBox);
 
-  function showCountdownWithRedirect() {
+  function showCountdown() {
     notifyBox.style.display = "flex";
     notifyBox.innerHTML = `
       <div class="notification-content">
-        <p><strong>Activate your account with ₦300 by 
-        <a href="activate.html">clicking here</a>.</strong></p>
+        <p>Activate your account with ₦300!
+        <br>Please hold on while we initialize the app...</p>
+        <div class="notice-timing">
+          <span id="countdown">20</span> seconds remaining
+        </div>
+        <button id="redirectBtn">Proceed</button>
       </div>
     `;
+
+    const countdownEl = document.getElementById("countdown");
+    const redirectBtn = document.getElementById("redirectBtn");
+    redirectBtn.disabled = true;
+
+    let remaining = 20;
+    const timer = setInterval(() => {
+      remaining--;
+      countdownEl.textContent = remaining;
+      if (remaining <= 0) {
+        clearInterval(timer);
+        redirectBtn.disabled = false;
+        redirectBtn.style.cursor = "pointer";
+        redirectBtn.style.opacity = "1";
+        redirectBtn.style.display = "inline-block";
+      }
+    }, 1000);
+
+    redirectBtn.addEventListener("click", () => {
+      window.location.href = "activate.html"; // Only on user click
+    });
   }
-  function showCountdownWithRedirect() {
-  notifyBox.style.display = "flex";
-  notifyBox.innerHTML = `
-    <div class="notification-content">
-      <p>Activate your account with ₦300!
-      <br>Please hold on while we initialize the app...</p>
-      <div class="notice-timing">
-        <span id="countdown">20</span> seconds remaining
-      </div>
-      <button id="redirectBtn" disabled style="
-        margin-top: 16px;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border: none;
-        border-radius: 8px;
-        background-color: #333;
-        color: #fff;
-        cursor: not-allowed;
-        opacity: 0.5;
-        transition: all 0.3s ease;
-        display: none;
-      ">Continue</button>
-    </div>
-  `;
-
-  const countdownEl = document.getElementById("countdown");
-  const redirectBtn = document.getElementById("redirectBtn");
-
-  let remaining = 20;
-  const timer = setInterval(() => {
-    remaining--;
-    countdownEl.textContent = remaining;
-
-    if (remaining <= 0) {
-      clearInterval(timer);
-      redirectBtn.disabled = false;
-      redirectBtn.style.cursor = "pointer";
-      redirectBtn.style.opacity = "1";
-      redirectBtn.style.display = "inline-block";
-      redirectBtn.textContent = "Proceed";
-      redirectBtn.addEventListener("click", () => {
-        // Redirect or perform action
-        window.location.href = "activate.html"; // change as needed
-      });
-    }
-  }, 1000);
-}
 
   function hideActivationNotice() {
     notifyBox.style.display = "none";
@@ -192,10 +170,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function processUserActivation() {
-    if (!userId) return showCountdownWithRedirect()();
+    if (!userId) return showCountdown();
 
     const rawData = localStorage.getItem("copData");
-    if (!rawData) return showCountdownWithRedirect()();
+    if (!rawData) return showCountdown();
 
     const users = JSON.parse(rawData);
     const user = users.find(item => item.Id === userId);
@@ -210,34 +188,27 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem("copData");
         hideActivationNotice();
       } else {
-        showCountdownWithRedirect()();
+        showCountdown();
       }
     } else {
-      showCountdownWithRedirect()();
+      showCountdown();
     }
   }
+
+  // Constantly check activateStatus locally every 2 seconds
+  setInterval(() => {
+    if (localStorage.getItem("activateStatus") === "present") {
+      hideActivationNotice();
+    }
+  }, 2000);
 
   // Controller logic
   if (localStorage.getItem("activateStatus") === "present") {
     hideActivationNotice();
   } else {
-    showCountdownWithRedirect(); // Show it first
-
+    showCountdown();
     if (shouldFetchData()) {
       fetchAllData();
-    } else {
-      const now = new Date();
-      let nextCheck = "later today";
-
-      if (now.getHours() < 12) nextCheck = "after 8:00 PM";
-      else if (now.getHours() < 20) nextCheck = "tomorrow morning";
-
-      notifyBox.innerHTML += `
-        <div class="notice-timing">
-          We'll check again automatically ${nextCheck}.
-        </div>
-      `;
     }
   }
 });
-
