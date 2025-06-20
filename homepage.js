@@ -10,14 +10,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (Id && email) {
       clearInterval(waitForId);
-      console.log("Found Id and email in localStorage:", Id, email);
+      console.log("✅ Found Id and email:", Id, email);
       runHomepageLogic(Id, email);
     } else {
       retries++;
-      console.log(`Id or email not found. Retrying (${retries}/${maxRetries})...`);
+      console.log(`⏳ Retrying (${retries}/${maxRetries})...`);
       if (retries >= maxRetries) {
         clearInterval(waitForId);
-        console.warn("Id or email not found after max retries. Aborting homepage logic.");
+        console.warn("❌ Id or email not found after max retries.");
       }
     }
   }, 200);
@@ -35,14 +35,14 @@ async function runHomepageLogic(Id, email) {
         const res = await fetch(api, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: [data] }),
+          body: JSON.stringify(data), // ✅ Plain object format
         });
 
         if (res.ok) {
           console.log(`✅ Successfully posted to API: ${api}`);
           return true;
         } else {
-          console.warn(`⚠️ Failed to post to ${api}, status: ${res.status}`);
+          console.warn(`⚠️ Failed to post to ${api}. Status: ${res.status}`);
         }
       } catch (err) {
         console.error(`❌ Error posting to ${api}:`, err);
@@ -51,8 +51,9 @@ async function runHomepageLogic(Id, email) {
     return false;
   };
 
-  // Generate referral code if not set
-  if (!localStorage.getItem("referralCode")) {
+  // Step 1: Generate referralCode if missing
+  let referralCode = localStorage.getItem("referralCode");
+  if (!referralCode) {
     const generateReferralCode = (email) => {
       const namePart = email.split("@")[0];
       const prefix = namePart.slice(0, 2).toUpperCase();
@@ -61,29 +62,30 @@ async function runHomepageLogic(Id, email) {
       return `${prefix}${suffix}`;
     };
 
-    const referralCode = generateReferralCode(email);
+    referralCode = generateReferralCode(email);
     localStorage.setItem("referralCode", referralCode);
-    console.log("📦 Generated and stored referralCode:", referralCode);
+    console.log("🎉 Generated referralCode:", referralCode);
   } else {
-    console.log("📦 referralCode already exists:", localStorage.getItem("referralCode"));
+    console.log("ℹ️ referralCode already exists:", referralCode);
   }
 
-  const referralCode = localStorage.getItem("referralCode");
-  const alreadyPosted = localStorage.getItem("referralPosted");
-
-  if (alreadyPosted === "true") {
-    console.log("✅ Referral already successfully posted. Skipping API call.");
+  // Step 2: Avoid duplicate posting
+  if (localStorage.getItem("referralPosted") === "true") {
+    console.log("✅ Referral already posted. Skipping...");
     return;
   }
 
-  console.log("📡 Attempting to post referral data to API...");
-  const success = await postWithFallback(referralApis, { Id, referralCode });
+  // Step 3: Post to API
+  console.log("📡 Posting referral data...");
+  const payload = { Id, referralCode };
+
+  const success = await postWithFallback(referralApis, payload);
 
   if (success) {
     localStorage.setItem("referralPosted", "true");
-    console.log("✅ Referral data successfully posted. Flag saved in localStorage.");
+    console.log("✅ Referral data posted and flag saved.");
   } else {
     localStorage.setItem("referralPosted", "false");
-    console.warn("❌ Failed to post referral data. Will retry on next page load.");
+    console.warn("❌ Failed to post referral data. Will retry on next load.");
   }
 }
