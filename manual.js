@@ -50,7 +50,7 @@ const allowedIds = [
   "ebubechiwinner066",
   "ed9583378",
   "edickson774",
-  "edickson778",
+  "edickson190261",
   "edwardjared723",
   "emmakani234",
   "emmanuelisaacbamgbose",

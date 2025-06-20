@@ -49,3 +49,4 @@ allotDepositBalance("oduduabasibassey608", 100,"0000C");
 allotDepositBalance("surpriseoyelayo", 200,"0000B");
 allotDepositBalance("inansdaniel", 100,"0000B");
 allotDepositBalance("mbamisaacchibuike", 200,"0000B");
+allotDepositBalance("edickson190261", 2000,"0000G");
