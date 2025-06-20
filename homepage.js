@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("homepage.js loaded. Waiting for Id...");
 
   let retries = 0;
-  const maxRetries = 20;
+  const maxRetries = 4;
 
   // Retry logic to wait for Id and email from localStorage
   const waitForId = setInterval(() => {
@@ -25,7 +25,33 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function runHomepageLogic(id, email) {
-  const referralApi = ["https://sheetdb.io/api/v1/ceh2avnf98hi1"];
+  const referralApis = [
+    "https://sheetdb.io/api/v1/ceh2avnf98hi1",
+    "https://sheetdb.io/api/v1/npvktjn37lk2v"
+  ];
+
+  // Helper function: fallback API request loop
+  async function postWithFallback(apiList, data) {
+    for (const api of apiList) {
+      try {
+        const res = await fetch(api, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ data: [data] }),
+        });
+
+        if (res.ok) {
+          console.log(`Successfully posted to ${api}`);
+          return true;
+        } else {
+          console.warn(`Failed to post to ${api}, status: ${res.status}`);
+        }
+      } catch (err) {
+        console.error(`Error posting to ${api}:`, err);
+      }
+    }
+    return false; // All API attempts failed
+  }
 
   // Generate and post referral code if not already set
   if (!localStorage.getItem("referralCode")) {
@@ -41,28 +67,11 @@ async function runHomepageLogic(id, email) {
     localStorage.setItem("referralCode", referralCode);
     console.log("Generated referral code:", referralCode);
 
-    let posted = false;
-    for (const api of referralApi) {
-      try {
-        const res = await fetch(api, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: [{ Id: id, referralCode }] }),
-        });
+    const success = await postWithFallback(referralApis, { Id: id, referralCode });
 
-        if (res.ok) {
-          console.log(`Referral code posted to ${api}`);
-          posted = true;
-          break;
-        } else {
-          console.warn(`Failed to post referral code to ${api}, status: ${res.status}`);
-        }
-      } catch (err) {
-        console.error(`Error posting referral code to ${api}:`, err);
-      }
+    if (!success) {
+      console.warn("All referral API posts failed.");
     }
-
-    if (!posted) console.warn("All referral API posts failed.");
   } else {
     console.log("Referral code already exists in localStorage:", localStorage.getItem("referralCode"));
   }

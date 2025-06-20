@@ -9,6 +9,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const allCards = document.querySelectorAll(".task-card");
   console.log(`[Init] Found ${allCards.length} task card(s).`);
 
+  // SheetDB fallback API list
+  const sheetDbApis = [
+    "https://sheetdb.io/api/v1/iiwyeqnkahuo9",
+    "https://sheetdb.io/api/v1/bww55osygzdli",
+    "https://sheetdb.io/api/v1/apy1rhij3hpgd"];
+
   allCards.forEach((card) => {
     const taskId = card.dataset.taskId;
 
@@ -54,30 +60,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       try {
-        // Upload image to ImgBB
-        const formData = new FormData();
-        formData.append("image", file);
-        formData.append("expiration", Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60); // 7 days
+        // ✅ Retry loop for ImgBB upload
+        const imageUrl = await uploadToImgBB(file, taskId);
+        if (!imageUrl) throw new Error("All attempts to upload image failed");
 
-        const uploadRes = await fetch(
-          `https://api.imgbb.com/1/upload?key=b08c28e563e88b729eefa384ac7d00db`,
-          { method: "POST", body: formData }
-        );
-
-        const imgData = await uploadRes.json();
-        if (!imgData.success) throw new Error("Image upload failed");
-
-        const imageUrl = imgData.data.url;
         console.log(`[${taskId}] ✅ Image uploaded successfully:`, imageUrl);
 
-        // Extract task title and reward
         const titleEl = card.querySelector("h2, .task-title");
         const rewardEl = card.querySelector(".task-text p, .task-reward");
 
         const title = titleEl ? titleEl.textContent.trim() : "Untitled";
         const reward = rewardEl ? rewardEl.textContent.trim() : "0";
 
-        // Log all extracted data for debugging
         console.log(`[${taskId}] 🧾 Debug Info:`);
         console.log(`- User ID: ${userId}`);
         console.log(`- Task Title: ${title}`);
@@ -85,7 +79,6 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log(`- Text: ${text}`);
         console.log(`- Image URL: ${imageUrl}`);
 
-        // Create payload
         const taskData = {
           Id: userId,
           text: text,
@@ -97,14 +90,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const finalPayload = { data: [taskData] };
         console.log(`[${taskId}] 📦 Final JSON payload to send:`, finalPayload);
 
-        // Send to SheetDB
-        const dbRes = await fetch("https://sheetdb.io/api/v1/iiwyeqnkahuo9", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(finalPayload),
-        });
-
-        if (!dbRes.ok) throw new Error("SheetDB API error");
+        // ✅ Retry loop for SheetDB submission
+        const submitted = await submitToSheetDB(sheetDbApis, finalPayload, taskId);
+        if (!submitted) throw new Error("All SheetDB API attempts failed");
 
         localStorage.setItem(taskKey, "true");
         console.log(`[${taskId}] ✅ Task successfully submitted to SheetDB.`);
@@ -118,6 +106,50 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  // 🔁 ImgBB fallback upload function
+  async function uploadToImgBB(file, taskId) {
+    const apiKey = "b08c28e563e88b729eefa384ac7d00db"; // Your key
+    const url = `https://api.imgbb.com/1/upload?key=${apiKey}`;
+
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      try {
+        console.log(`[${taskId}] 🖼️ ImgBB Upload Attempt ${attempt}...`);
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("expiration", Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60); // 7 days
+
+        const res = await fetch(url, { method: "POST", body: formData });
+        const data = await res.json();
+        if (data.success) return data.data.url;
+
+        console.warn(`[${taskId}] ImgBB failed:`, data);
+      } catch (e) {
+        console.warn(`[${taskId}] ImgBB error:`, e);
+      }
+    }
+    return null;
+  }
+
+  // 🔁 SheetDB fallback submission function
+  async function submitToSheetDB(apiList, payload, taskId) {
+    for (let i = 0; i < apiList.length; i++) {
+      const api = apiList[i];
+      try {
+        console.log(`[${taskId}] 📨 Trying SheetDB API: ${api}`);
+        const res = await fetch(api, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        if (res.ok) return true;
+        console.warn(`[${taskId}] ❌ SheetDB ${i + 1} failed with status:`, res.status);
+      } catch (err) {
+        console.warn(`[${taskId}] ❌ Error with SheetDB ${i + 1}:`, err);
+      }
+    }
+    return false;
+  }
 });
 
 // Alert system

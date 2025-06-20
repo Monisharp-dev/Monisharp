@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const userId = localStorage.getItem("Id");
   const apiURLs = [
+    "https://sheetdb.io/api/v1/c144vqnly26t5",
     "https://sheetdb.io/api/v1/k51vpzir9tfo8",
     "https://sheetdb.io/api/v1/backup_api_1",
     "https://sheetdb.io/api/v1/backup_api_2"
@@ -100,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
       <p>Activate your account with ₦300!
       <br>Please hold on while we initialize the app...</p>
       <div class="notice-timing">
-        <span id="countdown">80</span> seconds remaining
+        <span id="countdown">20</span> seconds remaining
       </div>
       <button id="redirectBtn" disabled style="
         margin-top: 16px;
@@ -121,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const countdownEl = document.getElementById("countdown");
   const redirectBtn = document.getElementById("redirectBtn");
 
-  let remaining = 80;
+  let remaining = 20;
   const timer = setInterval(() => {
     remaining--;
     countdownEl.textContent = remaining;
@@ -220,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("activateStatus") === "present") {
     hideActivationNotice();
   } else {
-    showCountdownWithRedirect()(); // Show it first
+    showCountdownWithRedirect(); // Show it first
 
     if (shouldFetchData()) {
       fetchAllData();
@@ -239,3 +240,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 });
+

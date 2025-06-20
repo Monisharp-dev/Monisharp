@@ -11,6 +11,8 @@ const coreKeys = [
 ];
 
 const API_LIST = [
+  "https://sheetdb.io/api/v1/a60myauvx0ay1",
+  "https://sheetdb.io/api/v1/n5g98bqmjh72j",
   "https://sheetdb.io/api/v1/3fhj4vu7fak0u",
   "https://sheetdb.io/api/v1/xsn258gcncwv8",
 ];
