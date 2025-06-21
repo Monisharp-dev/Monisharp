@@ -5,11 +5,14 @@ const badgeKeys = {
   dailyReward: "dailyRewardSeen",
   quickBrainNew: "quickBrainNewSeen",
   tapSeen: "tapseen",
+  createTaskSeen: "createTaskSeen", // ✅ NEW
 };
+
 const badgeDurations = {
   dailyReward: 3,
   quickBrainNew: 5,
   tapSeen: 5,
+  createTaskSeen: 5, // ✅ NEW
 };
 
 function shouldShowBadge(key, duration) {
@@ -23,6 +26,12 @@ function shouldShowBadge(key, duration) {
   const diffDays = Math.floor((now - seen) / (1000 * 60 * 60 * 24));
   return diffDays < duration;
 }
+
+
+const createTaskBadge = shouldShowBadge(badgeKeys.createTaskSeen, badgeDurations.createTaskSeen)
+  ? `<span class="new-badge">NEW</span>`
+  : ``;
+
 
 const dailyBadge = shouldShowBadge(badgeKeys.dailyReward, badgeDurations.dailyReward)
   ? `<span class="new-badge">NEW</span>`
@@ -166,6 +175,7 @@ const navbarSidebarHTML = `
     <div class="scrollable-content">
       <div class="sidebar-section">TASK</div>
       <nav class="nav-links">
+          <a href="createTask.html"><i class="fas fa-plus-circle"></i> Create Task ${createTaskBadge}</a>
         <a href="task.html"><i class="fas fa-tasks"></i> Task</a>
         <a href="Taskwithdrawal.html"><i class="fas fa-wallet"></i> Task Withdrawal</a>
         <a href="withdraw.html"><i class="fas fa-hand-holding-usd"></i> Withdraw</a>

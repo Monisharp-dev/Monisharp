@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Advertise Task - MoniSharp</title>
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="advertise.css" />
+  <script src="https://kit.fontawesome.com/a2e0e6b6d0.js" crossorigin="anonymous"></script>
+</head>
+<style>
+    .loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #16a34a;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+<body>
+  <div class="ad-container">
+    <h2><i class="fas fa-ad"></i> Create a New Advertisement</h2>
+
+    <form id="adForm">
+      <div class="form-group">
+        <label for="userId"><i class="fas fa-user-tag"></i> User Id</label>
+        <input type="text" id="userId" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="category"><i class="fas fa-list"></i> Category</label>
+        <select id="category">
+          <option value="">-- Select Category --</option>
+          <option value="business">Business</option>
+          <option value="social">Social</option>
+          <option value="other">Other Tasks</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="reward"><i class="fas fa-coins"></i> Reward per User (₦)</label>
+        <input type="number" id="reward" placeholder="Minimum ₦10" />
+      </div>
+
+      <div class="form-group">
+        <label for="targetUsers"><i class="fas fa-users"></i> Number of Users (Max 9)</label>
+        <input type="number" id="targetUsers" placeholder="1 - 9" />
+      </div>
+
+      <div class="form-group">
+        <label for="task"><i class="fas fa-tasks"></i> Task Instructions</label>
+        <textarea id="task" rows="4" placeholder="Describe the task clearly..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="date"><i class="fas fa-calendar-day"></i> Date</label>
+        <input type="text" id="date" readonly />
+      </div>
+
+      <div class="form-group">
+        <label for="price"><i class="fas fa-calculator"></i> Total Price (₦)</label>
+        <input type="text" id="price" readonly />
+      </div>
+
+      <div class="form-group center">
+        <button type="button" id="payBtn"><i class="fas fa-money-bill-wave"></i> Pay & Submit</button>
+      </div>
+
+      <div id="alertBox" class="alertBox"></div>
+    </form>
+  </div>
+
+<div id="loader" style="display: none; text-align: center; margin-top: 20px;">
+  <span class="loader"></span>
+</div>
+
+  <script src="navbar.js"></script>
+  
+  <script src="advertise.js"></script>
+</body>
+</html>
