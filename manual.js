@@ -148,6 +148,7 @@ const allowedIds = [
   "proffmykey",
   "raetharolin",
   "raphaelumoh5",
+  "realearners01",
   "realpeller633",
   "reginaokoro703",
   "rukeachu",
