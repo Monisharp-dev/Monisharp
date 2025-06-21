@@ -7,54 +7,71 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background-color: #f0f8ff;
+      background: linear-gradient(to right, #e0f7fa, #fce4ec);
       margin: 0;
       padding: 20px;
       color: #333;
+      transition: all 0.3s ease-in-out;
     }
 
     .container {
-      max-width: 500px;
+      max-width: 520px;
       margin: auto;
       background-color: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease-in-out;
     }
 
     h2 {
       text-align: center;
       color: #007b5e;
-    }
-
-    .account-info, .instructions {
-      margin-top: 20px;
+      margin-bottom: 25px;
     }
 
     .info-box {
       background: #e6f7ff;
       border-left: 4px solid #007bff;
       padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .admin-image {
+      display: block;
+      margin: 15px auto;
+      width: 170px;
+      height: 170px;
+      border-radius: 8%;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease;
+    }
+
+    .admin-image:hover {
+      transform: scale(1.05);
     }
 
     .id-section {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #f4f4f4;
-      padding: 10px 15px;
-      border-radius: 8px;
+      background: #f9f9f9;
+      padding: 12px 18px;
+      border-radius: 10px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
     }
 
     .copy-btn {
       background-color: #28a745;
       color: white;
       border: none;
-      padding: 8px 14px;
-      border-radius: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.3s ease;
     }
 
     .copy-btn:hover {
@@ -67,16 +84,19 @@
       text-decoration: none;
       color: #007bff;
       font-weight: bold;
+      transition: color 0.2s ease;
     }
 
     a.admin-link:hover {
       text-decoration: underline;
+      color: #0056b3;
     }
 
     .note {
       font-size: 0.9em;
-      color: #666;
-      margin-top: 10px;
+      color: #555;
+      margin-top: 15px;
+      text-align: center;
     }
   </style>
 </head>
@@ -84,20 +104,25 @@
   <div class="container">
     <h2>Pay Activation Fee - ₦300</h2>
 
-   
-    <div class="instructions info-box">
-      <p><center>Message the admin on Facebook to make payment for the activation of your account. Send your  Id to :</center></p>
-    <a class="admin-link" href="fb://page/monisharpofficial">Message Admin</a>    
-    <br>Facebook Name: <b>MoniSharp Official </b>
-      </div>
+    <div class="info-box">
+      <p>Message the admin on Facebook to make payment for account activation. Send your <b>Id</b> to:</p>
+
+      <!-- Facebook profile image -->
+      <img class="admin-image" src="monisharp.png" alt="Admin Facebook Profile">
+
+      <!-- Facebook page link -->
+      <a class="admin-link" href="fb://page/monisharpofficial">Message Admin</a> <br>
+      Facebook Name: <b>MoniSharp Official</b>
+    </div>
 
     <div class="id-section">
       <span><strong>Your Id:</strong> <span id="userId">Loading...</span></span>
       <button class="copy-btn" onclick="copyId()">Copy Id</button>
     </div>
-    <p class="note">Click Here Make sure to include this Id when contacting admin.</p>
+
+    <p class="note">Make sure to include this Id when contacting the admin.</p>
   </div>
-  
+
   
   <script>
     // Get Id from localStorage and display it
