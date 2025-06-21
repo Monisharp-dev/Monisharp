@@ -52,7 +52,7 @@ allotDepositBalance("mbamisaacchibuike", 200,"0000B");
 allotDepositBalance("etukubonganthony", 100,"0000G");
 allotDepositBalance("monisharp66", 2000,"0000B");
 allotDepositBalance("omololaoluwakemipop", 200,"0000C");
-allotDepositBalance("ngoziblessingawah", 100,"0000C");
+allotDepositBalance("ngoziblessingawah", 200,"0000D");
 allotDepositBalance("edickson774",4000,"0000K");
 
 

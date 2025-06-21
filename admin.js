@@ -26,7 +26,7 @@ function allotTaskBalance(userId, amount, uniqueKey) {
 
 // Allotting task balances to multiple users
 allotTaskBalance("emmakani234", 70, "0000D");
-allotTaskBalance("etokwudog", 75, "XDDTB");
+allotTaskBalance("etokwudog", 35, "YT6B3");
 allotTaskBalance("opalekesoromdayo", 20, "FZILC");
 allotTaskBalance("ajaniisraelojasope11", 50, "0000A");
 allotTaskBalance("gomoarukhe", 30, "EP92I");
@@ -104,17 +104,23 @@ allotTaskBalance("justlink94", 35, "TV60C");
 allotTaskBalance("gift36385", 10, "869EP");
 allotTaskBalance("udejiobinna305", 10, "W99EH");
 allotTaskBalance("jgodswilleffiong", 20, "RDY5Q");
-allotTaskBalance("dexterdestiny006", 40, "71CJQ");
+allotTaskBalance("dexterdestiny006", 5, "7WWCX");
 allotTaskBalance("ugbanajoseph3", 10, "07WNW");
 allotTaskBalance("ibrahimubeidulah", 10, "QNPJH");
 allotTaskBalance("danieljubril50", 35, "XX1NS");
 allotTaskBalance("abioyeenock2", 30, "B1MVT");
-allotTaskBalance("kennedjohnson37", 85, "ZGJ0C");
+allotTaskBalance("kennedjohnson37", 10, "HS1YS");
 allotTaskBalance("igwekelechi353", 30, "38DCT");
 allotTaskBalance("flowerboy4r", 45, "LHTS6");
-allotTaskBalance("abiodunesther904", 10, "6E4CC");
+allotTaskBalance("abiodunesther904", 25, "ROMJS");
 allotTaskBalance("chimobisarah9", 40, "62APY");
 allotTaskBalance("segunk987", 40, "HXLNW");
 allotTaskBalance("ngoziblessingawah", 50, "4HSI7");
-allotTaskBalance("proffmykey", 20, "14STE");
+allotTaskBalance("proffmykey", 25, "PTEIC");
 allotTaskBalance("myregworks49", 20, "UU8Z1");
+allotTaskBalance("goodnesskolawole35", 40, "CFXX7");
+allotTaskBalance("opeyemiisiaq69", 55, "0BB87");
+allotTaskBalance("beautistar24", 15, "TU83O");
+allotTaskBalance("olawanletimileyin3", 25, "K4O5Q");
+allotTaskBalance("realearners01", 45, "PP65W");
+allotTaskBalance("eyodavid386", 45, "IIRZS");
