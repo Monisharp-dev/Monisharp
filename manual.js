@@ -154,6 +154,7 @@ const allowedIds = [
   "rukeachu",
   "rutie7omare",
   "safiyaibrahimbahago",
+  "sambemediong2",
   "samuelbillionz93",
   "sarchibong92",
   "segunk987",
