@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Advertisement History</title>
+  <link rel="stylesheet" href="ad-history.css" />
+  <style>
+      * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f0f2f5;
+  color: #333;
+  transition: all 0.4s ease-in-out;
+  padding: 2rem 1rem;
+}
+
+.container {
+  max-width: 1000px;
+  margin: auto;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #0066cc;
+  font-size: 1.8rem;
+}
+
+.scroll-table {
+  overflow-x: auto;
+  transition: all 0.3s ease-in-out;
+  border-radius: 8px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  min-width: 900px;
+  text-align: left;
+}
+
+th, td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+thead {
+  background-color: #0066cc;
+  color: white;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1;
+  transition: 0.3s;
+}
+
+.empty-message {
+  text-align: center;
+  margin-top: 20px;
+  color: #999;
+  display: none;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>📜 Advertisement History</h2>
+    <div class="scroll-table">
+      <table id="historyTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Reward (₦)</th>
+            <th>Target Users</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Total Paid (₦)</th>
+            <th>Status</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Entries will be inserted here -->
+        </tbody>
+      </table>
+    </div>
+    <div class="empty-message" id="emptyMsg">No advertisement history yet.</div>
+  </div>
+
+  <script>
+  window.addEventListener("DOMContentLoaded", () => {
+  const id = localStorage.getItem("Id") || "Unknown";
+  const historyKey = `taskHistory_${id}`;
+  let history = JSON.parse(localStorage.getItem(historyKey)) || [];
+  const tableBody = document.getElementById("tableBody");
+  const emptyMsg = document.getElementById("emptyMsg");
+
+  if (history.length === 0) {
+    emptyMsg.style.display = "block";
+    return;
+  }
+
+  const now = new Date();
+  let updated = false;
+
+  history.forEach((task, index) => {
+    // Check if status should be updated
+    if (task.status === "Pending (24hrs)") {
+      const taskDate = new Date(task.date);
+      const diffHours = Math.abs(now - taskDate) / 36e5; // milliseconds to hours
+
+      if (diffHours >= 24) {
+        task.status = "Completed";
+        updated = true;
+      }
+    }
+
+    // Render row
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${index + 1}</td>
+      <td>₦${task.reward}</td>
+      <td>${task.users}</td>
+      <td>${task.category}</td>
+      <td>${task.task}</td>
+      <td>₦${task.totalPaid}</td>
+      <td>${task.status}</td>
+      <td>${task.date}</td>
+    `;
+
+    tableBody.appendChild(row);
+  });
+
+  // Save updates to localStorage if any task status was changed
+  if (updated) {
+    localStorage.setItem(historyKey, JSON.stringify(history));
+  }
+});
+  </script>
+</body>
+</html>
