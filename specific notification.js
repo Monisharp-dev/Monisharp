@@ -1,5 +1,5 @@
 // List of specific user IDs allowed to see the message
-const allowedUserIds = ["67890", "gidadosani372"]; // Replace with actual Ids
+const allowedUserIds = ["67890", "paulchisom34"]; // Replace with actual Ids
 
 // Get user ID from localStorage
 const monisharpUserId = localStorage.getItem("Id");
@@ -55,7 +55,7 @@ if (allowedUserIds.includes(monisharpUserId)) {
   notify.className = "mono-notify";
   notify.innerHTML = `
     <div>
-      ❌ Your deposit was not successful because you intentionally uploaed the same recipt you used in activating your account. It doesn't work that way</div>
+      ❌ Your Task was not advertise because you did not include your TicTok link in your Task. Please message the admin on Facebook for help. </div>
     <button class="close-btn" onclick="this.parentElement.remove()">×</button>
   `;
   document.body.appendChild(notify);
