@@ -62,6 +62,7 @@ const allowedIds = [
   "eyodavid386",
   "ezeagum54",
   "ezeisaiah2023",
+  "f1688703",
   "fasootovictor3",
   "favourboy817",
   "feargodthompson",
