@@ -4,14 +4,26 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Activation Payment</title>
+ <!-- Font Awesome CDN without SRI -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #e0f7fa, #fce4ec);
+      background: linear-gradient(135deg, #e0f7fa, #fce4ec);
       margin: 0;
       padding: 20px;
       color: #333;
       transition: all 0.3s ease-in-out;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .container {
@@ -19,34 +31,51 @@
       margin: auto;
       background-color: #fff;
       padding: 30px;
-      border-radius: 16px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease-in-out;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: slideUp 0.6s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     h2 {
       text-align: center;
       color: #007b5e;
       margin-bottom: 25px;
+      font-size: 26px;
+      position: relative;
+    }
+
+    h2::after {
+      content: '';
+      display: block;
+      height: 3px;
+      width: 60px;
+      margin: 10px auto 0;
+      background-color: #007b5e;
+      border-radius: 2px;
     }
 
     .info-box {
       background: #e6f7ff;
       border-left: 4px solid #007bff;
-      padding: 15px;
-      border-radius: 10px;
-      margin-bottom: 20px;
+      padding: 15px 20px;
+      border-radius: 12px;
+      margin-bottom: 25px;
       text-align: center;
     }
 
     .admin-image {
       display: block;
-      margin: 15px auto;
-      width: 170px;
-      height: 170px;
-      border-radius: 8%;
+      margin: 20px auto;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
       object-fit: cover;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
       transition: transform 0.3s ease;
     }
 
@@ -54,21 +83,42 @@
       transform: scale(1.05);
     }
 
+    .admin-link {
+      display: inline-block;
+      margin-top: 10px;
+      text-decoration: none;
+      color: #fff;
+      background: #007bff;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
+
+    .admin-link:hover {
+      background: #0056b3;
+    }
+
+    .admin-link i {
+      margin-right: 8px;
+    }
+
     .id-section {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: #f9f9f9;
-      padding: 12px 18px;
-      border-radius: 10px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+      background: #f5f5f5;
+      padding: 14px 18px;
+      border-radius: 12px;
+      box-shadow: inset 0 1px 4px rgba(0,0,0,0.05);
+      margin-top: 20px;
     }
 
     .copy-btn {
       background-color: #28a745;
       color: white;
       border: none;
-      padding: 8px 16px;
+      padding: 10px 18px;
       border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s ease;
@@ -78,52 +128,58 @@
       background-color: #218838;
     }
 
-    a.admin-link {
-      display: inline-block;
-      margin-top: 10px;
-      text-decoration: none;
-      color: #007bff;
-      font-weight: bold;
-      transition: color 0.2s ease;
-    }
-
-    a.admin-link:hover {
-      text-decoration: underline;
-      color: #0056b3;
+    .copy-btn i {
+      margin-right: 6px;
     }
 
     .note {
-      font-size: 0.9em;
-      color: #555;
-      margin-top: 15px;
+      font-size: 0.88em;
+      color: #666;
+      margin-top: 18px;
       text-align: center;
+    }
+
+    .alert {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 15px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      color: #fff;
+      z-index: 9999;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      opacity: 1;
+      transition: opacity 0.5s ease;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Pay Activation Fee - ₦300</h2>
+    <h2><i class="fas fa-lock"></i> Pay Activation Fee - ₦300</h2>
 
     <div class="info-box">
-      <p>Message the admin on Facebook to make payment for account activation. Send your <b>Id</b> to:</p>
+      <p><i class="fas fa-info-circle"></i> Message the admin on Facebook to activate your account. Send your <strong>Id</strong> to:</p>
 
-      <!-- Facebook profile image -->
+      <!-- Admin Profile Image -->
       <img class="admin-image" src="monisharp.png" alt="Admin Facebook Profile">
 
-      <!-- Facebook page link -->
-      <a class="admin-link" href="fb://page/monisharpofficial">Message Admin</a> <br>
-      Facebook Name: <b>MoniSharp Official</b>
-    </div>
+      <!-- Facebook link -->
+      <a class="admin-link" href="https://m.me/monisharpofficial" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-facebook-messenger"></i> Message Admin
+      </a>
 
-    <div class="id-section">
-      <span><strong>Your Id:</strong> <span id="userId">Loading...</span></span>
-      <button class="copy-btn" onclick="copyId()">Copy Id</button>
-    </div>
+      <!-- ID Section -->
+      <div class="id-section">
+        <span><strong>Your Id:</strong> <span id="userId">Loading...</span></span>
+        <button class="copy-btn" onclick="copyId()"><i class="fas fa-copy"></i> Copy Id</button>
+      </div>
 
-    <p class="note">Make sure to include this Id when contacting the admin.</p>
+      <p class="note">Include this Id when chatting with the admin for verification.</p>
+    </div>
   </div>
 
-  
   <script>
     // Get Id from localStorage and display it
     const storedId = localStorage.getItem('Id');
@@ -132,53 +188,28 @@
     function copyId() {
       if (storedId) {
         navigator.clipboard.writeText(storedId).then(() => {
-          showAlert("Id copied to clipboard!", "success");
+          showAlert("✅ Id copied to clipboard!", "#28a745");
         }).catch(() => {
-          showAlert("Failed to copy Id.", "error");
+          showAlert("❌ Failed to copy Id.", "#dc3545");
         });
       } else {
-        showAlert("No Id found in storage.", "warning");
+        showAlert("⚠️ No Id found in storage.", "#ffc107", "#000");
       }
     }
 
-    function showAlert(message, type = "info") {
+    function showAlert(message, bgColor, textColor = "#fff") {
       const alert = document.createElement("div");
+      alert.className = "alert";
       alert.textContent = message;
-
-      // Dynamic styling
-      alert.style.position = "fixed";
-      alert.style.top = "20px";
-      alert.style.left = "50%";
-      alert.style.transform = "translateX(-50%)";
-      alert.style.padding = "15px 25px";
-      alert.style.borderRadius = "8px";
-      alert.style.fontSize = "16px";
-      alert.style.color = "#fff";
-      alert.style.zIndex = 9999;
-      alert.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
-      alert.style.transition = "opacity 0.5s ease";
-
-      // Background colors by type
-      if (type === "success") {
-        alert.style.backgroundColor = "#28a745";
-      } else if (type === "error") {
-        alert.style.backgroundColor = "#dc3545";
-      } else if (type === "warning") {
-        alert.style.backgroundColor = "#ffc107";
-        alert.style.color = "#000";
-      } else {
-        alert.style.backgroundColor = "#007bff";
-      }
-
+      alert.style.backgroundColor = bgColor;
+      alert.style.color = textColor;
       document.body.appendChild(alert);
 
-      // Remove after 3.5s
       setTimeout(() => {
         alert.style.opacity = "0";
         setTimeout(() => alert.remove(), 500);
-      }, 3500);
+      }, 3000);
     }
   </script>
- <script src="id.js"></script> 
 </body>
 </html>
