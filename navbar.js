@@ -175,7 +175,7 @@ const navbarSidebarHTML = `
     <div class="scrollable-content">
       <div class="sidebar-section">TASK</div>
       <nav class="nav-links">
-          <a href="createTask.html"><i class="fas fa-plus-circle"></i> Create Task ${createTaskBadge}</a>
+          <a href="Create Tasks.html"><i class="fas fa-plus-circle"></i> Create Task ${createTaskBadge}</a>
           <a href="ad history.html"><i class="fas fa-history"></i> Task Creation History ${createTaskBadge}</a>
         <a href="task.html"><i class="fas fa-tasks"></i> Task</a>
         <a href="Taskwithdrawal.html"><i class="fas fa-wallet"></i> Task Withdrawal</a>
