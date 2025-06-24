@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Referral Contest - MoniSharp</title>
+  <link rel="stylesheet" href="referral-contest.css"/>
+  <link rel="stylesheet" href="bottom-nav.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  
+  <script src="https://kit.fontawesome.com/a81368914c.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fas fa-trophy"></i> Referral Contest Leaderboard</h1>
+
+    <div class="leaderboard">
+      <div class="table-header">
+        <span>Name</span>
+        <span>Referrals</span>
+        <span>Reward (₦)</span>
+      </div>
+      <div id="leaderboard-data" class="table-body">
+        <!-- JS will inject rows here -->
+      </div>
+    </div>
+
+    <div class="how-to-join">
+      <h2><i class="fas fa-info-circle"></i> How to Join</h2>
+      <p>Message the admin on Facebook using the button below:</p>
+      <div class="copy-box">
+        <input type="text" id="fb-link" value="https://www.facebook.com/monisharpofficial" readonly>
+        <button id="copyBtn"><i class="fas fa-copy"></i> Copy</button>
+      </div>
+      <p><strong>Tell him you want to join the contest. It’s 100% FREE – No payment required!</strong></p>
+    </div>
+
+    <div class="rewards-info">
+      <h2><i class="fas fa-gift"></i> Referral Rewards</h2>
+      <ul>
+        <li>🎉 5 Referrals = ₦1000</li>
+        <li>🔥 10 Referrals = ₦2000</li>
+        <li>💰 15 Referrals = ₦3000</li>
+        <li>💎 20 Referrals = ₦4000</li>
+        <li>🚀 25 Referrals = ₦5000</li>
+      </ul>
+    </div>
+
+    <div id="notification" class="notification hidden">
+      <i class="fas fa-check-circle"></i> Link copied successfully!
+    </div>
+  </div>
+<script src="bottom-nav.js"></script>
+  <script src="referral-contest.js"></script>
+</body>
+</html>

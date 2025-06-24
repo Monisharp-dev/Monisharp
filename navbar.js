@@ -5,14 +5,18 @@ const badgeKeys = {
   dailyReward: "dailyRewardSeen",
   quickBrainNew: "quickBrainNewSeen",
   tapSeen: "tapseen",
-  createTaskSeen: "createTaskSeen", // ✅ NEW
+  createTaskSeen: "createTaskSeen",
+  referralSeen: "referralSeen", // ✅ NEW
+  referralContestSeen: "referralContestSeen" // ✅ NEW
 };
 
 const badgeDurations = {
   dailyReward: 3,
   quickBrainNew: 5,
   tapSeen: 5,
-  createTaskSeen: 5, // ✅ NEW
+  createTaskSeen: 5,
+  referralSeen: 5, // ✅ NEW
+  referralContestSeen: 5 // ✅ NEW
 };
 
 function shouldShowBadge(key, duration) {
@@ -27,6 +31,15 @@ function shouldShowBadge(key, duration) {
   return diffDays < duration;
 }
 
+
+
+const referralBadge = shouldShowBadge(badgeKeys.referralSeen, badgeDurations.referralSeen)
+  ? `<span class="new-badge">NEW</span>`
+  : ``;
+
+const referralContestBadge = shouldShowBadge(badgeKeys.referralContestSeen, badgeDurations.referralContestSeen)
+  ? `<span class="new-badge">NEW</span>`
+  : ``;
 
 const createTaskBadge = shouldShowBadge(badgeKeys.createTaskSeen, badgeDurations.createTaskSeen)
   ? `<span class="new-badge">NEW</span>`
@@ -173,6 +186,11 @@ const navbarSidebarHTML = `
     </div>
 
     <div class="scrollable-content">
+        <div class="sidebar-section">REFER & EARN</div>
+<nav class="nav-links">
+  <a href="refer.html"><i class="fas fa-link"></i> Refer Friends ${referralBadge}</a>
+  <a href="referral-contest.html"><i class="fas fa-chart-line"></i> Referral Contest ${referralContestBadge}</a>
+</nav>
       <div class="sidebar-section">TASK</div>
       <nav class="nav-links">
           <a href="Create Tasks.html"><i class="fas fa-plus-circle"></i> Create Task ${createTaskBadge}</a>
