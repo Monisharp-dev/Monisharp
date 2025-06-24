@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   const inputs = document.querySelectorAll("input");
@@ -9,9 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const apiList = [
-    "https://sheetdb.io/api/v1/nwaqj66tx0aax",   
+    "https://sheetdb.io/api/v1/nwaqj66tx0aax",
     "https://sheetdb.io/api/v1/405z3g0d9avnw",
-    "https://sheetdb.io/api/v1/oawvpqtgfg14g",       
+    "https://sheetdb.io/api/v1/oawvpqtgfg14g",
     "https://sheetdb.io/api/v1/ot1b8mxw83ll6"
   ];
 
@@ -51,9 +52,11 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Utility: Send to first working API in the list
-  const sendToFirstAvailableApi = async (data, timeout = 5000) => {
-    for (let api of apiList) {
+  const delay = (ms) => new Promise(res => setTimeout(res, ms));
+
+  const sendToFirstAvailableApi = async (data, timeout = 10000) => {
+    for (let i = 0; i < apiList.length; i++) {
+      const api = apiList[i];
       try {
         const controller = new AbortController();
         const timer = setTimeout(() => controller.abort(), timeout);
@@ -74,9 +77,15 @@ document.addEventListener("DOMContentLoaded", () => {
           console.warn(`❌ Error: ${api} responded with status ${res.status}`);
         }
       } catch (err) {
-        console.warn(`⚠️ Failed to connect to ${api}`, err.message);
+        console.warn(`⚠️ Failed to connect to ${api}: ${err.message}`);
+      }
+
+      if (i < apiList.length - 1) {
+        console.log("⏳ Waiting 10 seconds before trying next API...");
+        await delay(10000); // Wait 10 seconds before trying next
       }
     }
+
     return false;
   };
 
