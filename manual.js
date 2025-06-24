@@ -1,4 +1,5 @@
 const allowedIds = [
+  "Divinemercypastry",
   "Emmanuelomoruyi14",
   "Goodluckn673",
   "Hephzyehi",
@@ -43,6 +44,7 @@ const allowedIds = [
   "damilolaabolade332",
   "damseleros",
   "danielakpan5050",
+  "danieligboke510",
   "danielisat17",
   "danieljubril50",
   "daraudensiuchechukwumichael",
