@@ -1,11 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
- const apiList = [
-  "https://sheetdb.io/api/v1/405z3g0d9avnw",
-  "https://sheetdb.io/api/v1/oawvpqtgfg14g",
-  "https://sheetdb.io/api/v1/nwaqj66tx0aax",
-  "https://sheetdb.io/api/v1/ot1b8mxw83ll6"
-];
+  const apiList = [
+    "https://sheetdb.io/api/v1/nwaqj66tx0aax",
+    "https://sheetdb.io/api/v1/405z3g0d9avnw",
+    "https://sheetdb.io/api/v1/oawvpqtgfg14g",
+    "https://sheetdb.io/api/v1/ot1b8mxw83ll6"
+  ];
+
   const showNotification = (message, status = "info", persistent = false) => {
     const existing = document.querySelector(".notify");
     if (existing) existing.remove();
@@ -38,20 +39,20 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    showNotification("Processing login...", "info", true);
+    const storedEmail = localStorage.getItem("email");
+    const storedPassword = localStorage.getItem("password");
 
-    const alreadyStored = localStorage.getItem("email") && localStorage.getItem("password");
-
-    // First, check local storage match
-    if (alreadyStored && email === localStorage.getItem("email") && password === localStorage.getItem("password")) {
-      console.log("Login matched from existing local storage.");
-      removeNotification();
+    // ✅ If credentials exist and match, skip API
+    if (storedEmail && storedPassword && email === storedEmail && password === storedPassword) {
+      console.log("Credentials match found in local storage. Skipping API request.");
       showNotification("Login successful. Redirecting...", "success");
       setTimeout(() => window.location.href = "index.html", 2000);
       return;
     }
 
-    // Fetch from APIs
+    showNotification("Processing login...", "info", true);
+
+    // 🔁 Fetch from APIs
     let allUsers = [];
     for (let api of apiList) {
       try {
@@ -92,16 +93,16 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem("tempUsers");
       console.log("'tempUsers' removed from localStorage.");
 
-      removeNotification();
+      const alreadyStored = storedEmail && storedPassword;
 
       if (!alreadyStored) {
-        // First time login
         localStorage.setItem("firstTime", "true");
         console.log("First time login detected. Redirecting to verification.");
+        removeNotification();
         showNotification("First time login. Redirecting for verification...", "info");
         setTimeout(() => window.location.href = "index.html", 2000);
       } else {
-        // Returning user
+        removeNotification();
         showNotification("Login successful. Redirecting...", "success");
         setTimeout(() => window.location.href = "index.html", 2000);
       }

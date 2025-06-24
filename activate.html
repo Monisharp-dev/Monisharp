@@ -7,179 +7,176 @@
  <!-- Font Awesome CDN without SRI -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    * {
-      box-sizing: border-box;
-    }
+   * {
+  box-sizing: border-box;
+}
 
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #e0f7fa, #fce4ec);
-      margin: 0;
-      padding: 20px;
-      color: #333;
-      transition: all 0.3s ease-in-out;
-      animation: fadeIn 1s ease;
-    }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #e0f7fa, #fce4ec);
+  margin: 0;
+  padding: 20px;
+  color: #333;
+  transition: all 0.3s ease-in-out;
+  animation: fadeIn 1s ease;
+  overflow-x: hidden;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    .container {
-      max-width: 520px;
-      margin: auto;
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      animation: slideUp 0.6s ease;
-    }
+.container {
+  max-width: 520px;
+  width: 100%;
+  margin: auto;
+  background-color: #fff;
+  padding: 30px 20px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  animation: slideUp 0.6s ease;
+  word-wrap: break-word;
+}
 
-    @keyframes slideUp {
-      from { transform: translateY(30px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
+@keyframes slideUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 
-    h2 {
-      text-align: center;
-      color: #007b5e;
-      margin-bottom: 25px;
-      font-size: 26px;
-      position: relative;
-    }
+h2 {
+  text-align: center;
+  color: #007b5e;
+  margin-bottom: 25px;
+  font-size: 26px;
+  position: relative;
+  word-break: break-word;
+}
 
-    h2::after {
-      content: '';
-      display: block;
-      height: 3px;
-      width: 60px;
-      margin: 10px auto 0;
-      background-color: #007b5e;
-      border-radius: 2px;
-    }
+h2::after {
+  content: '';
+  display: block;
+  height: 3px;
+  width: 60px;
+  margin: 10px auto 0;
+  background-color: #007b5e;
+  border-radius: 2px;
+}
 
-    .info-box {
-      background: #e6f7ff;
-      border-left: 4px solid #007bff;
-      padding: 15px 20px;
-      border-radius: 12px;
-      margin-bottom: 25px;
-      text-align: center;
-    }
+.info-box {
+  background: #e6f7ff;
+  border-left: 4px solid #007bff;
+  padding: 15px 20px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  text-align: center;
+  word-wrap: break-word;
+}
 
-    .admin-image {
-      display: block;
-      margin: 20px auto;
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-      transition: transform 0.3s ease;
-    }
+.admin-image {
+  display: block;
+  margin: 20px auto;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+}
 
-    .admin-image:hover {
-      transform: scale(1.05);
-    }
+.admin-image:hover {
+  transform: scale(1.05);
+}
 
-    .admin-link {
-      display: inline-block;
-      margin-top: 10px;
-      text-decoration: none;
-      color: #fff;
-      background: #007bff;
-      padding: 10px 18px;
-      border-radius: 30px;
-      font-weight: 500;
-      transition: background 0.3s ease;
-    }
+.id-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: #f5f5f5;
+  padding: 14px 18px;
+  border-radius: 12px;
+  box-shadow: inset 0 1px 4px rgba(0,0,0,0.05);
+  margin-top: 20px;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
 
-    .admin-link:hover {
-      background: #0056b3;
-    }
+.id-section span {
+  font-size: 15px;
+  word-break: break-word;
+  margin-bottom: 10px;
+}
 
-    .admin-link i {
-      margin-right: 8px;
-    }
+.copy-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-self: flex-end;
+  white-space: nowrap;
+}
 
-    .id-section {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #f5f5f5;
-      padding: 14px 18px;
-      border-radius: 12px;
-      box-shadow: inset 0 1px 4px rgba(0,0,0,0.05);
-      margin-top: 20px;
-    }
+.copy-btn:hover {
+  background-color: #218838;
+}
 
-    .copy-btn {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+.copy-btn i {
+  margin-right: 6px;
+}
 
-    .copy-btn:hover {
-      background-color: #218838;
-    }
+.note {
+  font-size: 0.88em;
+  color: #666;
+  margin-top: 18px;
+  text-align: center;
+  word-wrap: break-word;
+}
 
-    .copy-btn i {
-      margin-right: 6px;
-    }
-
-    .note {
-      font-size: 0.88em;
-      color: #666;
-      margin-top: 18px;
-      text-align: center;
-    }
-
-    .alert {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 15px 25px;
-      border-radius: 8px;
-      font-size: 16px;
-      color: #fff;
-      z-index: 9999;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      opacity: 1;
-      transition: opacity 0.5s ease;
-    }
+.alert {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 25px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #fff;
+  z-index: 9999;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  max-width: 90%;
+  word-break: break-word;
+}
   </style>
 </head>
 <body>
   <div class="container">
     <h2><i class="fas fa-lock"></i> Pay Activation Fee - ₦300</h2>
 
-    <div class="info-box">
-      <p><i class="fas fa-info-circle"></i> Message the admin on Facebook to activate your account. Send your <strong>Id</strong> to:</p>
+   <div class="info-box">
+  <p><i class="fas fa-info-circle"></i> To contact the admin, copy the Facebook link below and paste it in your browser (e.g. Chrome). This method opens Facebook faster and works better.</p>
 
-      <!-- Admin Profile Image -->
-      <img class="admin-image" src="monisharp.png" alt="Admin Facebook Profile">
+  <!-- Admin Profile Image -->
+  <img class="admin-image" src="monisharp.png" alt="Admin Facebook Profile">
 
-      <!-- Facebook link -->
-      <a class="admin-link" href="https://m.me/monisharpofficial" target="_blank" rel="noopener noreferrer">
-        <i class="fab fa-facebook-messenger"></i> Message Admin
-      </a>
-
-      <!-- ID Section -->
-      <div class="id-section">
-        <span><strong>Your Id:</strong> <span id="userId">Loading...</span></span>
-        <button class="copy-btn" onclick="copyId()"><i class="fas fa-copy"></i> Copy Id</button>
-      </div>
-
-      <p class="note">Include this Id when chatting with the admin for verification.</p>
-    </div>
+  <!-- Facebook Link Section -->
+  <div class="id-section">
+    <span><strong>Admin Facebook:</strong> <span id="fbLink">https://www.facebook.com/monisharpofficial</span></span>
+    <button class="copy-btn" onclick="copyLink()"><i class="fas fa-copy"></i> Copy Link</button>
   </div>
 
+  <!-- ID Section -->
+  <div class="id-section" style="margin-top: 15px;">
+    <span><strong>Your Id:</strong> <span id="userId">Loading...</span></span>
+    <button class="copy-btn" onclick="copyId()"><i class="fas fa-copy"></i> Copy Id</button>
+  </div>
+
+  <p class="note">Include this Id when chatting with the admin for activation.</p>
+</div>
   <script>
     // Get Id from localStorage and display it
     const storedId = localStorage.getItem('Id');
@@ -210,6 +207,14 @@
         setTimeout(() => alert.remove(), 500);
       }, 3000);
     }
+    function copyLink() {
+  const fbLink = document.getElementById("fbLink").textContent;
+  navigator.clipboard.writeText(fbLink).then(() => {
+    showAlert("✅ Facebook link copied! Paste it in your browser.", "#007bff");
+  }).catch(() => {
+    showAlert("❌ Failed to copy link.", "#dc3545");
+  });
+}
   </script>
 </body>
 </html>

@@ -113,6 +113,7 @@ const allowedIds = [
   "kehindeige527",
   "kennedjohnson37",
   "khaddyabdullai",
+  "kingsegun9",
   "kingsleyarege",
   "kumijemichael",
   "ladannasirudeen",
