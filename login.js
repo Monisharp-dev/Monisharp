@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const storedEmail = localStorage.getItem("email");
     const storedPassword = localStorage.getItem("password");
 
-    // ✅ If credentials exist and match, skip API
     if (storedEmail && storedPassword && email === storedEmail && password === storedPassword) {
       console.log("Credentials match found in local storage. Skipping API request.");
       showNotification("Login successful. Redirecting...", "success");
@@ -52,40 +51,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     showNotification("Processing login...", "info", true);
 
-    // 🔁 Fetch from APIs
-    let allUsers = [];
+    let matchedUser = null;
+
     for (let api of apiList) {
       try {
-        const res = await fetch(api);
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 5000); // 5 seconds max wait
+
+        const res = await fetch(api, { signal: controller.signal });
+        clearTimeout(timeout);
+
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data)) {
-            console.log(`Data fetched from ${api}: ${data.length} users.`);
-            allUsers = allUsers.concat(data);
+          console.log(`✅ Success from ${api}: ${data.length} users fetched.`);
+
+          matchedUser = data.find(
+            user => user.email === email && user.password === password
+          );
+
+          if (matchedUser) {
+            console.log("🎯 Match found. Stopping further API checks.");
+            break;
+          } else {
+            console.log(`🔍 No match in data from ${api}`);
           }
         } else {
-          console.warn(`Failed to fetch from ${api}: Status ${res.status}`);
+          console.warn(`❌ API ${api} responded with status ${res.status}`);
         }
       } catch (err) {
-        console.error(`Error fetching from ${api}`, err);
+        console.warn(`⚠️ API ${api} failed or was too slow:`, err.message);
       }
     }
 
-    if (allUsers.length === 0) {
-      removeNotification();
-      console.warn("No data fetched from any API.");
-      showNotification("Login failed. Try again later.", "error");
-      return;
-    }
-
-    const matchedUser = allUsers.find(
-      user => user.email === email && user.password === password
-    );
+    removeNotification();
 
     if (matchedUser) {
-      console.log("User match found in fetched data.");
+      console.log("Login successful via API. Saving credentials...");
 
-      // Save credentials
       localStorage.setItem("email", matchedUser.email);
       localStorage.setItem("password", matchedUser.password);
       localStorage.setItem("phoneNumber", matchedUser.phoneNumber || "");
@@ -93,23 +95,17 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.removeItem("tempUsers");
       console.log("'tempUsers' removed from localStorage.");
 
-      const alreadyStored = storedEmail && storedPassword;
-
-      if (!alreadyStored) {
+      const isFirstLogin = !(storedEmail && storedPassword);
+      if (isFirstLogin) {
         localStorage.setItem("firstTime", "true");
-        console.log("First time login detected. Redirecting to verification.");
-        removeNotification();
         showNotification("First time login. Redirecting for verification...", "info");
-        setTimeout(() => window.location.href = "index.html", 2000);
       } else {
-        removeNotification();
         showNotification("Login successful. Redirecting...", "success");
-        setTimeout(() => window.location.href = "index.html", 2000);
       }
 
+      setTimeout(() => window.location.href = "index.html", 2000);
     } else {
-      console.warn("No match found in API data.");
-      removeNotification();
+      console.warn("No match found from any API.");
       showNotification("Invalid login credentials. Please try again.", "error");
     }
   });

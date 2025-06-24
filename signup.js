@@ -8,12 +8,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-const apiList = [
-  "https://sheetdb.io/api/v1/405z3g0d9avnw",
-  "https://sheetdb.io/api/v1/oawvpqtgfg14g",
-  "https://sheetdb.io/api/v1/nwaqj66tx0aax",
-  "https://sheetdb.io/api/v1/ot1b8mxw83ll6"
-];
+  const apiList = [
+    "https://sheetdb.io/api/v1/nwaqj66tx0aax",   
+    "https://sheetdb.io/api/v1/405z3g0d9avnw",
+    "https://sheetdb.io/api/v1/oawvpqtgfg14g",       
+    "https://sheetdb.io/api/v1/ot1b8mxw83ll6"
+  ];
+
   const showNotification = (message, status = "info", persistent = false) => {
     const existing = document.querySelector(".notify");
     if (existing) existing.remove();
@@ -33,7 +34,6 @@ const apiList = [
     if (existing) existing.remove();
   };
 
-  // Check if email and password already exist
   const existingEmail = localStorage.getItem("email");
   const existingPassword = localStorage.getItem("password");
 
@@ -48,9 +48,37 @@ const apiList = [
       removeNotification();
       window.location.href = "login.html";
     }, 4000);
-
     return;
   }
+
+  // Utility: Send to first working API in the list
+  const sendToFirstAvailableApi = async (data, timeout = 5000) => {
+    for (let api of apiList) {
+      try {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeout);
+
+        const res = await fetch(api, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ data }),
+          signal: controller.signal
+        });
+
+        clearTimeout(timer);
+
+        if (res.ok) {
+          console.log(`✅ Success: Data sent to ${api}`);
+          return true;
+        } else {
+          console.warn(`❌ Error: ${api} responded with status ${res.status}`);
+        }
+      } catch (err) {
+        console.warn(`⚠️ Failed to connect to ${api}`, err.message);
+      }
+    }
+    return false;
+  };
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -62,30 +90,21 @@ const apiList = [
     const password = document.getElementById("password")?.value.trim();
     const referee = document.getElementById("referral")?.value.trim();
 
-    console.log("Form submitted. Starting validation...");
-
-    // Validate all fields
     if (!firstName || !lastName || !phone || !email || !password) {
-      console.warn("Validation failed: All fields are required.");
       showNotification("All fields are required.", "error");
       return;
     }
 
-    // Validate email
     if (!/@gmail\.com$/.test(email)) {
-      console.warn("Invalid email domain.");
       showNotification("Email must be a Gmail address.", "error");
       return;
     }
 
-    // Validate phone number prefix
     if (!/^(?:\+234|080|081|070|071|090|091)/.test(phone)) {
-      console.warn("Invalid phone number prefix.");
       showNotification("Phone must start with +234, 080, 081, 070, 071, 090 or 091.", "error");
       return;
     }
 
-    // Check for duplicate user data
     if (
       firstName === localStorage.getItem("firstName") &&
       lastName === localStorage.getItem("lastName") &&
@@ -93,7 +112,6 @@ const apiList = [
       email === localStorage.getItem("email") &&
       password === localStorage.getItem("password")
     ) {
-      console.warn("Duplicate user data detected.");
       showNotification("Duplicate user data found. Please clear local storage.", "error");
       return;
     }
@@ -106,34 +124,14 @@ const apiList = [
       password
     };
 
-    let success = false;
-
     showNotification("Processing your registration...", "info", true);
-    console.log("Sending data to API...");
+    console.log("⏳ Attempting to send data...");
 
-    for (let api of apiList) {
-      try {
-        const res = await fetch(api, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data: userData })
-        });
-
-        if (res.ok) {
-          console.log(`Successfully sent data to API: ${api}`);
-          success = true;
-          break;
-        } else {
-          console.warn(`Server responded with error on: ${api}`);
-        }
-      } catch (err) {
-        console.warn(`API request failed: ${api}`, err);
-      }
-    }
+    const sent = await sendToFirstAvailableApi(userData);
 
     removeNotification();
 
-    if (success) {
+    if (sent) {
       localStorage.setItem("firstName", firstName);
       localStorage.setItem("lastName", lastName);
       localStorage.setItem("phoneNumber", phone);
@@ -141,15 +139,10 @@ const apiList = [
       localStorage.setItem("password", password);
       localStorage.setItem("refereeCode", referee);
 
-      console.log("Registration complete. Redirecting to dashboard...");
       showNotification("Signup successful! Redirecting...", "success");
       setTimeout(() => window.location.href = "index.html", 2000);
     } else {
-      console.error("All API servers failed.");
       showNotification("Signup failed. All servers unreachable. Try again later.", "error");
     }
   });
 });
-
-
-
