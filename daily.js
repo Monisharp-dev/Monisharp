@@ -13,10 +13,10 @@
     { label: "₦5", type: "money", amount: 5 },
     { label: "₦5", type: "money", amount: 5 },
     { label: "₦5", type: "money", amount: 5 },
-    { label: "+3,000", type: "points", amount: 3000 },
+    { label: "+3,000 score points", type: "points", amount: 3000 },
     { label: "₦10", type: "money", amount: 10 },
     { label: "₦10", type: "money", amount: 10 },
-    { label: "+10,000", type: "points", amount: 10000 }
+    { label: "+10,000 score points", type: "points", amount: 10000 }
   ];
 
   const lastClaim = localStorage.getItem(lastDateKey);
