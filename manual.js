@@ -180,6 +180,7 @@ const allowedIds = [
   "sermborleeh",
   "sesughdaniel433",
   "shadrachudosen11",
+  "shifmosempire",
   "sikinsam24",
   "simonejembi783",
   "sunsuwaamagai2020",
