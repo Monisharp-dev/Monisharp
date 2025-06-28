@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   const inputs = document.querySelectorAll("input");
@@ -10,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const apiList = [
+    "https://sheetdb.io/api/v1/okda0ptyi2lt1",
     "https://sheetdb.io/api/v1/nwaqj66tx0aax",
     "https://sheetdb.io/api/v1/405z3g0d9avnw",
     "https://sheetdb.io/api/v1/oawvpqtgfg14g",
@@ -35,6 +35,53 @@ document.addEventListener("DOMContentLoaded", () => {
     if (existing) existing.remove();
   };
 
+  const delay = (ms) => new Promise(res => setTimeout(res, ms));
+
+  const sendToFirstAvailableApi = async (data, timeout = 10000, retries = 2) => {
+    for (let i = 0; i < apiList.length; i++) {
+      const api = apiList[i];
+      let attempt = 0;
+
+      while (attempt <= retries) {
+        try {
+          const controller = new AbortController();
+          const timer = setTimeout(() => controller.abort(), timeout);
+
+          const res = await fetch(api, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ data }),
+            signal: controller.signal
+          });
+
+          clearTimeout(timer);
+
+          if (res.ok) {
+            console.log(`✅ Success: Data sent to ${api} on attempt ${attempt + 1}`);
+            return true;
+          } else {
+            console.warn(`❌ API ${api} failed with status ${res.status}`);
+          }
+        } catch (err) {
+          console.warn(`⚠️ Attempt ${attempt + 1} to ${api} failed: ${err.message}`);
+        }
+
+        attempt++;
+        if (attempt <= retries) {
+          console.log(`🔁 Retrying ${api} after 3s (attempt ${attempt + 1})...`);
+          await delay(3000);
+        }
+      }
+
+      if (i < apiList.length - 1) {
+        console.log("⏳ Moving to next API after 10 seconds...");
+        await delay(10000);
+      }
+    }
+
+    return false;
+  };
+
   const existingEmail = localStorage.getItem("email");
   const existingPassword = localStorage.getItem("password");
 
@@ -44,50 +91,12 @@ document.addEventListener("DOMContentLoaded", () => {
     submitBtn.disabled = true;
 
     showNotification("An account already exists on this device. Redirecting to login...", "info", true);
-
     setTimeout(() => {
       removeNotification();
       window.location.href = "login.html";
     }, 4000);
     return;
   }
-
-  const delay = (ms) => new Promise(res => setTimeout(res, ms));
-
-  const sendToFirstAvailableApi = async (data, timeout = 10000) => {
-    for (let i = 0; i < apiList.length; i++) {
-      const api = apiList[i];
-      try {
-        const controller = new AbortController();
-        const timer = setTimeout(() => controller.abort(), timeout);
-
-        const res = await fetch(api, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ data }),
-          signal: controller.signal
-        });
-
-        clearTimeout(timer);
-
-        if (res.ok) {
-          console.log(`✅ Success: Data sent to ${api}`);
-          return true;
-        } else {
-          console.warn(`❌ Error: ${api} responded with status ${res.status}`);
-        }
-      } catch (err) {
-        console.warn(`⚠️ Failed to connect to ${api}: ${err.message}`);
-      }
-
-      if (i < apiList.length - 1) {
-        console.log("⏳ Waiting 10 seconds before trying next API...");
-        await delay(10000); // Wait 10 seconds before trying next
-      }
-    }
-
-    return false;
-  };
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -97,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const phone = document.getElementById("phoneNumber")?.value.trim();
     const email = document.getElementById("email")?.value.trim();
     const password = document.getElementById("password")?.value.trim();
-    const referee = document.getElementById("referral")?.value.trim();
+    const refereeCode = document.getElementById("refereeCode")?.value.trim();
 
     if (!firstName || !lastName || !phone || !email || !password) {
       showNotification("All fields are required.", "error");
@@ -146,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem("phoneNumber", phone);
       localStorage.setItem("email", email);
       localStorage.setItem("password", password);
-      localStorage.setItem("refereeCode", referee);
+      localStorage.setItem("refereeCode", refereeCode);
 
       showNotification("Signup successful! Redirecting...", "success");
       setTimeout(() => window.location.href = "index.html", 2000);
