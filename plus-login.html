@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - MoniSharp</title>
+  <link rel="stylesheet" href="image.css" />
+  <link rel="stylesheet" href="plus-signup.css" />
+</head>
+<body>
+  <div class="signup-container">
+    <img src="logo.png" alt="MoniSharp Logo" class="logo" />
+    <h2>Login to Your Account</h2>
+
+    <form autocomplete="off" onsubmit="return false;">
+      <!-- Hidden fake fields to trick browser autofill -->
+      <input type="text" name="fakeusernameremembered" style="display:none">
+      <input type="password" name="fakepasswordremembered" style="display:none">
+
+      <div class="form-group">
+        <label for="login_email">Email</label>
+        <input type="text" id="login_email" name="login_email" placeholder="Enter your email" required autocomplete="off" />
+      </div>
+
+      <div class="form-group">
+        <label for="login_password">Password</label>
+        <input type="password" id="login_password" name="login_password" placeholder="Enter your password" required autocomplete="new-password" />
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="note">Don't have an account? <a href="plus-signup.html" style="color:#b9f6ca;">Sign Up</a></p>
+  </div>
+
+  <script src="block access.js"></script>
+  <script src="image.js"></script>
+  <script src="plus-login.js"></script>
+  <script src="nodrag.js"></script>
+  <script src="online.js"></script>
+</body>
+</html>

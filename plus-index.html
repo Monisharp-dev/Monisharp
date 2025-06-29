@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | MoniSharp</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="plus-index.css">
+  <style>
+    .count {
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Welcome Notification -->
+  <div class="notify" id="welcomeMessage">👋 Welcome back, Sharp User!</div>
+
+  <!-- Main Dashboard -->
+  <div class="dashboard-container">
+    <div class="profile">
+      <img id="profilePic" alt="Profile Picture" />
+      <h2>Welcome, MoniSharp Member</h2>
+    </div>
+
+    <div class="balances">
+      <div class="balance-card">
+        <i class="fas fa-bolt"></i>
+        <h3>Activity Balance</h3>
+        <p id="activityBalance" class="count">₦0</p>
+      </div>
+
+      <div class="balance-card">
+        <i class="fas fa-users"></i>
+        <h3>Referral Bonus</h3>
+        <p id="referralBalance" class="count">₦0</p>
+      </div>
+
+      <div class="balance-card">
+        <i class="fas fa-wallet"></i>
+        <h3>Deposit Balance</h3>
+        <p id="depositBalance" class="count">₦0</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Load profile image
+    function getProfileImage() {
+      const key = "moni_user_pic";
+      let saved = localStorage.getItem(key);
+
+      if (!saved) {
+        const randomId = Math.floor(Math.random() * 1000);
+        saved = `https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=${randomId}`;
+        localStorage.setItem(key, saved);
+      }
+
+      return saved;
+    }
+
+    document.getElementById("profilePic").src = getProfileImage();
+
+    // Auto-dismiss welcome message
+    setTimeout(() => {
+      const note = document.getElementById("welcomeMessage");
+      if (note) note.style.display = "none";
+    }, 5000);
+
+    // Animate number counting
+    function animateCountUp(el, endValue, duration = 1000) {
+      let start = 0;
+      const step = Math.ceil(endValue / (duration / 20));
+
+      const counter = setInterval(() => {
+        start += step;
+        if (start >= endValue) {
+          start = endValue;
+          clearInterval(counter);
+        }
+        el.textContent = `₦${start.toLocaleString()}`;
+      }, 20);
+    }
+
+    // Load balances from localStorage and animate
+    function loadBalancesAnimated() {
+      const activity = parseInt(localStorage.getItem("plus-activityBalance")) || 0;
+      const referral = parseInt(localStorage.getItem("plus-referralBalance")) || 0;
+      const deposit = parseInt(localStorage.getItem("plus-depositBalance")) || 0;
+
+      animateCountUp(document.getElementById("activityBalance"), activity);
+      animateCountUp(document.getElementById("referralBalance"), referral);
+      animateCountUp(document.getElementById("depositBalance"), deposit);
+    }
+
+    // Run
+    loadBalancesAnimated();
+  </script>
+
+  <!-- Other scripts -->
+  <script src="nav.js"></script>
+  <script src="plus-id.js"></script>
+  <script src="plus-cop.js"></script>
+  <script src="plus-homepage.js"></script>
+  <script src="plus-balance intit.js"></script>
+</body>
+</html>

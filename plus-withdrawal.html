@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Withdraw Funds</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" href="plus-withdrawal.css">
+  <style>
+    .loader-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loader-overlay.active {
+      display: flex;
+    }
+
+    .loader {
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .notification {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+    }
+
+    .notification.success { background: #e0fbe2; color: #2e7d32; }
+    .notification.warning { background: #fff4e5; color: #ff9800; }
+    .notification.error { background: #fdecea; color: #d32f2f; }
+  </style>
+</head>
+<body>
+
+
+<!-- Go Back Button -->
+<button onclick="history.back()" class="go-back-btn">
+  <i class="fas fa-arrow-left"></i> Go Back
+</button>
+
+<!-- Style it -->
+<style>
+  .go-back-btn {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease;
+  }
+
+  .go-back-btn:hover {
+    background-color: #0056b3;
+  }
+
+  .go-back-btn i {
+    font-size: 14px;
+  }
+</style>
+
+
+  <div class="glass-box">
+    <h2><i class="fas fa-wallet"></i> Withdraw Funds</h2>
+    <form id="withdrawForm">
+      <div class="form-group">
+        <label><i class="fas fa-random"></i> Choose Balance Source</label>
+        <select id="balanceType" required>
+          <option value="">-- Select Balance --</option>
+          <option value="referral">Referral Balance</option>
+          <option value="activity">Activity Balance</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-user-tag"></i> User ID</label>
+        <input type="text" id="Id" readonly>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-money-bill-wave"></i> Available Amount</label>
+        <input type="text" id="amount" readonly>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-university"></i> Bank Name</label>
+        <input type="text" id="bankName" required>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-user"></i> Account Name</label>
+        <input type="text" id="accountName" required>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-hashtag"></i> Account Number</label>
+        <input type="text" id="accountNumber" required>
+      </div>
+
+      <div class="form-group">
+        <label><i class="fas fa-calendar-day"></i> Date</label>
+        <input type="text" id="date" readonly>
+      </div>
+
+      <button type="submit"><i class="fas fa-paper-plane"></i> Withdraw Now</button>
+    </form>
+
+    <div id="notification" class="notification"></div>
+  </div>
+
+  <!-- Loader -->
+  <div class="loader-overlay" id="loaderOverlay">
+    <div class="loader"></div>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const Id = localStorage.getItem('plus-Id');
+  document.getElementById('Id').value = Id || 'N/A';
+  document.getElementById('date').value = new Date().toLocaleString();
+
+  const amountInput = document.getElementById('amount');
+  const balanceType = document.getElementById('balanceType');
+  const notification = document.getElementById('notification');
+  const form = document.getElementById('withdrawForm');
+  const loaderOverlay = document.getElementById('loaderOverlay');
+
+  // Show messages
+  function showNotification(message, type) {
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.style.display = 'block';
+    setTimeout(() => notification.style.display = 'none', 5000);
+  }
+
+  // Update the amount based on selected balance type
+  const updateAmount = () => {
+    const type = balanceType.value;
+    let balance = 0;
+
+    if (type === 'activity') {
+      const today = new Date();
+      if (today.getDate() !== 20) {
+        amountInput.value = "₦0.00";
+        showNotification("Activity balance can only be withdrawn on the 20th.", "warning");
+        return;
+      }
+      balance = parseFloat(localStorage.getItem('plus-activityBalance')) || 0;
+    } else if (type === 'referral') {
+      balance = parseFloat(localStorage.getItem('plus-referralBalance')) || 0;
+    }
+
+    amountInput.value = `₦${balance.toFixed(2)}`;
+  };
+
+  // Submit the withdrawal to API
+  async function submitWithdrawal(payload, attempt = 1) {
+    try {
+      const res = await fetch('https://sheetdb.io/api/v1/pecncmqdgxgih', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ data: payload })
+      });
+      if (!res.ok) throw new Error('Status: ' + res.status);
+      return true;
+    } catch {
+      return attempt < 10 ? await submitWithdrawal(payload, attempt + 1) : false;
+    }
+  }
+
+  balanceType.addEventListener('change', updateAmount);
+  updateAmount(); // call on load
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Auto-scroll to bottom
+    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+
+    const type = balanceType.value;
+    const rawAmount = (type === 'activity')
+      ? parseFloat(localStorage.getItem('plus-activityBalance')) || 0
+      : (type === 'referral')
+        ? parseFloat(localStorage.getItem('plus-referralBalance')) || 0
+        : 0;
+
+    const minAmount = type === 'activity' ? 7500 : 1000;
+    const bankName = document.getElementById('bankName').value.trim();
+    const accountName = document.getElementById('accountName').value.trim();
+    const accountNumber = document.getElementById('accountNumber').value.trim();
+
+    if (!type || !bankName || !accountName || !accountNumber) {
+      return showNotification("All fields must be filled.", "warning");
+    }
+
+    if (rawAmount < minAmount) {
+      return showNotification(`Minimum withdrawal is ₦${minAmount}`, "warning");
+    }
+
+    const payload = {
+      Id,
+      amount: rawAmount,
+      bankName,
+      accountName,
+      accountNumber,
+      date: new Date().toLocaleString(),
+      source: type
+    };
+
+    // Show loader
+    loaderOverlay.classList.add('active');
+
+    const success = await submitWithdrawal(payload);
+
+    // Hide loader
+    loaderOverlay.classList.remove('active');
+
+    if (success) {
+      // Deduct only if success
+      localStorage.setItem(`plus-${type}Balance`, '0');
+
+      const history = JSON.parse(localStorage.getItem('plus-withdrawalHistory')) || [];
+      history.push({ ...payload, status: 'Submitted' });
+      localStorage.setItem('plus-withdrawalHistory', JSON.stringify(history));
+
+      form.reset();
+      document.getElementById('Id').value = Id;
+      document.getElementById('date').value = new Date().toLocaleString();
+      amountInput.value = "₦0.00";
+      showNotification("Withdrawal submitted successfully.", "success");
+    } else {
+      showNotification("Submission failed. Please try again later.", "error");
+    }
+  });
+});
+</script>
+
+<script src="online.js"></script>
+</body>
+</html>

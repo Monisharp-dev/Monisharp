@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Referral Claim | MoniSharp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .referral-box {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.37);
+      animation: fadeIn 0.6s ease-in-out;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+    input {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+    button {
+      background-color: #1e90ff;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background-color: #0066cc;
+    }
+    .status {
+      margin-top: 15px;
+      text-align: center;
+      padding: 10px;
+      border-radius: 10px;
+      font-weight: 500;
+    }
+    .success { background: rgba(0,255,0,0.1); color: #aaffaa; }
+    .error { background: rgba(255,0,0,0.1); color: #ffaaaa; }
+    .info { background: rgba(255,255,255,0.15); color: #fff; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="referral-box">
+    <h2>Claim Referral Bonus</h2>
+    <input type="text" id="referralInput" placeholder="Enter Referral Code" />
+    <button onclick="claimReferral()">Claim Now</button>
+    <div id="statusMessage" class="status info">Awaiting input...</div>
+  </div>
+
+  <script>
+    const API_URL = "https://sheetdb.io/api/v1/nl6j5kit103gh";
+    const MAX_DAILY_CLAIMS = 5;
+
+    function getTodayKey() {
+      const d = new Date();
+      return `plus-referLog-${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+    }
+
+    function detectType(code) {
+      if (/^[A-Z]{2,3}[0-9]{2,3}$/.test(code)) return "Student";
+      if (/^PL\-[A-Z]{3}\-\d{3}\-\d{3}$/.test(code)) return "Plus";
+      return "Invalid";
+    }
+
+    async function claimReferral() {
+      const input = document.getElementById("referralInput");
+      const code = input.value.trim().toUpperCase();
+      const status = document.getElementById("statusMessage");
+      status.className = "status info";
+      status.innerText = "⏳ Validating referral code...";
+
+      if (!code) {
+        status.className = "status error";
+        status.innerText = "❌ Please enter a referral code.";
+        return;
+      }
+
+      const myReferralCode = localStorage.getItem("plus-referralCode");
+      if (code === myReferralCode) {
+        status.className = "status error";
+        status.innerText = "❌ You cannot claim using your own referral code!";
+        return;
+      }
+
+      const todayKey = getTodayKey();
+      const todayClaims = JSON.parse(localStorage.getItem(todayKey) || "[]");
+      if (todayClaims.length >= MAX_DAILY_CLAIMS) {
+        status.className = "status error";
+        status.innerText = "❌ You've reached today's referral claim limit.";
+        return;
+      }
+
+      const referGroup = JSON.parse(localStorage.getItem("plus-referGroup") || "[]");
+      if (referGroup.includes(code)) {
+        status.className = "status error";
+        status.innerText = "❌ This referral has already been claimed.";
+        return;
+      }
+
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+
+        let match = null;
+        for (let row of data) {
+          if (row.referralCode && row.referralCode.toUpperCase() === code) {
+            match = row;
+            break;
+          }
+        }
+
+        if (!match) {
+          console.warn(`❌ Referral code '${code}' not found in any referralCode fields.`);
+          status.className = "status error";
+          status.innerText = `❌ Referral code '${code}' not found in system.`;
+          return;
+        }
+
+        const refType = detectType(code);
+        let reward = 0;
+        if (refType === "Student") reward = 150;
+        else if (refType === "Plus") reward = 450;
+        else {
+          status.className = "status error";
+          status.innerText = "❌ Invalid referral code format.";
+          return;
+        }
+
+        const balKey = "plus-referralBalance";
+        const refCountKey = "plus-referrals";
+        const currentBal = parseInt(localStorage.getItem(balKey) || "0");
+        const currentCount = parseInt(localStorage.getItem(refCountKey) || "0");
+
+        localStorage.setItem(balKey, currentBal + reward);
+        localStorage.setItem(refCountKey, currentCount + 1);
+        referGroup.push(code);
+        todayClaims.push(code);
+        localStorage.setItem("plus-referGroup", JSON.stringify(referGroup));
+        localStorage.setItem(todayKey, JSON.stringify(todayClaims));
+
+        status.className = "status success";
+        status.innerText = `✅ Referral '${code}' accepted! ₦${reward} added to your referral balance.`;
+
+      } catch (err) {
+        console.error("❌ API error:", err);
+        status.className = "status error";
+        status.innerText = "❌ Network error. Please try again later.";
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Withdrawal History</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="plus-withdrawHistory.css">
+  <style>
+    .status-submitted {
+      color: dodgerblue;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Withdrawal History</h2>
+  <div class="table-container">
+    <table id="historyTable">
+      <thead>
+        <tr>
+          <th>Amount (₦)</th>
+          <th>Bank</th>
+          <th>Account Name</th>
+          <th>Account Number</th>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Rows will be inserted here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let history = [];
+
+    try {
+      const rawHistory = localStorage.getItem('plus-withdrawalHistory');
+      history = rawHistory ? JSON.parse(rawHistory) : [];
+    } catch (err) {
+      console.error("Invalid JSON in withdrawalHistory:", err);
+      history = [];
+    }
+
+    const tbody = document.querySelector('#historyTable tbody');
+    history.reverse(); // Show newest first
+
+    if (history.length === 0) {
+      const row = document.createElement('tr');
+      const cell = document.createElement('td');
+      cell.colSpan = 6;
+      cell.textContent = "No withdrawal records found.";
+      cell.style.textAlign = "center";
+      row.appendChild(cell);
+      tbody.appendChild(row);
+      return;
+    }
+
+    history.forEach(record => {
+      const row = document.createElement('tr');
+
+      row.innerHTML = `
+        <td>₦${parseFloat(record.amount).toFixed(2)}</td>
+        <td>${record.bankName}</td>
+        <td>${record.accountName}</td>
+        <td>${record.accountNumber}</td>
+        <td>${record.date}</td>
+        <td class="status-submitted">Submitted</td>
+      `;
+
+      tbody.appendChild(row);
+    });
+  });
+  </script>
+
+</body>
+</html>

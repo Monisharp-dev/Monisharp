@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Task Submission</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="bottom-nav.css"/>
+  <link rel="stylesheet" href="image.css">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: linear-gradient(to right, #0f172a, #1e3a8a);
+      color: #f8fafc;
+      padding: 20px;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .task-container {
+      max-width: 960px;
+      margin: auto;
+      padding: 25px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 18px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .header {
+      font-size: 28px;
+      text-align: center;
+      margin-bottom: 25px;
+      color: #93c5fd;
+    }
+
+    .instruction-box {
+      background: rgba(59, 130, 246, 0.2);
+      padding: 16px;
+      border-left: 4px solid #3b82f6;
+      border-radius: 10px;
+      margin-bottom: 25px;
+      font-size: 15.5px;
+      color: #dbeafe;
+    }
+
+    .category-filter {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .category-filter button {
+      background-color: #1e40af;
+      color: #e0f2fe;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .category-filter button.active,
+    .category-filter button:hover {
+      background-color: #2563eb;
+      color: #fff;
+    }
+
+    .task-card {
+      background: #1e293b;
+      border-left: 4px solid #3b82f6;
+      border-radius: 12px;
+      margin-bottom: 25px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .task-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .task-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      padding: 20px;
+      cursor: pointer;
+    }
+
+    .task-header img {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    .task-text h2 {
+      margin: 0 0 8px;
+      color: #93c5fd;
+      font-size: 20px;
+    }
+
+    .task-text ul {
+      margin: 0;
+      padding-left: 18px;
+      list-style: square;
+      color: #e2e8f0;
+      font-size: 14.5px;
+    }
+
+    .task-text p {
+      margin-top: 8px;
+      font-weight: bold;
+      color: #60a5fa;
+    }
+
+    .task-details {
+      display: none;
+      padding: 16px 20px;
+      background: #0f172a;
+      border-top: 1px solid #334155;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .how-to-do strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #bfdbfe;
+    }
+
+    .task-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .task-form textarea,
+    .task-form input[type="file"] {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-family: inherit;
+    }
+
+    .task-form textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .submit-btn:hover {
+      background-color: #2563eb;
+    }
+
+    .hidden-id {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<button onclick="history.back()" style="
+  display: inline-block;
+  margin-bottom: 20px;
+  background-color: #1e40af;
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s;
+">
+  <i class="fas fa-arrow-left"></i> Go Back
+</button>
+
+
+  <div class="task-container">
+    <h1 class="header"><i class="fas fa-tasks"></i> Complete Tasks</h1>
+
+    <!-- Instruction Box -->
+    <div id="instruction" class="instruction-box">
+      <p><i class="fas fa-info-circle"></i> Click on a task below to start performing it.<br>
+        <b>👇 NEW TASKS ARE BELOW THE OLD ONES 👇</b></p>
+    </div>
+
+    <!-- Category Filter -->
+    <div class="category-filter" role="tablist" aria-label="Task categories">
+      <button class="active" onclick="filterTasks(event, 'all')" role="tab" aria-selected="true">
+        <i class="fas fa-globe"></i> All
+      </button>
+      <button onclick="filterTasks(event, 'social')" role="tab" aria-selected="false">
+        <i class="fas fa-share-alt"></i> Social Tasks
+      </button>
+      <button onclick="filterTasks(event, 'business')" role="tab" aria-selected="false">
+        <i class="fas fa-briefcase"></i> Business Tasks
+      </button>
+      <button onclick="filterTasks(event, 'other')" role="tab" aria-selected="false">
+        <i class="fas fa-ellipsis-h"></i> Other Tasks
+      </button>
+    </div>
+
+    <!-- Task Cards -->
+    <div id="task-list">
+
+      <!-- Task Card: YouTube -->
+      <div class="task-card" data-category="social" data-task-id="F73">
+        <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-F73">
+          <img src="logo2.png" alt="Task Thumbnail" />
+          <div class="task-text">
+            <h2><i class="fab fa-youtube"></i> Subscribe to YouTube Channel</h2>
+            <ul>
+              <li>Tap LINK below to view channel</li>
+              <li><a href="https://www.youtube.com/@Blossom-x2b" target="_blank">LINK</a></li>
+              <li>Subscribe to the YouTube Channel</li>
+              <li>Send screenshot</li>
+            </ul>
+            <p><i class="fas fa-coins"></i> Reward: ₦50</p>
+          </div>
+        </div>
+        <div class="task-details" id="task-details-F73">
+          <div class="how-to-do">
+            <strong><i class="fas fa-lightbulb"></i> How to do:</strong>
+            <p>1. Tap <b>LINK</b> above<br>2. Subscribe<br>3. Send screenshot</p>
+          </div>
+          <form class="task-form" novalidate>
+            <input type="hidden" name="Id" class="hidden-id" />
+            <textarea name="text" placeholder="Text proof ..." required></textarea>
+            <input type="file" name="screenshot" accept="image/*" required />
+            <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Task</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Task Card: WhatsApp Group -->
+      <div class="task-card" data-category="social" data-task-id="GY1">
+        <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-GY1">
+          <img src="logo2.png" alt="Task Thumbnail" />
+          <div class="task-text">
+            <h2><i class="fab fa-whatsapp"></i> Join WhatsApp Group</h2>
+            <ul>
+              <li>Get instant access to updates, tips, and resources! 🌟</li>
+              <li><a href="https://chat.whatsapp.com/FoKNB9GDMTb9nTZRGS2WkV" target="_blank">Join Group</a></li>
+              <li>Engage & send screenshot</li>
+            </ul>
+            <p><i class="fas fa-coins"></i> Reward: ₦50</p>
+          </div>
+        </div>
+        <div class="task-details" id="task-details-GY1">
+          <div class="how-to-do">
+            <strong><i class="fas fa-lightbulb"></i> How to do:</strong>
+            <p>1. Tap the link<br>2. Join the group<br>3. Send screenshot</p>
+          </div>
+          <form class="task-form" novalidate>
+            <input type="hidden" name="Id" class="hidden-id" />
+            <textarea name="text" placeholder="Text proof ..." required></textarea>
+            <input type="file" name="screenshot" accept="image/*" required />
+            <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Task</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    // Toggle task details
+    function toggleTaskDetails(header) {
+      const details = header.nextElementSibling;
+      const isVisible = details.style.display === "flex";
+      details.style.display = isVisible ? "none" : "flex";
+      details.style.flexDirection = "column";
+      header.setAttribute('aria-expanded', !isVisible);
+    }
+
+    // Filter by category
+    function filterTasks(event, category) {
+      const buttons = document.querySelectorAll('.category-filter button');
+      buttons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-selected', 'false');
+      });
+
+      event.target.classList.add('active');
+      event.target.setAttribute('aria-selected', 'true');
+
+      const tasks = document.querySelectorAll('.task-card');
+      tasks.forEach(task => {
+        const taskCategory = task.getAttribute('data-category');
+        task.style.display = (category === 'all' || taskCategory === category) ? "block" : "none";
+      });
+    }
+
+    // Prefill Id fields
+    document.addEventListener('DOMContentLoaded', () => {
+      const userId = localStorage.getItem('plus-Id');
+      document.querySelectorAll('.hidden-id').forEach(input => {
+        input.value = userId || '';
+      });
+    });
+  </script>
+<script src="plus-task.js"></script>
+  <script src="image.js"></script>
+  <script src="pop.js"></script>
+  
+<script src="online.js"></script>
+</body>
+</html>

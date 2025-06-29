@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MoniSharp Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom right, #f0f8ff, #ffffff);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+      overflow-x: hidden;
+    }
+
+    .card {
+      background-color: #fff;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeSlideIn 1s ease forwards;
+    }
+
+    @keyframes fadeSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .title {
+      font-size: 2em;
+      font-weight: bold;
+      color: #1d4ed8;
+      margin-bottom: 10px;
+    }
+
+    .highlight {
+      color: #facc15;
+    }
+
+    .desc {
+      font-size: 0.95em;
+      color: #4b5563;
+      margin-bottom: 25px;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .btn {
+      padding: 14px;
+      font-weight: 600;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1em;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn i {
+      font-size: 1.1em;
+    }
+
+    .student-btn {
+      background-color: #2563eb;
+    }
+
+    .student-btn:hover {
+      background-color: #1e40af;
+      transform: scale(1.03);
+    }
+
+    .nonstudent-btn {
+      background-color: #059669;
+    }
+
+    .nonstudent-btn:hover {
+      background-color: #047857;
+      transform: scale(1.03);
+    }
+
+    .info-box {
+      text-align: left;
+      background-color: #eef4ff;
+      border: 1px solid #dbeafe;
+      padding: 20px;
+      border-radius: 15px;
+      color: #374151;
+      font-size: 0.92em;
+      line-height: 1.5;
+    }
+
+    .info-box strong {
+      display: block;
+      margin-top: 10px;
+      font-weight: bold;
+      color: #1d4ed8;
+    }
+
+    footer {
+      margin-top: 40px;
+      font-size: 0.85em;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    @media (min-width: 500px) {
+      .btn-group {
+        flex-direction: row;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h1 class="title">Welcome to <span class="highlight">MoniSharp</span></h1>
+    <p class="desc">Join our fast-growing platform that helps students and non-students earn money through fun tasks, games, and smart strategies.</p>
+    
+    <div class="btn-group">
+      <a href="signup.html" class="btn student-btn">
+        <i class="fas fa-user-graduate"></i> I’m a Student
+      </a>
+      <a href="plus-signup.html" class="btn nonstudent-btn">
+        <i class="fas fa-briefcase"></i> I’m a Non-Student
+      </a>
+    </div>
+
+    <div class="info-box">
+      <strong>For Students:</strong>
+      If you're a student and would like to be earning up to ₦1,000 through tasks and games, then this is the right choice for you. <br>
+      <span style="color:#2563eb;font-weight:600;">REG FEE: ₦300</span>
+
+      <strong>For Non-Students:</strong>
+      If you're not a student and you'd like to be earning more than ₦1,000 or ₦20,000 monthly, then the non-student package is good for you. <br>
+      <span style="color:#059669;font-weight:600;">REG FEE: ₦750</span>
+    </div>
+  </div>
+
+  <footer>&copy; 2025 MoniSharp. All rights reserved.</footer>
+
+<script src="online.js"></script>
+</body>
+</html>

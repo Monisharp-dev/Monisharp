@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Coupon Generator | MoniSharp Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #3b82f6, #1e3a8a);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 30px 25px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 26px;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: none;
+      margin-bottom: 20px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    .result-box {
+      background: rgba(255,255,255,0.08);
+      padding: 15px;
+      border-radius: 10px;
+      word-wrap: break-word;
+      font-family: monospace;
+      font-size: 15px;
+      color: #f8fafc;
+    }
+
+    .copy-btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      background: linear-gradient(to right, #22c55e, #15803d);
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .copy-btn:hover {
+      background: linear-gradient(to right, #15803d, #166534);
+    }
+
+    .alert {
+      margin-top: 15px;
+      padding: 10px;
+      background: #0ea5e9;
+      color: #fff;
+      border-radius: 6px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2><i class="fas fa-key"></i> Generate Coupon Code</h2>
+
+    <input type="text" id="userIdInput" placeholder="Enter User ID (e.g., johnplus)" oninput="generateCoupon()" />
+
+    <div class="result-box" id="couponCodeDisplay">Waiting for input...</div>
+
+    <button class="copy-btn" onclick="copyCode()"><i class="fas fa-copy"></i> Copy Code</button>
+
+    <div class="alert" id="copyAlert">🔑 Coupon copied to clipboard!</div>
+  </div>
+
+  <script>
+    async function generateCoupon() {
+      const userId = document.getElementById("userIdInput").value.trim();
+      const display = document.getElementById("couponCodeDisplay");
+
+      if (!userId) {
+        display.textContent = "Waiting for input...";
+        return;
+      }
+
+      const encoder = new TextEncoder();
+      const data = encoder.encode(userId);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      display.textContent = hash;
+    }
+
+    function copyCode() {
+      const code = document.getElementById("couponCodeDisplay").textContent;
+      if (code && code !== "Waiting for input...") {
+        navigator.clipboard.writeText(code).then(() => {
+          const alertBox = document.getElementById("copyAlert");
+          alertBox.style.display = "block";
+          setTimeout(() => alertBox.style.display = "none", 3000);
+        });
+      }
+    }
+  </script>
+</body>
+</html>

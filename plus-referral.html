@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Referral Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .code-box, .link-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 10px 0;
+      background: #f5faff;
+    }
+
+    .code-box span, .link-box span {
+      word-break: break-word;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    ul {
+      list-style: disc;
+      padding-left: 20px;
+    }
+
+    .instruction-box {
+      background: #e7f1ff;
+      border-left: 4px solid #007BFF;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #007BFF;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 25px;
+      font-weight: bold;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 9999;
+    }
+
+    .center {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+  </style>
+</head>
+<body>
+   <div style="margin-bottom: 10px;">
+  <button onclick="window.history.back()" style="margin-left: 0;">
+    <i class="fas fa-arrow-left"></i> Go Back
+  </button>
+</div>
+<div class="container">
+  <h1>Referral Program</h1>
+
+  <section class="referral-count">
+    <h2>Number of Referrals</h2>
+    <p id="referralNumber">0</p>
+  </section>
+
+  <section class="referral-code">
+    <h2>My Referral Code</h2>
+    <div class="code-box">
+      <span id="referralCode">Loading...</span>
+      <button id="copyBtn">Copy</button>
+    </div>
+  </section>
+
+  <div class="instruction-box">
+    <h3>How to Earn Referral Rewards</h3>
+    <ul>
+      <li>Share your referral code with friends.</li>
+      <li>Your friend must register and activate a package.</li>
+      <li>If they choose the <strong>Student package</strong> — you earn <strong>₦150</strong></li>
+      <li>If they choose the <strong>Plus package</strong> — you earn <strong>₦450</strong></li>
+      <li>Once activated, ask them to send you their referral code.</li>
+      <li>Tap the button below to claim your reward.</li>
+    </ul>
+  </div>
+
+  <div class="center">
+    <button onclick="window.location.href='plus-refer.html'">Go to Claim Page</button>
+  </div>
+
+  <section class="app-link">
+    <h2>MoniSharp App Link</h2>
+    <div class="link-box">
+      <span id="appLink">https://tinyurl.com/MoniSharp</span>
+      <button onclick="copyAppLink()">Copy Link</button>
+    </div>
+  </section>
+</div>
+
+<div id="toast"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const code = localStorage.getItem("plus-referralCode") || "NO CODE";
+    const count = localStorage.getItem("plus-referrals") || "0";
+    document.getElementById("referralCode").textContent = code;
+    document.getElementById("referralNumber").textContent = count;
+  });
+
+  document.getElementById("copyBtn").onclick = () => {
+    const code = document.getElementById("referralCode").textContent;
+    navigator.clipboard.writeText(code);
+    showToast("Referral code copied!");
+  };
+
+  function copyAppLink() {
+    const link = document.getElementById("appLink").textContent;
+    navigator.clipboard.writeText(link);
+    showToast("App link copied!");
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.style.display = "block";
+    toast.style.opacity = "1";
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      setTimeout(() => (toast.style.display = "none"), 400);
+    }, 3000);
+  }
+</script>
+
+</body>
+</html>
