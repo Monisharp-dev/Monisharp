@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("✅ Deposit Balance:", depositBalance);
 
   // Step 5: Redirect if balance conditions are met
-  if (mainBalance > 300 || referralBalance > 300) {
+  if (mainBalance > 5000 || referralBalance > 5000) {
     const popup = document.createElement("div");
     popup.innerHTML = `
       <div style="

@@ -23,7 +23,47 @@ document.addEventListener("DOMContentLoaded", () => {
   }, 200);
 });
 
+// Show full-page blocking overlay
+function showBlockingOverlay() {
+  const overlay = document.createElement("div");
+  overlay.id = "blockingOverlay";
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+  overlay.style.color = "#fff";
+  overlay.style.display = "flex";
+  overlay.style.flexDirection = "column";
+  overlay.style.justifyContent = "center";
+  overlay.style.alignItems = "center";
+  overlay.style.zIndex = "9999";
+  overlay.innerHTML = `
+    <div style="text-align: center;">
+      <h2>⏳ Please wait...</h2>
+      <p>We're verifying and posting your referral code</p>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+// Hide overlay
+function hideBlockingOverlay() {
+  const overlay = document.getElementById("blockingOverlay");
+  if (overlay) overlay.remove();
+}
+
 async function runHomepageLogic(Id, email) {
+  const activated = localStorage.getItem("activateStatus");
+  const referralPosted = localStorage.getItem("referralPosted");
+  let referralCode = localStorage.getItem("referralCode");
+
+  if (!activated || referralCode || referralPosted === "true") {
+    console.log("✅ Conditions not met. Skipping posting logic.");
+    return;
+  }
+
   const referralApis = [
     "https://sheetdb.io/api/v1/ceh2avnf98hi1",
     "https://sheetdb.io/api/v1/npvktjn37lk2v"
@@ -35,9 +75,8 @@ async function runHomepageLogic(Id, email) {
         const res = await fetch(api, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data), // ✅ Plain object format
+          body: JSON.stringify(data),
         });
-
         if (res.ok) {
           console.log(`✅ Successfully posted to API: ${api}`);
           return true;
@@ -51,41 +90,36 @@ async function runHomepageLogic(Id, email) {
     return false;
   };
 
-  // Step 1: Generate referralCode if missing
-  let referralCode = localStorage.getItem("referralCode");
-  if (!referralCode) {
-    const generateReferralCode = (email) => {
-      const namePart = email.split("@")[0];
-      const prefix = namePart.slice(0, 2).toUpperCase();
-      const digits = namePart.match(/\d{3}$/);
-      const suffix = digits ? digits[0] : Math.floor(100 + Math.random() * 900);
-      return `${prefix}${suffix}`;
-    };
+  // Show blocking UI
+  showBlockingOverlay();
 
-    referralCode = generateReferralCode(email);
-    localStorage.setItem("referralCode", referralCode);
-    console.log("🎉 Generated referralCode:", referralCode);
-  } else {
-    console.log("ℹ️ referralCode already exists:", referralCode);
-  }
+  // Generate referralCode
+  const generateReferralCode = (email) => {
+    const name = email.split("@")[0];
+    const letters = name.replace(/[^a-z]/gi, '').substring(0, 3).toUpperCase().padEnd(3, 'X');
+    const timestamp = Date.now().toString().slice(-6, -3);
+    const random = Math.floor(100 + Math.random() * 900);
+    return `PL-${letters}-${timestamp}-${random}`;
+  };
 
-  // Step 2: Avoid duplicate posting
-  if (localStorage.getItem("referralPosted") === "true") {
-    console.log("✅ Referral already posted. Skipping...");
-    return;
-  }
+  referralCode = generateReferralCode(email);
+  localStorage.setItem("referralCode", referralCode);
+  console.log("🎉 Generated referralCode:", referralCode);
 
-  // Step 3: Post to API
-  console.log("📡 Posting referral data...");
+  // Attempt to post
   const payload = { Id, referralCode };
+  console.log("📡 Posting referral data...");
 
   const success = await postWithFallback(referralApis, payload);
 
   if (success) {
     localStorage.setItem("referralPosted", "true");
-    console.log("✅ Referral data posted and flag saved.");
+    console.log("✅ Referral posted successfully.");
+    hideBlockingOverlay();
   } else {
     localStorage.setItem("referralPosted", "false");
-    console.warn("❌ Failed to post referral data. Will retry on next load.");
+    console.warn("❌ Referral not posted. Show overlay permanently.");
+    alert("❌ Failed to post referral code.\nPlease notify admin on our Facebook page.");
+    // Overlay remains until successful post
   }
 }
