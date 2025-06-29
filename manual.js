@@ -56,6 +56,7 @@ const allowedIds = [
   "dexterdestiny006",
   "dicksongabriel940",
   "diyoabdulgafar24",
+  "duruchukwuebuka123",
   "ea7332759",
   "ebubechiwinner066",
   "ed9583378",
