@@ -29,6 +29,7 @@ const allowedIds = [
   "ayomidemilekan23",
   "beautistar24",
   "beautycreation19",
+  "beautyemilyosaze",
   "bilkisumusa888",
   "blessingsalami081",
   "blessnigfaithbobby",
