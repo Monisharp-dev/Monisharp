@@ -154,6 +154,7 @@ const allowedIds = [
   "oluwadamilareezekiel70",
   "oluwaseansalami92",
   "oluwatofunmienochoke",
+  "oluwolebasheet11",
   "omoizehappy",
   "omojesu087",
   "omololaoluwakemipop",
@@ -207,6 +208,7 @@ const allowedIds = [
   "victorumoren113",
   "whizzyboss67",
   "winnerfelix094",
+  "winnerv255",
   "wisdomeyo75",
   "yakubuhanifat202"
 ];
