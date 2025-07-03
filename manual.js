@@ -191,6 +191,7 @@ const allowedIds = [
   "shifmosempire",
   "sikinsam24",
   "simonejembi783",
+  "sohlohmhon526",
   "sunsuwaamagai2020",
   "surpriseoyelayo",
   "taiwoolamilekan890",
