@@ -54,8 +54,7 @@ allotDepositBalance("gift36385", 400,"0000F");
 allotDepositBalance("omololaoluwakemipop", 200,"0000C");
 allotDepositBalance("ngoziblessingawah", 200,"0000D");
 allotDepositBalance("femigodslove069", 500,"0000N");
-allotDepositBalance("edickson774",4000,"0000K");
-allo
+allotDepositBalance("hammadumar346",300,"0000K");
 
 
 
