@@ -108,14 +108,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 🔁 ImgBB fallback upload function
-  async function uploadToImgBB(file, taskId) {
-    const apiKey = "b08c28e563e88b729eefa384ac7d00db"; // Your key
+  // 🔁 ImgBB fallback upload function with API key fallback
+async function uploadToImgBB(file, taskId) {
+  const apiKeys = [
+    "b08c28e563e88b729eefa384ac7d00db",
+    "86ac206cbf0a9713952bc49109196e11",
+    "b8460f459985ca3a01a5f3a3c9cdcf1f",
+    "5da6321ffe26d29500c57086abea4179",
+    "86154b3839c2d7db9a08f4383b90b863"
+  ];
+
+  for (let keyIndex = 0; keyIndex < apiKeys.length; keyIndex++) {
+    const apiKey = apiKeys[keyIndex];
     const url = `https://api.imgbb.com/1/upload?key=${apiKey}`;
 
     for (let attempt = 1; attempt <= 3; attempt++) {
       try {
-        console.log(`[${taskId}] 🖼️ ImgBB Upload Attempt ${attempt}...`);
+        console.log(`[${taskId}] 🖼️ ImgBB Upload Attempt ${attempt} with Key ${keyIndex + 1}...`);
         const formData = new FormData();
         formData.append("image", file);
         formData.append("expiration", Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60); // 7 days
@@ -124,14 +133,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await res.json();
         if (data.success) return data.data.url;
 
-        console.warn(`[${taskId}] ImgBB failed:`, data);
+        console.warn(`[${taskId}] ImgBB failed with key ${keyIndex + 1}, attempt ${attempt}:`, data);
       } catch (e) {
-        console.warn(`[${taskId}] ImgBB error:`, e);
+        console.warn(`[${taskId}] ImgBB error with key ${keyIndex + 1}, attempt ${attempt}:`, e);
       }
     }
-    return null;
   }
 
+  // All keys and attempts failed
+  console.error(`[${taskId}] ❌ All ImgBB API keys failed`);
+  return null;
+}
   // 🔁 SheetDB fallback submission function
   async function submitToSheetDB(apiList, payload, taskId) {
     for (let i = 0; i < apiList.length; i++) {
