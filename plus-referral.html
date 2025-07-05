@@ -107,10 +107,10 @@
     <p id="referralNumber">0</p>
   </section>
 
-  <section class="referral-code">
+  <section class="plusreferral-code">
     <h2>My Referral Code</h2>
     <div class="code-box">
-      <span id="referralCode">Loading...</span>
+      <span id="plus-referralCode">Loading...</span>
       <button id="copyBtn">Copy</button>
     </div>
   </section>
@@ -146,12 +146,12 @@
   document.addEventListener("DOMContentLoaded", () => {
     const code = localStorage.getItem("plus-referralCode") || "NO CODE";
     const count = localStorage.getItem("plus-referrals") || "0";
-    document.getElementById("referralCode").textContent = code;
+    document.getElementById("plus-referralCode").textContent = code;
     document.getElementById("referralNumber").textContent = count;
   });
 
   document.getElementById("copyBtn").onclick = () => {
-    const code = document.getElementById("referralCode").textContent;
+    const code = document.getElementById("plus-referralCode").textContent;
     navigator.clipboard.writeText(code);
     showToast("Referral code copied!");
   };
