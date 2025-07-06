@@ -1,165 +1,146 @@
+// === CONFIGURATION === //
 const apiUrls = [
   "https://sheetdb.io/api/v1/nl6j5kit103gh",
   "https://sheetdb.io/api/v1/npvktjn37lk2v",
   "https://sheetdb.io/api/v1/ceh2avnf98hi1"
 ];
 
+// === FETCH LOCALSTORAGE KEYS === //
 const referralCode = localStorage.getItem("referralCode");
-const refereeCode = localStorage.getItem("refereeCode");
+const activateStatus = localStorage.getItem("activateStatus");
+const localReferGroup = JSON.parse(localStorage.getItem("referGroup") || "[]");
+
+// === DOM ELEMENT REFERENCES (WITH GUARDS) === //
 const referralDisplay = document.getElementById("referralCode");
 const notification = document.getElementById("notification");
+const copyBtn = document.getElementById("copyBtn");
+const toast = document.getElementById("toast");
 
+// === LOGS === //
 console.log("Referral Page Loaded");
+console.log("Referral Code:", referralCode);
+console.log("Plus Referral Code:", localStorage.getItem("plus-referralCode"));
 
-// Display referral code from localStorage
-if (referralCode) {
-  console.log("Referral code found:", referralCode);
+// === DISPLAY REFERRAL CODE IF AVAILABLE === //
+if (referralCode && referralDisplay) {
   referralDisplay.textContent = referralCode;
   showNotification("You're a Valid User");
   showToast("Welcome back, valid user!");
 
-  // Check if a request should be made
+  // Check if update needed
   if (shouldMakeApiRequest()) {
-    if (refereeCode) {
-      console.log("Referee code found:", refereeCode);
-      updateReferrals(refereeCode);
-    } else {
-      console.log("No referee code found. Skipping referral update.");
-    }
-  } else {
-    console.log("API request already made within the past 24 hours.");
+    updateReferGroupToSheetDB();
   }
-} else {
-  console.warn("No referral code found in local storage.");
+} else if (referralDisplay) {
   referralDisplay.textContent = "No code found";
   showToast("No referral code detected.");
+  console.warn("No referral code in local storage.");
 }
 
-// Copy button logic
-document.getElementById("copyBtn").onclick = () => {
-  if (referralCode) {
-    navigator.clipboard.writeText(referralCode).then(() => {
-      console.log("Referral code copied to clipboard.");
-      showToast("Referral code copied!");
-    });
-  } else {
-    showToast("Nothing to copy.");
-  }
-};
+// === COPY BUTTON HANDLER === //
+if (copyBtn) {
+  copyBtn.onclick = () => {
+    if (referralCode) {
+      navigator.clipboard.writeText(referralCode)
+        .then(() => {
+          console.log("Referral code copied.");
+          showToast("Referral code copied!");
+        });
+    } else {
+      showToast("Nothing to copy.");
+    }
+  };
+}
 
-// Allow all requests on 20 June 2025 and reset timer
+// === API CALL TIMING CONTROL === //
 function shouldMakeApiRequest() {
   const today = new Date();
   const isJune20 = today.getFullYear() === 2025 && today.getMonth() === 5 && today.getDate() === 20;
 
   if (isJune20) {
-    console.log("Bypassing 24hr check: Today is 20 June 2025");
+    console.log("Bypassing 24hr check (June 20).");
     localStorage.removeItem("lastApiRequest");
     return true;
   }
 
-  const lastRequestTime = localStorage.getItem("lastApiRequest");
-  const currentTime = Date.now();
+  const lastRequest = parseInt(localStorage.getItem("lastApiRequest"), 10);
+  const now = Date.now();
+  const day = 24 * 60 * 60 * 1000;
 
-  if (!lastRequestTime) {
-    localStorage.setItem("lastApiRequest", currentTime);
-    return true;
-  }
-
-  const timeDiff = currentTime - lastRequestTime;
-  const oneDay = 24 * 60 * 60 * 1000;
-
-  if (timeDiff >= oneDay) {
-    localStorage.setItem("lastApiRequest", currentTime);
+  if (!lastRequest || (now - lastRequest >= day)) {
+    localStorage.setItem("lastApiRequest", now.toString());
     return true;
   }
 
   return false;
 }
 
-// Update referGroup when refereeCode is used
-async function updateReferrals(refereeCode) {
-  if (!localStorage.getItem("activateStatus")) {
-    showToast("Account not activated. Please activate to update referrals.");
-    console.warn("activateStatus not found. Blocking referral update.");
+// === PUSH REFERGROUP IF NEW === //
+async function updateReferGroupToSheetDB() {
+  if (!referralCode || !activateStatus) {
+    console.warn("Referral code or activation status missing.");
     return;
   }
 
-  if (!referralCode) {
-    console.warn("No referralCode found. Cannot update referGroup.");
-    return;
-  }
-
-  for (let url of apiUrls) {
-    console.log("Checking API:", url);
+  for (const url of apiUrls) {
     try {
-      const response = await fetch(`${url}/search?referralCode=${refereeCode}`);
+      const response = await fetch(`${url}/search?referralCode=${referralCode}`);
       const data = await response.json();
 
-      if (data.length > 0) {
-        console.log("User found in database.");
-        const user = data[0];
-
-        // Handle referGroup array
-        let referGroup = [];
-        try {
-          if (user.referGroup) {
-            referGroup = JSON.parse(user.referGroup);
-            if (!Array.isArray(referGroup)) referGroup = [];
-          }
-        } catch {
-          referGroup = [];
-        }
-
-        if (!referGroup.includes(referralCode)) {
-          referGroup.push(referralCode);
-        }
-
-        // Update referGroup only
-        await fetch(`${url}/referralCode/${refereeCode}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            data: {
-              referGroup: JSON.stringify(referGroup)
-            }
-          })
-        });
-
-        localStorage.setItem(`referGroup_${refereeCode}`, JSON.stringify(referGroup));
-        showToast("ReferGroup updated!");
-        console.log("Updated referGroup stored locally:", referGroup);
-
-        localStorage.removeItem("refereeCode");
-        console.log("Referee code removed from localStorage.");
-
-        break;
-      } else {
-        console.log("No matching user found in this API.");
+      if (data.length === 0) {
+        console.log("User not found on this API endpoint.");
+        continue;
       }
+
+      const user = data[0];
+      let remoteGroup = [];
+
+      try {
+        if (user.referGroup) {
+          remoteGroup = JSON.parse(user.referGroup);
+          if (!Array.isArray(remoteGroup)) remoteGroup = [];
+        }
+      } catch {
+        remoteGroup = [];
+      }
+
+      // Compare groups and update only if needed
+      const newEntries = localReferGroup.filter(code => !remoteGroup.includes(code));
+      if (newEntries.length === 0) {
+        console.log("No new referral group entries to update.");
+        return;
+      }
+
+      const updatedGroup = [...new Set([...remoteGroup, ...localReferGroup])];
+
+      await fetch(`${url}/referralCode/${referralCode}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: { referGroup: JSON.stringify(updatedGroup) } })
+      });
+
+      showToast("ReferGroup updated to server!");
+      console.log("Updated group posted:", updatedGroup);
+      break;
+
     } catch (err) {
-      console.error("API error while updating referral data:", err);
+      console.error("ReferGroup update failed:", err);
     }
   }
 }
 
-// Toast alert
+// === TOAST UI FEEDBACK === //
 function showToast(message) {
-  const toast = document.getElementById("toast");
+  if (!toast) return;
   toast.textContent = message;
   toast.classList.add("show");
-
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 3000);
+  setTimeout(() => toast.classList.remove("show"), 3000);
 }
 
-// Notification banner
+// === BANNER NOTIFICATION === //
 function showNotification(message) {
+  if (!notification) return;
   notification.textContent = message;
   notification.classList.remove("hidden");
   notification.style.display = "block";
 }
-
-
-

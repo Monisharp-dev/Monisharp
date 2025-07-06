@@ -25,7 +25,7 @@ function allotTaskBalance(userId, amount, uniqueKey) {
 }
 
 // Allotting task balances to multiple users
-allotTaskBalance("emmakani234", 33, "AIWGT");
+allotTaskBalance("emmakani234", 10, "O7JMD");
 allotTaskBalance("etokwudog", 10, "ERZBM");
 allotTaskBalance("opalekesoromdayo", 20, "FZILC");
 allotTaskBalance("ajaniisraelojasope11", 50, "0000A");
@@ -57,7 +57,7 @@ allotTaskBalance("mophaserbeolokun", 10, "OB9YD");
 allotTaskBalance("diyoabdulgafar24", 10, "KIAUU");
 allotTaskBalance("danielakpan5050", 20, "H0EP7");
 allotTaskBalance("simonejembi783", 40, "FIJYC");
-allotTaskBalance("chrisfaith323", 5, "CA7X4");
+allotTaskBalance("chrisfaith323", 5, "TX7EY");
 allotTaskBalance("idongesitfriday84", 60, "U3LPS");
 allotTaskBalance("adewoyedavid873", 20, "HVTS8");
 allotTaskBalance("akatinjames409", 20, "OBDUW");
@@ -122,7 +122,7 @@ allotTaskBalance("goodnesskolawole35", 5, "2P5RP");
 allotTaskBalance("opeyemiisiaq69", 13, "1M1N1");
 allotTaskBalance("beautistar24", 16, "REAHV");
 allotTaskBalance("olawanletimileyin3", 6, "XHH5V");
-allotTaskBalance("realearners01", 15, "0NN2A");
+allotTaskBalance("realearners01", 5, "UUA3P");
 allotTaskBalance("eyodavid386", 15, "799YJ");
 allotTaskBalance("akinpadesamuelayomide", 20, "FQ4OX");
 allotTaskBalance("oluwadamilareezekiel70", 5, "PVD3S");
@@ -149,3 +149,6 @@ allotTaskBalance("winnerv255", 20, "N1FYZ");
 allotTaskBalance("hammadumar346", 12, "57LIN");
 allotTaskBalance("godwingozie6", 5, "LMAYM");
 allotTaskBalance("anzinayusuf33", 5, "QV2F2");
+allotTaskBalance("Ibbello1507", 22, "ZE0LY");
+allotTaskBalance("mosesosawe71", 50, "PM9GY");
+allotTaskBalance("andychinonye59", 22, "P2Z8H");
