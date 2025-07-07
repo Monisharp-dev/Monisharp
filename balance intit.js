@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Step 2: Load balances from localStorage
   let referralBalance = parseFloat(localStorage.getItem("referralBalance")) || 0;
-  
+
   // Step 3: Always sync mainBalance = referralBalance
   localStorage.setItem("mainBalance", referralBalance.toFixed(2));
 
@@ -18,8 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Step 5: Referral activation check
   const activateStatus = localStorage.getItem("activateStatus");
   const refereeCode = localStorage.getItem("refereeCode");
+  const referralCodeCopied = localStorage.getItem("referralCodeCopied");
 
-  if (activateStatus && refereeCode) {
+  // Only show modal if referred and code has NOT been copied
+  if (activateStatus && refereeCode && !referralCodeCopied) {
     // Step 6: Show full-screen blocking modal
     const modal = document.createElement("div");
     modal.innerHTML = `
