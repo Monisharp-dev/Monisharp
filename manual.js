@@ -225,7 +225,9 @@ const allowedIds = [
   "conanrex62",
   "murjanatumuhammad150",
   "jamespila100",
-  "markadepoju1" //New user
+  "markadepoju1", 
+  "markadepoju1",
+  "olaoyevictor05"//New user
 ];
 
 const currentUserId = localStorage.getItem("Id");
