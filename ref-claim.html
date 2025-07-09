@@ -152,47 +152,63 @@
 
   // ▓▓▓▓ CLAIM REWARD FUNCTION ▓▓▓▓
   function claimReward() {
-    const input = document.getElementById("refCodeInput").value.trim();
+  const input = document.getElementById("refCodeInput").value.trim();
+  console.clear();
+  console.log("🔐 Entered reward code:", input);
 
-    let decoded = "";
-    try {
-      decoded = atob(input); // Decode base64
-    } catch (e) {
-      return showToast("Invalid code format", "error");
-    }
-
-    if (!decoded.includes(":")) {
-      return showToast("Invalid code content", "error");
-    }
-
-    const [referralCode, refereeCode] = decoded.split(":");
-    const myRefereeCode = localStorage.getItem("refereeCode");
-    if (!myRefereeCode || refereeCode !== myRefereeCode) {
-      return showToast("Code doesn't match your invitee", "error");
-    }
-
-    const referGroupKey = "referGroup";
-    const referralsKey = "referrals";
-    const balanceKey = "referralBalance";
-
-    let group = JSON.parse(localStorage.getItem(referGroupKey) || "[]");
-
-    if (group.includes(referralCode)) {
-      return showToast("You've already claimed for this invitee", "error");
-    }
-
-    group.push(referralCode);
-    localStorage.setItem(referGroupKey, JSON.stringify(group));
-
-    const currentCount = parseInt(localStorage.getItem(referralsKey) || "0");
-    const currentBalance = parseInt(localStorage.getItem(balanceKey) || "0");
-
-    localStorage.setItem(referralsKey, (currentCount + 1).toString());
-    localStorage.setItem(balanceKey, (currentBalance + 150).toString());
-
-    showToast("₦150 reward claimed successfully!", "success");
-    document.getElementById("refCodeInput").value = "";
+  let decoded = "";
+  try {
+    decoded = atob(input);
+    console.log("✅ Decoded string:", decoded);
+  } catch (e) {
+    console.error("❌ Failed to decode base64:", e.message);
+    return showToast("Invalid code format", "error");
   }
+
+  if (!decoded.includes(":")) {
+    console.error("❌ Decoded string missing ':' separator");
+    return showToast("Invalid code content", "error");
+  }
+
+  const [inviteeReferralCode, refereeCodeFromCode] = decoded.split(":");
+  console.log("👤 Invitee's referralCode:", inviteeReferralCode);
+  console.log("📨 Referrer's (inviter) code from reward:", refereeCodeFromCode);
+
+  const myReferralCode = localStorage.getItem("referralCode"); // ⚠️ This is the inviter's code
+  console.log("💾 My referralCode from localStorage:", myReferralCode);
+
+  if (!myReferralCode || refereeCodeFromCode !== myReferralCode) {
+    console.warn("❌ Code doesn't match current user as referrer");
+    return showToast("Code doesn't belong to your invitee", "error");
+  }
+
+  // Continue claiming...
+  const referGroupKey = "referGroup";
+  const referralsKey = "referrals";
+  const balanceKey = "referralBalance";
+
+  let group = JSON.parse(localStorage.getItem(referGroupKey) || "[]");
+
+  if (group.includes(inviteeReferralCode)) {
+    console.warn("⛔ Already claimed reward from this invitee");
+    return showToast("You've already claimed for this invitee", "error");
+  }
+
+  group.push(inviteeReferralCode);
+  localStorage.setItem(referGroupKey, JSON.stringify(group));
+
+  const currentCount = parseInt(localStorage.getItem(referralsKey) || "0");
+  const currentBalance = parseInt(localStorage.getItem(balanceKey) || "0");
+
+  localStorage.setItem(referralsKey, (currentCount + 1).toString());
+  localStorage.setItem(balanceKey, (currentBalance + 150).toString());
+
+  console.log("🎉 Reward claimed! Total referrals:", currentCount + 1);
+  console.log("💰 New balance: ₦" + (currentBalance + 150));
+
+  showToast("₦150 reward claimed successfully!", "success");
+  document.getElementById("refCodeInput").value = "";
+}
 </script>
 <script src="pop.js"></script>
 <script src="ad place.js"></script>

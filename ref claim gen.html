@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auth Code Generator</title>
+  <style>
+    /* ▓▓▓▓ BASIC PAGE STYLES ▓▓▓▓ */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: #fff;
+      padding: 30px 35px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 15px;
+      color: #555;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    button {
+      background: #007BFF;
+      color: white;
+      border: none;
+      padding: 12px;
+      margin-top: 20px;
+      width: 100%;
+      font-size: 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    button:active {
+      background: #0056b3;
+    }
+
+    #output {
+      margin-top: 20px;
+      padding: 10px;
+      background: #e9ecef;
+      border-radius: 8px;
+      word-break: break-word;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Auth Code Generator</h2>
+
+    <!-- ▓▓▓▓ INPUTS ▓▓▓▓ -->
+    <label for="referralCode">Your Referral Code</label>
+    <input type="text" id="referralCode" placeholder="Enter your referral code">
+
+    <label for="refereeCode">Inviter's Code</label>
+    <input type="text" id="refereeCode" placeholder="Enter who referred you">
+
+    <!-- ▓▓▓▓ GENERATE BUTTON ▓▓▓▓ -->
+    <button onclick="generateAuthCode()">Generate Auth Code</button>
+
+    <!-- ▓▓▓▓ OUTPUT DISPLAY ▓▓▓▓ -->
+    <div id="output"></div>
+  </div>
+
+  <script>
+    // ▓▓▓▓ AUTH CODE GENERATOR ▓▓▓▓
+    function generateAuthCode() {
+      const referralCode = document.getElementById("referralCode").value.trim();
+      const refereeCode = document.getElementById("refereeCode").value.trim();
+      const output = document.getElementById("output");
+
+      // ▓▓▓▓ VALIDATE INPUT ▓▓▓▓
+      if (!referralCode || !refereeCode) {
+        output.textContent = "Please enter both codes.";
+        output.style.color = "red";
+        return;
+      }
+
+      // ▓▓▓▓ GENERATE BASE64 ENCODED AUTH CODE ▓▓▓▓
+      const raw = `${referralCode}:${refereeCode}`;
+      const encoded = btoa(raw);
+
+      // ▓▓▓▓ DISPLAY + SAVE TO LOCAL STORAGE ▓▓▓▓
+      output.textContent = encoded;
+      output.style.color = "#000";
+      localStorage.setItem("savedAuthCode", encoded);
+    }
+  </script>
+
+</body>
+</html>

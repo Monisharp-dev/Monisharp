@@ -5,13 +5,13 @@
   const savedAuthKey = "savedAuthCode";
   const delay = 10 * 60 * 1000; // 10 minutes
 
-  const referralCode = localStorage.getItem("referralCode");
-  const refereeCode = localStorage.getItem("refereeCode");
+  const referralCode = localStorage.getItem("referralCode"); // this user's code
+  const refereeCode = localStorage.getItem("refereeCode");   // code of the person who referred this user
 
-  // ▓▓▓▓ EXIT EARLY IF NOTHING TO DO ▓▓▓▓
+  // ▓▓▓▓ EXIT IF NOT REFERRED OR ALREADY COPIED ▓▓▓▓
   if (!refereeCode || localStorage.getItem(copiedKey)) return;
 
-  // ▓▓▓▓ STYLES ▓▓▓▓
+  // ▓▓▓▓ INJECT POPUP STYLES ▓▓▓▓
   const style = document.createElement("style");
   style.textContent = `
     #referralPopup {
@@ -66,59 +66,57 @@
   `;
   document.head.appendChild(style);
 
-  // ▓▓▓▓ POPUP DOM ▓▓▓▓
+  // ▓▓▓▓ BUILD POPUP DOM ▓▓▓▓
   const popup = document.createElement("div");
   popup.id = "referralPopup";
   popup.innerHTML = `
     <div class="popup-content">
-      <p><strong>NOTICE:</strong> You were referred by someone.</p>
-      <p>Please send this code to the person who invited you or your account will be <span>BLOCKED</span>.</p>
+      <p><strong>Referral Notice</strong></p>
+      <p>You've been referred. Please share this code with your inviter.</p>
       <div id="generatedCode">Generating code...</div>
       <button id="copyReferralCode">Copy Code</button>
     </div>
   `;
   document.body.appendChild(popup);
 
-  // ▓▓▓▓ CODE GENERATION ▓▓▓▓
-  function generateAuthCode(referral, referee) {
-    const payload = `${referral}:${referee}`;
-    const base64 = btoa(payload);
-    return base64;
+  // ▓▓▓▓ GENERATE AUTH CODE ▓▓▓▓
+  function generateAuthCode(ownReferralCode, inviterCode) {
+    const payload = `${ownReferralCode}:${inviterCode}`;
+    return btoa(payload); // base64 encode
   }
 
-  // ▓▓▓▓ HANDLE POPUP LOGIC ▓▓▓▓
   const authCode = generateAuthCode(referralCode, refereeCode);
   const codeBox = document.getElementById("generatedCode");
   const copyBtn = document.getElementById("copyReferralCode");
 
   codeBox.textContent = authCode;
 
+  // ▓▓▓▓ COPY BUTTON HANDLER ▓▓▓▓
   copyBtn.onclick = () => {
-    navigator.clipboard.writeText(authCode)
-      .then(() => {
-        copyBtn.textContent = "Copied!";
-        copyBtn.disabled = true;
+    navigator.clipboard.writeText(authCode).then(() => {
+      copyBtn.textContent = "Copied!";
+      copyBtn.disabled = true;
 
-        // Save copied state and start timer
-        localStorage.setItem(copiedKey, "true");
-        localStorage.setItem(copiedAtKey, Date.now().toString());
+      // Save copied state and auth code immediately
+      localStorage.setItem(copiedKey, "true");
+      localStorage.setItem(copiedAtKey, Date.now().toString());
+      localStorage.setItem(savedAuthKey, authCode);
 
-        // Countdown to remove popup and clear refereeCode
-        setTimeout(() => {
-          localStorage.setItem(savedAuthKey, authCode);
-          localStorage.removeItem("refereeCode");
-          popup.remove();
-        }, delay);
-      });
+      // Remove popup and refereeCode after delay
+      setTimeout(() => {
+        localStorage.removeItem("refereeCode");
+        popup.remove();
+      }, delay);
+    });
   };
 
-  // ▓▓▓▓ Auto cleanup if already copied but time not expired ▓▓▓▓
+  // ▓▓▓▓ AUTO CLEANUP IF ALREADY COPIED ▓▓▓▓
   const copiedAt = localStorage.getItem(copiedAtKey);
   if (copiedAt && Date.now() - parseInt(copiedAt) < delay) {
     const timeLeft = delay - (Date.now() - parseInt(copiedAt));
     setTimeout(() => {
-      popup.remove();
       localStorage.removeItem("refereeCode");
+      popup.remove();
     }, timeLeft);
   }
 })();
