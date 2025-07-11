@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const accountNumber = document.getElementById('accountNumber').value.trim();
     const date = document.getElementById('date').value;
 
-    if (amount < 200) return showNotification("Minimum withdrawal amount is ₦200.", "warning");
+    if (amount < 250) return showNotification("Minimum withdrawal amount is ₦250.", "warning");
     if (!bankName || !accountName || !accountNumber) return showNotification("All fields are required.", "warning");
     if (amount > taskBalance) return showNotification("Insufficient task balance.", "warning");
 
