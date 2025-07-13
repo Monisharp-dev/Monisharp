@@ -1,7 +1,7 @@
 // BlockAccess.js
 
 document.addEventListener('DOMContentLoaded', function () {
-    const blockedIds = ["jnrf6ed589"]; // List of blocked user IDs
+    const blockedIds = ["Goodluckn673"]; // List of blocked user IDs
     const userId = localStorage.getItem("Id"); // Get user Id from localStorage
 
     if (blockedIds.includes(userId)) {
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <div class="icon">🚫</div>
             <h1>Access Denied</h1>
             <p>Your account has been flagged by the admin for violating our policies.<br>
-            If you believe this is a mistake, please contact support.</p>
+            If you believe this is a mistake, please contact the admin on Facebook.</p>
         `;
 
         // Wipe existing content and display the message
