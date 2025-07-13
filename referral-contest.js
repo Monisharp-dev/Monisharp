@@ -2,10 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const leaderboardData = [
     { name: "Samuel A.", referrals: 5 },
     { name: "Joy M.", referrals: 20 },
-    { name: "Daniel O.", referrals: 8 },
+    { name: "Daniel O.", referrals: 10 },
     { name: "Happiness K.", referrals: 8 },
     { name: "Nathan T.", referrals: 13 },
-    { name: "Goodness D.", referrals: 33 }
+    { name: "Goodness D.", referrals: 35 }
   ];
 
   const container = document.getElementById("leaderboard-data");
