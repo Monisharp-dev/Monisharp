@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Boost Social - Instant Growth</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(135deg, #6e00ff, #b100ff);
+      color: white;
+      padding: 70px 20px;
+      text-align: center;
+      animation: fadeIn 1.2s ease-in;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    header p {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+    .boost-btn {
+      background: #fff;
+      color: #6e00ff;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: 0.3s;
+    }
+    .boost-btn:hover {
+      background: #eee;
+    }
+    .form-section {
+      padding: 40px 20px;
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      box-shadow: 0 0 12px rgba(0,0,0,0.05);
+      border-radius: 12px;
+      animation: fadeIn 0.6s ease-in;
+    }
+    .form-section h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #6e00ff;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    select, input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    input[readonly] {
+      background: #f5f5f5;
+    }
+    #submitBtn {
+      width: 100%;
+      padding: 14px;
+      background: #6e00ff;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    #submitBtn:hover {
+      background: #5700d4;
+    }
+    .success-msg {
+      text-align: center;
+      margin-top: 20px;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><i class="fa-solid fa-bolt"></i> Supercharge Your Socials</h1>
+  <p>Buy real likes, views, followers, and more. No delay, no stress.</p>
+  <button class="boost-btn" onclick="scrollToForm()">🚀 Boost Now</button>
+</header>
+
+<section class="form-section" id="orderForm">
+  <h2><i class="fa-solid fa-cart-shopping"></i> Place Your Order</h2>
+  <form id="socialOrderForm">
+    <div class="form-group">
+      <label for="category">Category</label>
+      <select id="category" required>
+        <option value="">Select Platform</option>
+        <option value="Instagram">Instagram</option>
+        <option value="Facebook">Facebook</option>
+        <option value="YouTube">YouTube</option>
+        <option value="WhatsApp">WhatsApp</option>
+        <option value="TikTok">TikTok</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="service">Service</label>
+      <select id="service" required>
+        <option value="">Select a Category First</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="link">Link</label>
+      <input type="url" id="link" placeholder="https://..." required />
+    </div>
+    <div class="form-group">
+      <label for="quantity">Quantity</label>
+      <input type="number" id="quantity" placeholder="e.g. 1000" required />
+    </div>
+    <div class="form-group">
+      <label for="price">Price per Unit (₦)</label>
+      <input type="number" id="price" value="2" readonly />
+    </div>
+    <div class="form-group">
+      <label for="delay">Estimated Delivery</label>
+      <input type="text" id="delay" value="1 - 6 hours" readonly />
+    </div>
+    <div class="form-group">
+      <label for="amount">Amount to Pay (₦)</label>
+      <input type="text" id="amount" readonly />
+    </div>
+    <button type="submit" id="submitBtn">Submit Order</button>
+    <div id="successMsg" style="margin-top: 10px; color: green;"></div>
+
+  </form>
+</section>
+
+
+<script>
+const servicesData = {
+  Facebook: {
+    "FB Followers (Testing)": { price: 3.5, min: 10, duration: "6 hours" },
+    "Page or Profile Followers(NGN)": { price: 20, min: 100, duration: "24 hours" },
+    "Page or Profile Followers (Testing)": { price: 8, min: 100, duration: "2 days" },
+    "Post Likes (NGN)": { price: 18, min: 20, duration: "26 hours" },
+  },
+  Instagram: {
+    "Followers (NGN)": { price: 15, min: 5, duration: "2 days" },
+    "Post Likes (NGN)": { price: 18, min: 10, duration: "3 days" },
+    "Post Likes (Testing)": { price: 1.5, min: 10, duration: "2 hours" },
+    "Comments": { price: 20, min: 10, duration: "3 days" },
+  },
+  WhatsApp: {
+    "Group Members (Legal group)": { price: 30, min: 50, duration: "2 days" },
+    "Channels Followers": { price: 30, min: 100, duration: "5 days" },
+  },
+  YouTube: {
+    "Views": { price: 18, min: 10, duration: "3 days 15 hours" },
+    "Subscribers": { price: 14, min: 100, duration: "3 days" },
+    "Subscribers (NGN)": { price: 24, min: 100, duration: "3 days" },
+    "Short/Reel Views": { price: 4, min: 100, duration: "2 days" },
+  },
+  TikTok: {
+    "Followers": { price: 30, min: 50, duration: "2 days" },
+    "Likes": { price: 18, min: 20, duration: "2 days" },
+    "Comments": { price: 16, min: 20, duration: "1 day 6 hours" },
+  }
+};
+
+const categorySelect = document.getElementById("category");
+const serviceSelect = document.getElementById("service");
+const priceEl = document.getElementById("price");
+const quantityEl = document.getElementById("quantity");
+const delayEl = document.getElementById("delay");
+const amountEl = document.getElementById("amount");
+
+categorySelect.addEventListener("change", () => {
+  const selectedCategory = categorySelect.value;
+  serviceSelect.innerHTML = `<option value="">Select Service</option>`;
+
+  if (servicesData[selectedCategory]) {
+    Object.keys(servicesData[selectedCategory]).forEach(service => {
+      const opt = document.createElement("option");
+      opt.value = service;
+      opt.textContent = service;
+      serviceSelect.appendChild(opt);
+    });
+  }
+
+  priceEl.value = "";
+  delayEl.value = "";
+  amountEl.value = "";
+  quantityEl.value = "";
+});
+
+serviceSelect.addEventListener("change", () => {
+  const selectedCategory = categorySelect.value;
+  const selectedService = serviceSelect.value;
+
+  if (
+    servicesData[selectedCategory] &&
+    servicesData[selectedCategory][selectedService]
+  ) {
+    const data = servicesData[selectedCategory][selectedService];
+    priceEl.value = data.price;
+    delayEl.value = data.duration;
+    quantityEl.min = data.min;
+    quantityEl.placeholder = `Min. ${data.min}`;
+    quantityEl.value = data.min;
+    updateAmount();
+  }
+});
+
+quantityEl.addEventListener("input", updateAmount);
+
+function updateAmount() {
+  const price = parseFloat(priceEl.value);
+  const qty = parseInt(quantityEl.value);
+  if (!isNaN(price) && !isNaN(qty)) {
+    amountEl.value = (price * qty).toFixed(2);
+  } else {
+    amountEl.value = "";
+  }
+}
+
+document.getElementById("socialOrderForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const userId = localStorage.getItem("Id");
+  const submitBtn = document.getElementById("submitBtn");
+  const successMsg = document.getElementById("successMsg");
+
+  if (!userId) {
+    alert("❌ User not identified.");
+    return;
+  }
+
+  const depositKey = `depositBalance_${userId}`;
+  const currentBalance = parseFloat(localStorage.getItem(depositKey)) || 0;
+  const amountToPay = parseFloat(amountEl.value);
+
+  if (isNaN(amountToPay)) {
+    alert("❌ Invalid amount.");
+    return;
+  }
+
+  if (amountToPay > currentBalance) {
+    alert("❌ Insufficient deposit balance.");
+    return;
+  }
+
+  // Disable button and show submitting
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Submitting...";
+  successMsg.textContent = "";
+
+  const newBalance = (currentBalance - amountToPay).toFixed(2);
+  localStorage.setItem(depositKey, newBalance);
+
+  const data = {
+    Id: userId,
+    category: categorySelect.value,
+    service: serviceSelect.value,
+    link: document.getElementById("link").value,
+    quantity: quantityEl.value,
+    delay: delayEl.value,
+    date: new Date().toLocaleString("en-NG", { timeZone: "Africa/Lagos" })
+  };
+
+  fetch("https://sheetdb.io/api/v1/y7o8snbs8njpe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data })
+  })
+    .then(res => res.json())
+    .then(response => {
+      successMsg.textContent = "✅ Order submitted and balance deducted!";
+      document.getElementById("socialOrderForm").reset();
+      serviceSelect.innerHTML = `<option value="">Select a Category First</option>`;
+      amountEl.value = "";
+    })
+    .catch(error => {
+      console.error("❌ Error:", error);
+      successMsg.textContent = "❌ Submission failed. Try again.";
+      // Refund balance on failure
+      localStorage.setItem(depositKey, currentBalance.toFixed(2));
+    })
+    .finally(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit Order";
+    });
+});
+
+function scrollToForm() {
+  document.getElementById("orderForm").scrollIntoView({ behavior: "smooth" });
+}
+</script>
+
+</body>
+</html>

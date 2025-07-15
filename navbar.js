@@ -200,7 +200,8 @@ const navbarSidebarHTML = `
         <a href="withdraw.html"><i class="fas fa-hand-holding-usd"></i> Withdraw</a>
         <a href="withdrawHistory.html"><i class="fas fa-history"></i> Withdrawal History</a>
       </nav>
-
+<div class="sidebar-section"><i class="fas fa-bolt"></i> SOCIAL BOOST</div>
+<a href="social.html"><i class="fas fa-thumbs-up"></i> Get Likes, Followers...</a>    
       <div class="sidebar-section">QUIZZES</div>
       <nav class="nav-links">
         <a href="intro.html"><i class="fas fa-brain"></i> What's QuickBrain Mini ${quickBrainBadge}</a>
