@@ -43,6 +43,27 @@
   </main>
 
   <!-- Balance Initialization and Calculation -->
+  <script>
+      // ✅ Display the deposit balance in the HTML based on stored user ID
+function showUserDepositBalance() {
+  const userId = localStorage.getItem("Id"); // Make sure this is set on login
+  if (!userId) {
+    console.error("❌ No user ID found in localStorage.");
+    return;
+  }
+
+  const depositBalanceKey = `depositBalance_${userId}`;
+  const balance = parseFloat(localStorage.getItem(depositBalanceKey)) || 0;
+
+  const displayElement = document.getElementById("depositBalance");
+  if (displayElement) {
+    displayElement.textContent = `₦${balance.toFixed(2)}`;
+  }
+}
+
+// ✅ Run this on page load
+document.addEventListener("DOMContentLoaded", showUserDepositBalance);
+  </script>
   <!-- Operational Scripts -->
   <script src="balance intit.js"></script>
   <script src="block access.js"></script>
