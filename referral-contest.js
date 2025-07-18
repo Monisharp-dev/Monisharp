@@ -1,11 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   const leaderboardData = [
-    { name: "Samuel A.", referrals: 5 },
-    { name: "Joy M.", referrals: 20 },
-    { name: "Daniel O.", referrals: 10 },
-    { name: "Happiness K.", referrals: 8 },
-    { name: "Nathan T.", referrals: 13 },
-    { name: "Goodness D.", referrals: 35 }
+    { name: "Samuel A.", referrals: 6 },
+    { name: "Joy M.", referrals: 30 },
+    { name: "Daniel O.", referrals: 20 },
+    { name: "Happiness K.", referrals: 89},
+    { name: "Nathan T.", referrals: 23 },
+    { name: "Goodness D.", referrals: 41 }
   ];
 
   const container = document.getElementById("leaderboard-data");

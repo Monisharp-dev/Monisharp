@@ -38,6 +38,7 @@ function allotDepositBalance(userId, amount, uniqueKey) {
 // ✅ Allotments to specific users (manual and direct)
 allotDepositBalance("edickson774", 600, "2S7KL");
 allotDepositBalance("jimohhabeeb2008", 200, "000VB");
+allotDepositBalance("ibehaugustine933", 300, "000AA");
 
 // ✅ Optional: Credit the currently logged-in user (if any)
 const loggedInUserId = getCurrentUserId();
