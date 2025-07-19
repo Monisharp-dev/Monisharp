@@ -233,7 +233,8 @@ const allowedIds = [
   "mjibreel311",
   "jimohhabeeb2008",
   "echeninidavid",
-  "alaopaul211"
+  "alaopaul211",
+  "marvelousdavid465"
 ];
 
 const currentUserId = localStorage.getItem("Id");
