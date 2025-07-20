@@ -382,6 +382,8 @@ allotTaskBalance("mjibreel311", 4, "9HBQ2");
 allotTaskBalance("monsuratyusuff82", 26, "YDXL2");
 allotTaskBalance("clintonchuk396", 40, "QEB0D");
 allotTaskBalance("olaoyevictor05", 3, "V2Z7J");
+
+
 allotTaskBalance("emmakani234", 10, "O7JMD");
 allotTaskBalance("etokwudog", 10, "ERZBM");
 allotTaskBalance("opalekesoromdayo", 20, "FZILC");
@@ -506,7 +508,7 @@ allotTaskBalance("winnerv255", 20, "N1FYZ");
 allotTaskBalance("hammadumar346", 12, "57LIN");
 allotTaskBalance("godwingozie6", 5, "LMAYM");
 allotTaskBalance("anzinayusuf33", 5, "QV2F2");
-allotTaskBalance("Ibbello1507", 22, "ZE0LY");
+allotTaskBalance("Ibbello1507", 6, "GLLKE");
 allotTaskBalance("mosesosawe71", 50, "PM9GY");
 allotTaskBalance("andychinonye59", 22, "P2Z8H");
 allotTaskBalance("mjibreel311", 4, "9HBQ2");
@@ -515,3 +517,5 @@ allotTaskBalance("clintonchuk396", 40, "QEB0D");
 allotTaskBalance("olaoyevictor05", 3, "V2Z7J");
 allotTaskBalance("itoyadominion5", 30, "W7B2M");
 allotTaskBalance("echeninidavid", 10, "D41ZC");
+allotTaskBalance("aminukanotv", 6, "EVV93");
+allotTaskBalance("marvelousdavid465", 27, "7FYSK");
