@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const leaderboardData = [
-    { name: "Opeyemi I.", referrals: 5 },
+    { name: "Sami I.", referrals: 5 },
     { name: "Joy M.", referrals: 30 },
     { name: "Daniel O.", referrals: 20 },
     { name: "Happiness K.", referrals: 89},
