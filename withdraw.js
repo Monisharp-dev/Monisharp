@@ -105,8 +105,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (amount < 200) {
-      showNotification("Minimum withdrawal is ₦200.", "warning");
+    if (amount < 250) {
+      showNotification("Minimum withdrawal is ₦250.", "warning");
       return;
     }
 

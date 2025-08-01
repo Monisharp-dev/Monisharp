@@ -1,3 +1,6 @@
+// ==============================
+// HTML & STYLE FOR AD POPUP
+// ==============================
 const adPopupHTML = `
   <style>
     .ad-popup {
@@ -5,7 +8,7 @@ const adPopupHTML = `
       bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
-      background: linear-gradient(135deg, #4e00c2, #8e2de2);
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
       color: white;
       width: 90%;
       max-width: 850px;
@@ -47,7 +50,7 @@ const adPopupHTML = `
       display: inline-block;
       padding: 10px 20px;
       background: #fff;
-      color: #6e00ff;
+      color: #1e3c72;
       font-weight: bold;
       border-radius: 10px;
       text-decoration: none;
@@ -62,7 +65,7 @@ const adPopupHTML = `
 
     .ad-popup .close-btn {
       background: white;
-      color: #6e00ff;
+      color: #1e3c72;
       border: none;
       border-radius: 50%;
       width: 32px;
@@ -108,22 +111,26 @@ const adPopupHTML = `
     }
   </style>
 
+  <!-- AD CONTENT -->
   <div class="ad-popup" id="adPopup">
-    <i class="fas fa-chart-line"></i>
+    <i class="fas fa-bullhorn"></i>
     <div class="content">
-      <h4>📈 Boost Your Socials Instantly</h4>
+      <h4>📢 Place Your Ad Here</h4>
       <p>
-        Get <strong>likes</strong>, <strong>followers</strong>, <strong>subscribers</strong>, and <strong>views</strong> for as low as <strong>₦4</strong>.<br>
-        ⚡ Superfast delivery from <strong>just 1 hour</strong> to a maximum of <strong>5 days</strong>.<br>
-        💡 100% automatic, reliable, and <strong>very affordable</strong>.<br>
-        Say goodbye to waiting weeks — start seeing results today!
+        This space is available for your advert.<br>
+        ✨ Reach thousands of daily users effortlessly.<br>
+        📍 Perfect spot for promoting your product, service, or event.<br>
+        🎯 High visibility with proven engagement!
       </p>
-      <a href="social.html" class="cta-btn"><i class="fas fa-rocket"></i> Boost Now</a>
+      <a href="ad contact.html" class="cta-btn"><i class="fas fa-envelope"></i> Advertise Now</a>
     </div>
     <button class="close-btn" onclick="document.getElementById('adPopup').remove()">×</button>
   </div>
 `;
 
+// ==============================
+// INJECT AD POPUP AFTER DELAY
+// ==============================
 setTimeout(() => {
   document.body.insertAdjacentHTML("beforeend", adPopupHTML);
 }, 4000); // Show after 4 seconds
