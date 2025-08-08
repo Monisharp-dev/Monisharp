@@ -538,3 +538,4 @@ allotTaskBalance("destinysylvanus74", 60, "O6O4Y");
 allotTaskBalance("greatnessedet8", 4, "3JTZ8");
 allotTaskBalance("echeninidavid", 15, "AR8YW");
 allotTaskBalance("ademolaoyinkasola034", 3, "FNNEL");
+allotTaskBalance("olasunkanmiomotayo2", 79, "ASOVI");
