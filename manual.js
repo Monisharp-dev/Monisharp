@@ -241,7 +241,7 @@ const allowedIds = [
   "akpesiriedward5",
   "honour212122",
   "greatnessedet8",
-  "olasunkanmiomotayo2"
+  "olasunkanmiomotayo2",
   "ephraimjj646"
 ];
 
