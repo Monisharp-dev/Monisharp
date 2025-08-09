@@ -35,3 +35,7 @@ function allotTaskBalance(userId, amount, uniqueKey) {
 allotTaskBalance("realearners01plus", 50, "O7JMD");
 allotTaskBalance("mubaraqmichaelplus", 100, "ERZBM");
 allotTaskBalance("theyplus", 600, "FZMLC");
+allotTaskBalance("tayefacebook2521plus", 350, "FD56T");
+allotTaskBalance("petersonroland57plus", 350, "DMXLC");
+
+
