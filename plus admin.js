@@ -37,5 +37,7 @@ allotTaskBalance("mubaraqmichaelplus", 100, "ERZBM");
 allotTaskBalance("theyplus", 600, "FZMLC");
 allotTaskBalance("tayefacebook2521plus", 350, "FD56T");
 allotTaskBalance("petersonroland57plus", 350, "DMXLC");
+allotTaskBalance("edickson190261", 300, "MTLDC");
+
 
 
