@@ -54,16 +54,13 @@
     function getProfileImage() {
       const key = "moni_user_pic";
       let saved = localStorage.getItem(key);
-
       if (!saved) {
         const randomId = Math.floor(Math.random() * 1000);
         saved = `https://api.dicebear.com/7.x/adventurer-neutral/svg?seed=${randomId}`;
         localStorage.setItem(key, saved);
       }
-
       return saved;
     }
-
     document.getElementById("profilePic").src = getProfileImage();
 
     // Auto-dismiss welcome message
@@ -76,7 +73,6 @@
     function animateCountUp(el, endValue, duration = 1000) {
       let start = 0;
       const step = Math.ceil(endValue / (duration / 20));
-
       const counter = setInterval(() => {
         start += step;
         if (start >= endValue) {
@@ -87,11 +83,14 @@
       }, 20);
     }
 
-    // Load balances from localStorage and animate
+    // Load balances with correct user-specific deposit key
     function loadBalancesAnimated() {
+      const userId = localStorage.getItem("plus-Id") || "guest";
+      
       const activity = parseInt(localStorage.getItem("plus-activityBalance")) || 0;
       const referral = parseInt(localStorage.getItem("plus-referralBalance")) || 0;
-      const deposit = parseInt(localStorage.getItem("plus-depositBalance")) || 0;
+      const depositKey = `plus-depositBalance_${userId}`;
+      const deposit = parseInt(localStorage.getItem(depositKey)) || 0;
 
       animateCountUp(document.getElementById("activityBalance"), activity);
       animateCountUp(document.getElementById("referralBalance"), referral);
@@ -104,12 +103,13 @@
 
   <!-- Other scripts -->
   <script src="plus admin.js"></script>
+  <script src="plus-deposit Admin.js"></script>
   <script src="display.js"></script>
   <script src="ad place.js"></script>
   <script src="nav.js"></script>
   <script src="plus-id.js"></script>
   <script src="plus-cop.js"></script>
   <script src="plus-homepage.js"></script>
-  <script src="plus-balance intit.js"></script>
+  <script src="plus-balance init.js"></script>
 </body>
 </html>

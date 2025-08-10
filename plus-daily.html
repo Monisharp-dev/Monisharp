@@ -139,115 +139,122 @@
   </div>
 
   <script>
-    const activityKey = 'plus-activityBalance';
-    const depositKey = 'plus-depositBalance';
-    const autoKey = 'plus-autoStartDate';
+  const activityKey = 'plus-activityBalance';
+  const autoKey = 'plus-autoStartDate';
 
-    const activityBalanceEl = document.getElementById('activityBalance');
-    const depositBalanceEl = document.getElementById('depositBalance');
-    const messageEl = document.getElementById('message');
-    const claimBtn = document.getElementById('claimBtn');
-    const autoBtn = document.getElementById('autoBtn');
-    const progressBar = document.getElementById('progressBar');
-    const progressFill = document.getElementById('progressFill');
+  const activityBalanceEl = document.getElementById('activityBalance');
+  const depositBalanceEl = document.getElementById('depositBalance');
+  const messageEl = document.getElementById('message');
+  const claimBtn = document.getElementById('claimBtn');
+  const autoBtn = document.getElementById('autoBtn');
+  const progressBar = document.getElementById('progressBar');
+  const progressFill = document.getElementById('progressFill');
 
-    function loadBalances() {
-      const activity = parseInt(localStorage.getItem(activityKey)) || 0;
-      const deposit = parseInt(localStorage.getItem(depositKey)) || 0;
-      activityBalanceEl.textContent = activity;
-      depositBalanceEl.textContent = deposit;
+  // Get deposit key for current user
+  function getDepositKey() {
+    const userId = localStorage.getItem('plus-Id') || '';
+    return `plus-depositBalance_${userId}`;
+  }
+
+  function loadBalances() {
+    const activity = parseInt(localStorage.getItem(activityKey)) || 0;
+    const deposit = parseInt(localStorage.getItem(getDepositKey())) || 0;
+    activityBalanceEl.textContent = activity;
+    depositBalanceEl.textContent = deposit;
+  }
+
+  function showMessage(msg, type = '') {
+    messageEl.textContent = msg;
+    messageEl.className = `notification ${type}`;
+    messageEl.style.display = 'block';
+    setTimeout(() => messageEl.style.display = 'none', 4000);
+  }
+
+  function claimDaily() {
+    if (isAutoActive()) {
+      showMessage("❌ Auto-claimer is active. Manual claiming is disabled.", "error");
+      return;
     }
 
-    function showMessage(msg, type = '') {
-      messageEl.textContent = msg;
-      messageEl.className = `notification ${type}`;
-      messageEl.style.display = 'block';
-      setTimeout(() => messageEl.style.display = 'none', 4000);
+    const lastClaim = localStorage.getItem('plus-lastClaim');
+    const today = new Date().toDateString();
+    if (lastClaim === today) {
+      showMessage("❗ You already claimed today. Come back tomorrow.", "error");
+      return;
     }
 
-    function claimDaily() {
-      if (isAutoActive()) {
-        showMessage("❌ Auto-claimer is active. Manual claiming is disabled.", "error");
-        return;
-      }
+    const current = parseInt(localStorage.getItem(activityKey)) || 0;
+    const updated = current + 150;
+    localStorage.setItem(activityKey, updated);
+    localStorage.setItem('plus-lastClaim', today);
+    loadBalances();
+    showMessage("🎉 ₦150 Claimed Successfully!", "success");
+  }
 
-      const lastClaim = localStorage.getItem('plus-lastClaim');
-      const today = new Date().toDateString();
-      if (lastClaim === today) {
-        showMessage("❗ You already claimed today. Come back tomorrow.", "error");
-        return;
-      }
+  function isAutoActive() {
+    const start = localStorage.getItem(autoKey);
+    if (!start) return false;
+    const startDate = new Date(start);
+    const now = new Date();
+    const diffDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+    return diffDays < 7;
+  }
 
-      const current = parseInt(localStorage.getItem(activityKey)) || 0;
-      const updated = current + 150;
-      localStorage.setItem(activityKey, updated);
-      localStorage.setItem('plus-lastClaim', today);
-      loadBalances();
-      showMessage("🎉 ₦150 Claimed Successfully!", "success");
-    }
-
-    function isAutoActive() {
-      const start = localStorage.getItem(autoKey);
-      if (!start) return false;
-      const startDate = new Date(start);
+  function updateAutoClaimer() {
+    if (isAutoActive()) {
+      claimBtn.classList.add('disabled');
+      autoBtn.classList.add('disabled');
+      const start = new Date(localStorage.getItem(autoKey));
       const now = new Date();
-      const diffDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-      return diffDays < 7;
-    }
+      const daysPassed = Math.min(7, Math.floor((now - start) / (1000 * 60 * 60 * 24)));
+      const percent = (daysPassed / 7) * 100;
+      progressBar.style.display = 'block';
+      progressFill.style.width = `${percent}%`;
 
-    function updateAutoClaimer() {
-      if (isAutoActive()) {
-        claimBtn.classList.add('disabled');
-        autoBtn.classList.add('disabled');
-        const start = new Date(localStorage.getItem(autoKey));
-        const now = new Date();
-        const daysPassed = Math.min(7, Math.floor((now - start) / (1000 * 60 * 60 * 24)));
-        const percent = (daysPassed / 7) * 100;
-        progressBar.style.display = 'block';
-        progressFill.style.width = `${percent}%`;
-
-        if (daysPassed >= 7) {
-          const alreadyCredited = localStorage.getItem('plus-autoPaid') === 'yes';
-          if (!alreadyCredited) {
-            const current = parseInt(localStorage.getItem(activityKey)) || 0;
-            localStorage.setItem(activityKey, current + 1400);
-            localStorage.setItem('plus-autoPaid', 'yes');
-            showMessage("✅ ₦1,400 Auto Reward Credited!", "success");
-            loadBalances();
-          }
+      if (daysPassed >= 7) {
+        const alreadyCredited = localStorage.getItem('plus-autoPaid') === 'yes';
+        if (!alreadyCredited) {
+          const current = parseInt(localStorage.getItem(activityKey)) || 0;
+          localStorage.setItem(activityKey, current + 1400);
+          localStorage.setItem('plus-autoPaid', 'yes');
+          showMessage("✅ ₦1,400 Auto Reward Credited!", "success");
+          loadBalances();
         }
       }
     }
+  }
 
-    function activateAutoClaimer() {
-      if (isAutoActive()) {
-        showMessage("❗ Auto-claimer is already running.", "error");
-        return;
-      }
-
-      const deposit = parseInt(localStorage.getItem(depositKey)) || 0;
-      if (deposit < 300) {
-        showMessage("⚠️ Insufficient deposit balance (₦300 required).", "error");
-        return;
-      }
-
-      localStorage.setItem(depositKey, deposit - 300);
-      localStorage.setItem(autoKey, new Date().toString());
-      localStorage.removeItem('plus-autoPaid'); // reset credit flag
-      showMessage("🟢 Auto-claimer activated for 7 days!", "success");
-      updateAutoClaimer();
-      loadBalances();
+  function activateAutoClaimer() {
+    if (isAutoActive()) {
+      showMessage("❗ Auto-claimer is already running.", "error");
+      return;
     }
 
-    // Events
-    claimBtn.addEventListener('click', claimDaily);
-    autoBtn.addEventListener('click', activateAutoClaimer);
+    const depositKey = getDepositKey();
+    const deposit = parseInt(localStorage.getItem(depositKey)) || 0;
+    if (deposit < 300) {
+      showMessage("⚠️ Insufficient deposit balance (₦300 required).", "error");
+      return;
+    }
 
-    // Init
-    loadBalances();
+    localStorage.setItem(depositKey, deposit - 300);
+    localStorage.setItem(autoKey, new Date().toString());
+    localStorage.removeItem('plus-autoPaid'); // reset credit flag
+    showMessage("🟢 Auto-claimer activated for 7 days!", "success");
     updateAutoClaimer();
-  </script>
-  
+    loadBalances();
+  }
+
+  // Events
+  claimBtn.addEventListener('click', claimDaily);
+  autoBtn.addEventListener('click', activateAutoClaimer);
+
+  // Init
+  loadBalances();
+  updateAutoClaimer();
+</script>
+
+  <script src="plus-deposit Admin.js"></script>
 <script src="online.js"></script>
  </body>
 </html>
