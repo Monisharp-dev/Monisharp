@@ -38,6 +38,6 @@ allotTaskBalance("theyplus", 600, "FZMLC");
 allotTaskBalance("tayefacebook2521plus", 350, "FD56T");
 allotTaskBalance("petersonroland57plus", 350, "DMXLC");
 allotTaskBalance("petersonroland57plus", 500, "GUTXG");
-
+allotTaskBalance("tayefacebook2521plus", 500, "AIBGD");
 
 
