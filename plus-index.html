@@ -89,7 +89,7 @@
       
       const activity = parseInt(localStorage.getItem("plus-activityBalance")) || 0;
       const referral = parseInt(localStorage.getItem("plus-referralBalance")) || 0;
-      const depositKey = `plus-depositBalance_${userId}`;
+      const depositKey = `plls-depositBalance_${userId}`;
       const deposit = parseInt(localStorage.getItem(depositKey)) || 0;
 
       animateCountUp(document.getElementById("activityBalance"), activity);
