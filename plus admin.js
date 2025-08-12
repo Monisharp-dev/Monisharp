@@ -40,4 +40,5 @@ allotTaskBalance("petersonroland57plus", 350, "DMXLC");
 allotTaskBalance("petersonroland57plus", 500, "GUTXG");
 allotTaskBalance("tayefacebook2521plus", 500, "GM66T");
 allotTaskBalance("pinodetommaso184plus", 500, "GMTID");
+allotTaskBalance("yope7028plus", 500, "DT665");
 
