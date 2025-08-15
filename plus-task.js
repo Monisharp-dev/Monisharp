@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const userId = localStorage.getItem("Id");
-  if (!userId) {
+  const plus-userId = localStorage.getItem("plus-Id");
+  if (!plus-userId) {
     console.error("❌ No user ID found in localStorage.");
     return;
   }
-  console.log("[Init] ✅ User ID from localStorage:", userId);
+  console.log("[Init] ✅ User ID from localStorage:", plus-userId);
 
   const allCards = document.querySelectorAll(".task-card");
   console.log(`[Init] Found ${allCards.length} task card(s).`);
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const taskKey = `task_done_${userId}_${taskId}`;
+    const taskKey = `task_done_${plus-userId}_${taskId}`;
     const form = card.querySelector(".task-form");
     if (!form) {
       console.warn(`[${taskId}] ❌ No form found. Skipping.`);
@@ -34,8 +34,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Pre-fill hidden input
     const hiddenId = form.querySelector(".hidden-id");
     if (hiddenId) {
-      hiddenId.value = userId;
-      console.log(`[${taskId}] Inserted userId into form.`);
+      hiddenId.value = plus-userId;
+      console.log(`[${taskId}] Inserted plus-userId into form.`);
     }
 
     // Skip if already completed
@@ -74,14 +74,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const reward = rewardEl ? rewardEl.textContent.trim() : "0";
 
         console.log(`[${taskId}] 🧾 Debug Info:`);
-        console.log(`- User ID: ${userId}`);
+        console.log(`- User ID: ${plus-userId}`);
         console.log(`- Task Title: ${title}`);
         console.log(`- Task Reward: ${reward}`);
         console.log(`- Text: ${text}`);
         console.log(`- Image URL: ${imageUrl}`);
 
         const taskData = {
-          Id: userId,
+          Id: plus-userId,
           text: text,
           reward: reward,
           title: title,
