@@ -237,13 +237,8 @@ const allowedIds = [
   "marvelousdavid465",
   "aminukanotv",
   "ifeomaawa65",
-  "heritagemofetoluwa",
-  "akpesiriedward5",
-  "honour212122",
-  "greatnessedet8",
-  "olasunkanmiomotayo2",
-  "ephraimjj646",
-  "ndulakachukwudi01"
+  "ademolaoyinkasola034",
+  "kaosaratomobolanle627"
 ];
 
 const currentUserId = localStorage.getItem("Id");
