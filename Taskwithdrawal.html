@@ -1,10 +1,10 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Task Withdrawal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
   <link rel="stylesheet" href="bottom-nav.css">
   <link rel="stylesheet" href="navbar.css">
   <style>
@@ -18,9 +18,31 @@
     .notification.success { background-color: #dff0d8; color: #3c763d; }
     .notification.error { background-color: #f2dede; color: #a94442; }
     .notification.warning { background-color: #fcf8e3; color: #8a6d3b; }
+    .fee-info {
+      background: #e8f4fd;
+      color: #055160;
+      padding: 12px;
+      border-left: 5px solid #0d6efd;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      margin-top: 40px;
+      font-size: 15px;
+    }
+    .receive-display {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #333;
+    }
   </style>
 </head>
-<body>  <h2>Task Balance Withdrawal</h2>
+<body>
+
+  <div class="fee-info">
+    <i class="fas fa-info-circle"></i> A 10% service fee applies to withdrawals.  
+    You will see your net amount before submitting.
+  </div>
+
+  <h2>Task Balance Withdrawal</h2>
   <form id="taskWithdrawForm">
     <div class="form-group">
       <label for="Id">User ID</label>
@@ -29,6 +51,7 @@
     <div class="form-group">
       <label for="amount">Amount</label>
       <input type="number" id="amount" readonly>
+      <div class="receive-display" id="receiveAmount">You will receive: ₦0.00</div>
     </div>
     <div class="form-group">
       <label for="bankName">Bank Name</label>
@@ -47,16 +70,30 @@
       <input type="text" id="date" readonly>
     </div>
     <button type="submit">Withdraw Now</button>
-  </form>  <div id="notification" class="notification"></div> 
-   <script>
+  </form>  
+
+  <div id="notification" class="notification"></div> 
+
+  <script>
 document.addEventListener('DOMContentLoaded', () => {
   const Id = localStorage.getItem('Id');
   const taskBalanceKey = `taskBalance_${Id}`;
   const taskBalance = parseFloat(localStorage.getItem(taskBalanceKey)) || 0;
 
+  const amountInput = document.getElementById('amount');
+  const receiveAmountDisplay = document.getElementById('receiveAmount');
+
   document.getElementById('Id').value = Id || 'N/A';
-  document.getElementById('amount').value = taskBalance.toFixed(2);
+  amountInput.value = taskBalance.toFixed(2);
   document.getElementById('date').value = new Date().toLocaleString();
+
+  // Display net receiveable
+  function updateReceiveAmount() {
+    const amount = parseFloat(amountInput.value) || 0;
+    const net = amount - (amount * 0.10);
+    receiveAmountDisplay.textContent = `You will receive: ₦${net.toFixed(2)}`;
+  }
+  updateReceiveAmount();
 
   const notification = document.getElementById('notification');
   const form = document.getElementById('taskWithdrawForm');
@@ -86,7 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const amount = parseFloat(document.getElementById('amount').value);
+    const amount = parseFloat(amountInput.value);
+    const fee = amount * 0.10;
+    const netAmount = amount - fee;
+
     const bankName = document.getElementById('bankName').value.trim();
     const accountName = document.getElementById('accountName').value.trim();
     const accountNumber = document.getElementById('accountNumber').value.trim();
@@ -96,22 +136,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!bankName || !accountName || !accountNumber) return showNotification("All fields are required.", "warning");
     if (amount > taskBalance) return showNotification("Insufficient task balance.", "warning");
 
-    const payload = { Id, amount, bankName, accountName, accountNumber, date, source: 'Task' };
+    // Send deducted amount to API (netAmount)
+    const payload = { Id, amount: netAmount.toFixed(2), bankName, accountName, accountNumber, date, source: 'Task' };
     const success = await submitWithdrawal(payload);
 
     if (success) {
-      localStorage.setItem(taskBalanceKey, '0');  // Reset task balance for this user
+      localStorage.setItem(taskBalanceKey, '0');
 
       const history = JSON.parse(localStorage.getItem('withdrawalHistory')) || [];
-      history.push({ ...payload, status: 'Completed' });
+      history.push({ ...payload, status: 'Completed', originalAmount: amount.toFixed(2), fee: fee.toFixed(2) });
       localStorage.setItem('withdrawalHistory', JSON.stringify(history));
 
-      // Reset all input fields after successful withdrawal
       form.reset();
-
-      // Reset the Id and amount fields manually after reset (to keep Id visible and amount = 0)
       document.getElementById('Id').value = Id || 'N/A';
-      document.getElementById('amount').value = '0.00';
+      amountInput.value = '0.00';
+      updateReceiveAmount();
       document.getElementById('date').value = new Date().toLocaleString();
 
       showNotification("Withdrawal request submitted successfully.", "success");
@@ -121,8 +160,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
   </script>
+  
   <script src="navbar.js"></script>
   <script src="bottom-nav.js"></script>
   <script src="network Checker.js"></script>
-  </body>
+</body>
 </html>

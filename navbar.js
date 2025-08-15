@@ -207,13 +207,7 @@ const navbarSidebarHTML = `
         <a href="leaderboard.html"><i class="fas fa-trophy"></i> Leaderboard ${quickBrainBadge}</a>
       </nav>
 
-      <div class="sidebar-section">TAP TO EARN</div>
-      <nav class="nav-links">
-        <a href="taptaptapintro.html"><i class="fas fa-play-circle"></i> Tap Intro ${tapBadge}</a>
-        <a href="shop.html"><i class="fas fa-store"></i> Tap Shop ${tapBadge}</a>
-        <a href="tap winners.html"><i class="fas fa-users"></i> Tap Game Scoreboard</a>
-      </nav>
-
+     
       <div class="sidebar-section">GAMES</div>
       <nav class="nav-links">
         <a href="wheelspin.html"><i class="fas fa-bullseye"></i> Spin & Win Game</a>
