@@ -553,3 +553,5 @@ allotTaskBalance("obuluezechukwuma", 11, "ZE44P");
 allotTaskBalance("etokwudog", 2, "H6WKS");
 allotTaskBalance("ndulakachukwudi01", 8, "H4AHC");
 allotTaskBalance("ceceshed1980", 10, "KSS7B");
+allotTaskBalance("ceceshed1980", 50, "JI7JE");
+allotTaskBalance("isrealsolomon629", 4, "OLMNT");
