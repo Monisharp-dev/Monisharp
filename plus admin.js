@@ -47,3 +47,4 @@ allotTaskBalance("tayefacebook2521plus", 500, "FWM56");
 allotTaskBalance("shikemiopeyemi0plus", 100, "GNM56");
 allotTaskBalance("tayefacebook2521plus", 150, "HTM76");
 allotTaskBalance("tayefacebook2521plus", 150, "FHA89");
+allotTaskBalance("mubaraqmichaelplus", 100, "DVH90");
