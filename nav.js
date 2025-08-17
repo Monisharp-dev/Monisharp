@@ -185,13 +185,16 @@ navBar.innerHTML = `
   </div>
 
   <div class="nav-links" id="navLinks">
-    <a href="plus-index.html">🏠 Dashboard</a>
-    <a href="plus-daily.html">🎁 Claim Daily Reward</a>
-    <a href="plus-task.html">📝 Tasks</a>
-    <a href="plus-referral.html">👥 Referrals</a>
-    <a href="plus-deposit.html">💳 Deposit</a>
-    <a href="plus-withdrawal.html">💸 Withdraw</a>
-    <a href="info.html">🚪 Logout</a> 
+  <a href="plus-index.html">🏠 Dashboard</a>
+<a href="plus-daily.html">🎁 Claim Daily Reward</a>
+<a href="plus-task.html">📝 Tasks</a>
+<a href="plus-referral.html">👥 Referrals</a>
+<a href="plus-deposit.html">💳 Deposit</a>
+<a href="plus-claimCode.html">✨ Claim Code</a>
+<a href="plus-withdrawal.html">💸 Withdraw</a>
+<a href="plus-data.html">📶 Data Coupon</a>
+<a href="plus-automatic.html">⚡ Automatic Task</a>
+<a href="info.html">🚪 Logout</a>
   </div>
 `;
 document.body.prepend(navBar);
