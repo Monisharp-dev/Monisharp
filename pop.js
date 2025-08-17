@@ -1,5 +1,5 @@
 // ==============================
-// HTML & STYLE FOR AD POPUP
+// HTML & STYLE FOR DATA POPUP
 // ==============================
 const adPopupHTML = `
   <style>
@@ -8,7 +8,7 @@ const adPopupHTML = `
       bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      background: linear-gradient(135deg, #0f2027, #2c5364);
       color: white;
       width: 90%;
       max-width: 850px;
@@ -24,10 +24,11 @@ const adPopupHTML = `
       flex-wrap: wrap;
     }
 
-    .ad-popup i {
-      font-size: 44px;
+    .ad-popup i.main-icon {
+      font-size: 50px;
       animation: bounce 1.5s infinite;
       margin-top: 6px;
+      color: #FFD700;
     }
 
     .ad-popup .content {
@@ -46,11 +47,16 @@ const adPopupHTML = `
       line-height: 1.6;
     }
 
+    .ad-popup .highlight {
+      font-weight: bold;
+      color: #00ffcc;
+    }
+
     .ad-popup .cta-btn {
       display: inline-block;
       padding: 10px 20px;
       background: #fff;
-      color: #1e3c72;
+      color: #0f2027;
       font-weight: bold;
       border-radius: 10px;
       text-decoration: none;
@@ -65,7 +71,7 @@ const adPopupHTML = `
 
     .ad-popup .close-btn {
       background: white;
-      color: #1e3c72;
+      color: #0f2027;
       border: none;
       border-radius: 50%;
       width: 32px;
@@ -97,8 +103,8 @@ const adPopupHTML = `
         align-items: flex-start;
       }
 
-      .ad-popup i {
-        font-size: 36px;
+      .ad-popup i.main-icon {
+        font-size: 40px;
       }
 
       .ad-popup .content h4 {
@@ -113,23 +119,23 @@ const adPopupHTML = `
 
   <!-- AD CONTENT -->
   <div class="ad-popup" id="adPopup">
-    <i class="fas fa-bullhorn"></i>
+    <i class="fas fa-sim-card main-icon"></i>
     <div class="content">
-      <h4>📢 Place Your Ad Here</h4>
+      <h4>🔥 Weekly Data Deals on Monisharp!</h4>
       <p>
-        This space is available for your advert.<br>
-        ✨ Reach thousands of daily users effortlessly.<br>
-        📍 Perfect spot for promoting your product, service, or event.<br>
-        🎯 High visibility with proven engagement!
+        📶 Every week you can grab amazing <span class="highlight">MTN Data</span>:<br>
+        👉 <b>Plus Users</b> (Non-Students): <span class="highlight">1GB for ₦50</span><br>
+        👉 <b>Students Package</b>: <span class="highlight">110MB for ₦10</span><br><br>
+        ⏳ Hurry! Slots are limited.
       </p>
-      <a href="ad contact.html" class="cta-btn"><i class="fas fa-envelope"></i> Advertise Now</a>
+      <a href="data.html" class="cta-btn"><i class="fas fa-bolt"></i> Book Now</a>
     </div>
     <button class="close-btn" onclick="document.getElementById('adPopup').remove()">×</button>
   </div>
 `;
 
 // ==============================
-// INJECT AD POPUP AFTER DELAY
+// INJECT POPUP AFTER DELAY
 // ==============================
 setTimeout(() => {
   document.body.insertAdjacentHTML("beforeend", adPopupHTML);

@@ -6,6 +6,55 @@
   <title>About - MoniSharp</title>
   <link rel="stylesheet" href="about.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    /* WhatsApp Button Styling */
+    .whatsapp-buttons {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .whatsapp-buttons a {
+      background: rgba(76, 175, 80, 0.15);
+      border: 1px solid rgba(76, 175, 80, 0.5);
+      backdrop-filter: blur(10px);
+      color: #25d366;
+      padding: 12px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    }
+
+    .whatsapp-buttons a:hover {
+      background: rgba(76, 175, 80, 0.25);
+      transform: scale(1.05);
+    }
+
+    /* Regular button */
+    .about-buttons a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 12px 20px;
+      background: #4caf50;
+      color: white;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .about-buttons a:hover {
+      background: #45a049;
+      transform: scale(1.05);
+    }
+  </style>
 </head>
 <body>
   <div class="about-container">
@@ -19,13 +68,19 @@
 
       <p>
         Unlike other platforms with hidden fees and complications, MoniSharp keeps it simple and accessible.
-        Register and activate your account for just <strong>₦300 ONLY</strong>. No hidden fees, no stress.
+        Register and activate your account with a one-time fee depending on your package:
+      </p>
+      <ul class="about-list">
+        <li><strong>Students Package:</strong> ₦300 only</li>
+        <li><strong>Non-Students (Plus Package):</strong> ₦750 only</li>
+      </ul>
+      <p>
         You earn <strong>₦100</strong> per referral and can withdraw once your balance hits <strong>₦300</strong> — with instant payment!
       </p>
 
       <h2>Why We Stand Out</h2>
       <ul class="about-list">
-        <li>No bank charges</li>
+        
         <li>No scams – 100% trusted</li>
         <li>Low activation fee</li>
         <li>Open to students and non-students</li>
@@ -38,17 +93,21 @@
         We’re here to give you a smart and easy way to make money online.
       </p>
 
-      <h2>New Feature: Tap-Tap-Tap Game</h2>
+      <h2>New Feature: Claim Codes</h2>
       <p>
-        MoniSharp introduces the exciting <strong>Tap-Tap-Tap</strong> game — a fast-paced, time-limited challenge where you earn points by tapping your screen. 
-        The top scorers each week get rewarded with real cash straight into their accounts. 
-        Boosters like <strong>Gold</strong>, <strong>Premium</strong>, and <strong>Local</strong> give you extra time and better chances to top the leaderboard!
+        MoniSharp introduces <strong>Claim Codes</strong> — released weekly on our WhatsApp group and channel. 
+        Enter the codes to instantly earn between <strong>₦50 – ₦500</strong> for free! 
+        Stay active in our community to grab these codes before they run out.
       </p>
       <p>
-        Use your <strong>main balance</strong> to buy boosters or pay with transfer. 
-        You can view the leaderboard every Saturday to track your position and claim your rewards. 
-        Tap smart, play fast, and cash out — all from your dashboard.
+        Claim Codes are a fun and fair way for everyone to enjoy extra rewards in addition to referrals and tasks.
       </p>
+
+      <!-- WhatsApp Glass Buttons -->
+      <div class="whatsapp-buttons">
+        <a href="https://chat.whatsapp.com/DUb4GsMDGUR88" target="_blank"><i class="fab fa-whatsapp"></i> Join WhatsApp Group</a>
+        <a href="https://whatsapp.com/channel/0029Va6YQkLDijmAqTtPEI2q" target="_blank"><i class="fas fa-bullhorn"></i> Join WhatsApp Channel</a>
+      </div>
 
       <div class="about-buttons">
         <a href="https://apk.e-droid.net/apk/app3583784-mh539i.apk?v=2"><i class="fas fa-download"></i> Download App</a>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buy MTN Data</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #1e3c72, #2a5298, #00bcd4);
+      background-size: 300% 300%;
+      animation: gradientMove 12s ease infinite;
+      color: #fff;
+      text-align: center;
+      padding: 30px;
+      overflow-x: hidden;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Back button */
+    .back-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(255,255,255,0.15);
+      padding: 8px 14px;
+      border-radius: 10px;
+      font-size: 0.9em;
+      color: #fff;
+      text-decoration: none;
+      transition: 0.3s;
+    }
+    .back-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* Floating particles */
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      animation: float 8s infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 0.7; }
+      50% { transform: translateY(-40px) scale(1.2); opacity: 0.4; }
+      100% { transform: translateY(0) scale(1); opacity: 0.7; }
+    }
+
+    .header {
+      margin-top: 40px;
+      margin-bottom: 20px;
+      animation: fadeInDown 1.2s ease;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(14px);
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      max-width: 420px;
+      margin: auto;
+      animation: fadeInUp 1.2s ease;
+    }
+
+    h1 {
+      font-size: 1.8em;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    .details {
+      margin: 15px 0;
+      font-size: 1.1em;
+    }
+
+    .balance {
+      margin: 15px 0;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #00e6ff;
+      animation: pulse 2s infinite;
+    }
+
+    .icon {
+      font-size: 2.5em;
+      margin: 10px 0;
+      animation: pulse 1.8s infinite;
+    }
+
+    .btn {
+      background: linear-gradient(45deg, #00c853, #00e676);
+      border: none;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: transform 0.2s;
+      margin-top: 15px;
+    }
+    .btn:hover {
+      transform: scale(1.05);
+    }
+
+    .notification {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 10px;
+      display: none;
+      font-weight: bold;
+      animation: fadeIn 0.5s ease;
+    }
+    .success { background: rgba(0,255,0,0.15); color: #4dff4d; }
+    .error { background: rgba(255,0,0,0.15); color: #ff4d4d; }
+    .warning { background: rgba(255,255,0,0.15); color: #ffeb3b; }
+
+    /* Loader Overlay */
+    #overlay {
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #00e676;
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Animations */
+    @keyframes spin { 100% { transform: rotate(360deg);} }
+    @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+    @keyframes fadeInDown { from {opacity:0; transform: translateY(-40px);} to {opacity:1; transform: translateY(0);} }
+    @keyframes fadeInUp { from {opacity:0; transform: translateY(40px);} to {opacity:1; transform: translateY(0);} }
+    @keyframes pulse { 0%,100% { transform: scale(1);} 50% { transform: scale(1.2);} }
+
+    .info {
+      margin-top: 20px;
+      font-size: 0.95em;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <!-- Back button -->
+  <a href="javascript:history.back()" class="back-btn">← Back</a>
+
+  <!-- Floating particles -->
+  <div class="particle" style="width:20px;height:20px;top:40%;left:15%;animation-delay:0s;"></div>
+  <div class="particle" style="width:15px;height:15px;top:70%;left:70%;animation-delay:2s;"></div>
+  <div class="particle" style="width:25px;height:25px;top:20%;left:80%;animation-delay:4s;"></div>
+  <div class="particle" style="width:18px;height:18px;top:60%;left:30%;animation-delay:6s;"></div>
+
+  <div class="header">
+    <h1>🚀 Special MTN Data Offer</h1>
+    <p>Get <strong>110MB Data</strong> for just <strong>₦10</strong> — valid for 24 hours!</p>
+  </div>
+
+  <div class="card">
+    <h2>📶 Buy MTN Data</h2>
+    <div class="icon">📱</div>
+    <div class="details">
+      <p><strong>Data Size:</strong> 110MB</p>
+      <p><strong>Amount to Deduct:</strong> ₦50</p>
+      <p><strong>Validity:</strong> 24 Hours</p>
+    </div>
+    <div class="balance">💰 Balance: ₦<span id="balanceAmount">0</span></div>
+    <button class="btn" id="buyBtn">💳 Get Data</button>
+    <div id="notify" class="notification"></div>
+  </div>
+
+  <div class="info">
+    <p>⚡ Limited slots available (only 2 per week).</p>
+    <p>💡 Tip: Be early to secure your data bonus!</p>
+  </div>
+
+  <div id="overlay">
+    <div class="loader"></div>
+  </div>
+
+  <script>
+    const API_URL = "https://sheetdb.io/api/v1/y7o8snbs8njpe";
+    const buyBtn = document.getElementById("buyBtn");
+    const notify = document.getElementById("notify");
+    const overlay = document.getElementById("overlay");
+    const balanceDisplay = document.getElementById("balanceAmount");
+
+    function showNotify(type, message) {
+      notify.className = "notification " + type;
+      notify.innerText = message;
+      notify.style.display = "block";
+    }
+
+    function updateBalanceDisplay() {
+      const userId = localStorage.getItem("Id");
+      if (!userId) return;
+      let depositKey = `depositBalance_${userId}`;
+      let currentBalance = parseInt(localStorage.getItem(depositKey) || "0");
+      balanceDisplay.textContent = currentBalance;
+    }
+
+    // Run once when page loads
+    updateBalanceDisplay();
+
+    buyBtn.addEventListener("click", async () => {
+      const userId = localStorage.getItem("Id");
+      if (!userId) {
+        showNotify("error", "❌ No User ID found. Please login.");
+        return;
+      }
+
+      overlay.style.display = "flex";
+
+      try {
+        // Fetch existing data to count rows
+        const res = await fetch(API_URL);
+        const data = await res.json();
+
+        if (data.length >= 2) {
+          overlay.style.display = "none";
+          showNotify("warning", "⚠️ SLOT IS FULL, CHECK AGAIN NEXT WEEK.");
+          return;
+        }
+
+        // Deduct from deposit balance
+        let depositKey = `depositBalance_${userId}`;
+        let currentBalance = parseInt(localStorage.getItem(depositKey) || "0");
+
+        if (currentBalance < 10) {
+          overlay.style.display = "none";
+          showNotify("error", "❌ Insufficient Balance.");
+          return;
+        }
+
+        currentBalance -= 10;
+        localStorage.setItem(depositKey, currentBalance);
+        updateBalanceDisplay();
+
+        // Prepare payload
+        const payload = {
+          "Id": userId,
+          "date": new Date().toLocaleString(),
+          "amountPaid": "₦10",
+          "dataSize": "110MB"
+        };
+
+        // Post to SheetDB
+        const postRes = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ data: [payload] })
+        });
+
+        overlay.style.display = "none";
+
+        if (postRes.ok) {
+          showNotify("success", "✅ Data Purchase Successful!");
+        } else {
+          showNotify("error", "❌ Failed! Please try again.");
+        }
+      } catch (e) {
+        overlay.style.display = "none";
+        showNotify("error", "❌ Network error. Try again.");
+      }
+    });
+  </script>
+</body>
+</html>

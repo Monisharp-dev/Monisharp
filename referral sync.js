@@ -3,8 +3,8 @@
   const syncKey = "referralFetched";
   const userId = localStorage.getItem("Id");
   const isActivated = localStorage.getItem("activateStatus");
-  const lastSyncKey = "lastReferralSync"; // Store the last sync timestamp here
-  const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+  const lastSyncKey = "lastReferralSync"; 
+  const oneDay = 24 * 60 * 60 * 1000; 
 
   const apiLink = [
     "https://sheetdb.io/api/v1/nl6j5kit103gh",
@@ -12,14 +12,21 @@
     "https://sheetdb.io/api/v1/ceh2avnf98hi1"
   ];
 
-  // Stop if missing user ID or activation status
+  // ✅ Clean bad values
+  let storedReferrals = parseInt(localStorage.getItem(referralKey) || "0");
+  if (isNaN(storedReferrals) || storedReferrals < 0) {
+    localStorage.setItem(referralKey, "0");
+    storedReferrals = 0;
+  }
+
+  // Stop if no user
   if (!userId || !isActivated) {
     console.warn("Missing Id or activateStatus. Sync aborted.");
-    updateReferralDisplay(); // Still show stored value
+    updateReferralDisplay();
     return;
   }
 
-  // Check if last sync was within 24 hours
+  // Rate limit: 24h
   const lastSync = localStorage.getItem(lastSyncKey);
   const now = Date.now();
   if (lastSync && now - parseInt(lastSync) < oneDay) {
@@ -39,22 +46,13 @@
       const user = data.find(u => u.Id === userId);
       if (user) {
         const referralCount = parseInt(user.referrals || "0");
-        const previousCount = parseInt(localStorage.getItem(referralKey) || "0");
 
-        if (referralCount !== previousCount) {
-          localStorage.setItem(referralKey, referralCount);
-          localStorage.setItem(syncKey, "yes");
+        // ✅ Always overwrite with server
+        localStorage.setItem(referralKey, referralCount.toString());
+        localStorage.setItem(syncKey, "yes");
+        localStorage.setItem(lastSyncKey, now.toString());
 
-          if (referralCount > previousCount) {
-            console.log("✅ Referral updated. New count is higher:", referralCount);
-          } else {
-            console.warn("⚠️ Referral updated. New count is LOWER:", referralCount);
-          }
-        } else {
-          console.log("ℹ️ Referral count unchanged. Skipping update.");
-        }
-
-        localStorage.setItem(lastSyncKey, now.toString()); // ✅ Update the sync time
+        console.log("✅ Referral count synced from server:", referralCount);
         synced = true;
         break;
       }
@@ -63,20 +61,23 @@
     }
   }
 
+  // ✅ If nothing synced, force reset to 0
   if (!synced) {
-    console.warn("⚠️ Referral data not found or all API calls failed.");
+    console.warn("⚠️ No referral data found. Resetting referrals to 0.");
+    localStorage.setItem(referralKey, "0");
+    localStorage.setItem(syncKey, "no");
   }
 
-  updateReferralDisplay(); // Call this at the end
+  updateReferralDisplay();
 })();
 
-// Display referral count from localStorage
+// === Display referral count from localStorage === //
 function updateReferralDisplay() {
   const referralDisplay = document.getElementById("referralNumber");
   const count = localStorage.getItem("referrals") || "0";
   if (referralDisplay) {
     referralDisplay.textContent = count;
-    console.log("📦 Displayed referral count from localStorage:", count);
+    console.log("📦 Displayed referral count:", count);
   } else {
     console.warn("Element #referralNumber not found in DOM.");
   }

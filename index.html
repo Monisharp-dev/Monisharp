@@ -1,69 +1,190 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard - Preview</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dashboard - Preview</title>
+<link rel="stylesheet" href="navbar.css">
+<link rel="stylesheet" href="bottom-nav.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
+    color: #222;
+  }
 
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="preview.css" />
-  <link rel="stylesheet" href="navbar.css" />
-  <link rel="stylesheet" href="bottom-nav.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  .dashboard {
+    padding: 20px;
+    margin-top: 70px; /* space for navbar */
+  }
+
+  /* --- BALANCES --- */
+  .balances {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .balance-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(145deg, #009b72, #00cfae);
+    color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .balance-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+  }
+
+  .balance-icon {
+    font-size: 2.5rem;
+    opacity: 0.9;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .balance-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .balance-info h2 {
+    margin: 5px 0 0;
+    font-size: 1.6rem;
+    font-weight: 700;
+  }
+
+  /* --- ACTION BUTTONS --- */
+  .actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+  }
+
+  .action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: #222;
+    font-weight: 500;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
+  }
+
+  .action-btn i {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    color: #009b72;
+  }
+
+  .action-btn:hover {
+    background-color: #009b72;
+    color: #fff;
+    transform: translateY(-3px);
+  }
+
+  .action-btn:hover i {
+    color: #fff;
+  }
+</style>
 </head>
 <body>
+<main class="dashboard">
 
-  <!-- Dashboard Main Content -->
-  <main class="dashboard">
-    <!-- Main Balance -->
-    <section class="balance-card">
-      <p>Main Balance</p>
-      <h1>₦0.00</h1>
-    </section>
-
-    <!-- Referral and Deposit Balances -->
-    <section class="info-cards">
-      <div class="info-card">
+  <!-- BALANCES: 2 rows, 2 cards each -->
+  <section class="balances">
+    <div class="balance-card">
+      <i class="fas fa-wallet balance-icon"></i>
+      <div class="balance-info">
+        <p>Main Balance</p>
+        <h2>₦0.00</h2>
+      </div>
+    </div>
+    <div class="balance-card">
+      <i class="fas fa-users balance-icon"></i>
+      <div class="balance-info">
         <p>Referral Balance</p>
         <h2>₦0.00</h2>
       </div>
-      <div class="info-card">
+    </div>
+    <div class="balance-card">
+      <i class="fas fa-hand-holding-usd balance-icon"></i>
+      <div class="balance-info">
         <p>Deposit Balance</p>
         <h2 id="depositBalance">₦0.00</h2>
       </div>
-    </section>
-
-    <!-- Task Balance -->
-    <section class="info-cards">
-      <div class="info-card">
+    </div>
+    <div class="balance-card">
+      <i class="fas fa-tasks balance-icon"></i>
+      <div class="balance-info">
         <p>Task Balance</p>
         <h2 id="taskBalance">₦0.00</h2>
       </div>
-    </section>
-  </main>
+    </div>
+  </section>
 
-  <!-- Balance Initialization and Calculation -->
-  <script>
-      // ✅ Display the deposit balance in the HTML based on stored user ID
+  <!-- ACTIONS -->
+  <section class="actions">
+    <a href="task.html" class="action-btn">
+      <i class="fas fa-tasks"></i>
+      Task
+    </a>
+    <a href="join.html" class="action-btn">
+      <i class="fas fa-question-circle"></i>
+      Quiz
+    </a>
+    <a href="claimCode.html" class="action-btn">
+      <i class="fas fa-ticket-alt"></i>
+      Claim Code
+    </a>
+    <a href="wheelSpin.html" class="action-btn">
+      <i class="fas fa-dharmachakra"></i>
+      Spin Wheel
+    </a>
+    <a href="https://chat.whatsapp.com/DUb4GsMDGUR88kgV8j7dJN?mode=ac_t" class="action-btn" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+      Join WhatsApp Group
+    </a>
+    <a href="https://whatsapp.com/channel/0029VbAtZIa8Pgs7e9ey7N3k" class="action-btn" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+      Join WhatsApp Channel
+    </a>
+  </section>
+
+</main>
+
+<script>
 function showUserDepositBalance() {
-  const userId = localStorage.getItem("Id"); // Make sure this is set on login
-  if (!userId) {
-    console.error("❌ No user ID found in localStorage.");
-    return;
-  }
-
+  const userId = localStorage.getItem("Id");
+  if (!userId) return;
   const depositBalanceKey = `depositBalance_${userId}`;
   const balance = parseFloat(localStorage.getItem(depositBalanceKey)) || 0;
-
   const displayElement = document.getElementById("depositBalance");
-  if (displayElement) {
-    displayElement.textContent = `₦${balance.toFixed(2)}`;
-  }
+  if (displayElement) displayElement.textContent = `₦${balance.toFixed(2)}`;
 }
 
-// ✅ Run this on page load
 document.addEventListener("DOMContentLoaded", showUserDepositBalance);
-  </script>
+</script>
   <!-- Operational Scripts -->
   <script src="balance intit.js"></script>
   <script src="block access.js"></script>
@@ -87,7 +208,7 @@ document.addEventListener("DOMContentLoaded", showUserDepositBalance);
 
   <!-- Structural Scripts -->
   <script src="navbar.js"></script>
-  <script src="bottom-nav.js"></script>
+ <script src="bottom-nav.js"></script>
   <script src="preview.js"></script>
   <script src="corrector.js"></script>
   <script src="notification.js"></script>

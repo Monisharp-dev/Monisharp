@@ -1,15 +1,13 @@
 (function () {
-  // ▓▓▓▓ CONFIG ▓▓▓▓
-  const copiedKey = "referralCodeCopied";
-  const copiedAtKey = "referralCodeCopiedAt";
-  const savedAuthKey = "savedAuthCode";
-  const delay = 10 * 60 * 1000; // 10 minutes
+  const referralCode = localStorage.getItem("referralCode") || "N/A";
+  const popupCountKey = "referralPopupCount";
+  let count = parseInt(localStorage.getItem(popupCountKey)) || 0;
 
-  const referralCode = localStorage.getItem("referralCode"); // this user's code
-  const refereeCode = localStorage.getItem("refereeCode");   // code of the person who referred this user
+  // Stop showing popup if count >= 5
+  if (count >= 5) return;
 
-  // ▓▓▓▓ EXIT IF NOT REFERRED OR ALREADY COPIED ▓▓▓▓
-  if (!refereeCode || localStorage.getItem(copiedKey)) return;
+  // Increment and save count
+  localStorage.setItem(popupCountKey, count + 1);
 
   // ▓▓▓▓ INJECT POPUP STYLES ▓▓▓▓
   const style = document.createElement("style");
@@ -17,106 +15,86 @@
     #referralPopup {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.75);
+      background: rgba(0, 0, 0, 0.6);
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 999999;
-    }
-    #referralPopup .popup-content {
-      background: white;
-      padding: 25px 30px;
-      border-radius: 12px;
-      max-width: 420px;
-      width: 90%;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      text-align: center;
       font-family: 'Segoe UI', sans-serif;
     }
-    #referralPopup p {
-      margin-bottom: 15px;
-      font-size: 15px;
-      color: #333;
+    #referralPopup .popup-content {
+      background: #ffffff;
+      padding: 25px 30px;
+      border-radius: 14px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      animation: fadeIn 0.3s ease-out;
     }
-    #referralPopup p span {
-      color: red;
-      font-weight: bold;
-    }
+    #referralPopup h2 { margin-bottom: 10px; font-size: 18px; color: #222; }
+    #referralPopup p { font-size: 15px; margin-bottom: 15px; color: #444; }
     #referralPopup #generatedCode {
-      background: #f1f1f1;
-      padding: 10px;
+      background: #f3f4f6;
+      padding: 12px;
+      margin: 10px 0 20px;
       font-weight: bold;
       border-radius: 8px;
       word-break: break-word;
-      margin: 10px 0;
+      font-size: 16px;
+      color: #111;
     }
+    #referralPopup .btn-group { display: flex; gap: 10px; justify-content: center; }
     #referralPopup button {
+      flex: 1;
       background: #007BFF;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 10px 0;
       font-size: 15px;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       transition: background 0.2s ease;
     }
-    #referralPopup button:active {
-      background: #0056b3;
-    }
+    #referralPopup button:active { background: #0056b3; }
+    #referralPopup button#okBtn { background: #28a745; }
+    #referralPopup button#okBtn:active { background: #1e7e34; }
+    @keyframes fadeIn { from {opacity: 0; transform: scale(0.95);} to {opacity: 1; transform: scale(1);} }
   `;
   document.head.appendChild(style);
 
-  // ▓▓▓▓ BUILD POPUP DOM ▓▓▓▓
+  // ▓▓▓▓ BUILD POPUP ▓▓▓▓
   const popup = document.createElement("div");
   popup.id = "referralPopup";
   popup.innerHTML = `
     <div class="popup-content">
-      <p><strong>Referral Notice</strong></p>
-      <p>You've been referred. Please share this code with your inviter.</p>
-      <div id="generatedCode">Generating code...</div>
-      <button id="copyReferralCode">Copy Code</button>
+      <h2>Referral Notice</h2>
+      <p>Please send your referral code to the person that invited you.</p>
+      <div id="generatedCode">${referralCode}</div>
+      <div class="btn-group">
+        <button id="copyReferralCode">Copy</button>
+        <button id="okBtn">Ok</button>
+      </div>
     </div>
   `;
   document.body.appendChild(popup);
 
-  // ▓▓▓▓ GENERATE AUTH CODE ▓▓▓▓
-  function generateAuthCode(ownReferralCode, inviterCode) {
-    const payload = `${ownReferralCode}:${inviterCode}`;
-    return btoa(payload); // base64 encode
-  }
-
-  const authCode = generateAuthCode(referralCode, refereeCode);
-  const codeBox = document.getElementById("generatedCode");
+  // ▓▓▓▓ BUTTON HANDLERS ▓▓▓▓
   const copyBtn = document.getElementById("copyReferralCode");
+  const okBtn = document.getElementById("okBtn");
 
-  codeBox.textContent = authCode;
-
-  // ▓▓▓▓ COPY BUTTON HANDLER ▓▓▓▓
   copyBtn.onclick = () => {
-    navigator.clipboard.writeText(authCode).then(() => {
+    navigator.clipboard.writeText(referralCode).then(() => {
       copyBtn.textContent = "Copied!";
       copyBtn.disabled = true;
-
-      // Save copied state and auth code immediately
-      localStorage.setItem(copiedKey, "true");
-      localStorage.setItem(copiedAtKey, Date.now().toString());
-      localStorage.setItem(savedAuthKey, authCode);
-
-      // Remove popup and refereeCode after delay
       setTimeout(() => {
-        localStorage.removeItem("refereeCode");
-        popup.remove();
-      }, delay);
+        copyBtn.textContent = "Copy";
+        copyBtn.disabled = false;
+      }, 2000);
     });
   };
 
-  // ▓▓▓▓ AUTO CLEANUP IF ALREADY COPIED ▓▓▓▓
-  const copiedAt = localStorage.getItem(copiedAtKey);
-  if (copiedAt && Date.now() - parseInt(copiedAt) < delay) {
-    const timeLeft = delay - (Date.now() - parseInt(copiedAt));
-    setTimeout(() => {
-      localStorage.removeItem("refereeCode");
-      popup.remove();
-    }, timeLeft);
-  }
+  okBtn.onclick = () => {
+    popup.remove();
+  };
 })();

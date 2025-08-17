@@ -14,13 +14,18 @@
   <div class="task-container">
     <h1 class="header">Complete Tasks</h1>
 
-    <!-- Instruction Box -->
-    <div id="instruction" class="instruction-box">
-      <p>Click on a task below to start performing it.<br>
-      <b>NEW TASKS ARE BELOW THE OLD ONES </b></p>
-    </div>
-
-    <!-- Category Filter -->
+  <!-- Instruction Box -->
+<div id="instruction" class="instruction-box" 
+     style="background: #f0fdf4; border-left: 6px solid #009b72; padding: 14px 18px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+  <p style="margin:0; font-size: 0.95rem; color:#333; line-height:1.5;">
+    Click on a task below to start performing it.<br>
+    <b style="color:#444;">NEW TASKS ARE BELOW THE OLD ONES.</b><br><br>
+    ✅ You can now <b style="color:#009b72;">shuffle tasks</b> easily by using the 
+    <span style="color:#009b72; font-weight:bold;">🔀 Shuffle Button</span> 
+    at the <b>top-right corner</b> of this page.
+  </p>
+</div>
+  <!-- Category Filter -->
     <div class="category-filter" role="tablist" aria-label="Task categories">
       <button class="active" onclick="filterTasks(event, 'all')" role="tab" aria-selected="true">All</button>
       <button onclick="filterTasks(event, 'social')" role="tab" aria-selected="false">Social Tasks</button>

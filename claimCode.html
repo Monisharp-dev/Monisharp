@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Claim</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Body background */
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a2a6c, #3f4c77, #f0f0f0);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    /* Claim box */
+    .claim-box {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+      padding: 30px 25px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      color: #fff;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .claim-box h1 {
+      margin: 0;
+      font-size: 26px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .claim-box p {
+      margin: 8px 0 25px;
+      font-size: 15px;
+      color: #e8e8e8;
+    }
+
+    /* Input with icon */
+    .input-group {
+      position: relative;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .input-group input {
+      padding: 12px 40px 12px 15px;
+      border-radius: 10px;
+      border: none;
+      width: 100%;
+      font-size: 16px;
+      outline: none;
+    }
+    .input-group i {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #555;
+    }
+
+    /* Button with icon */
+    button {
+      background: linear-gradient(135deg, #0077ff, #0059b3);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    button i {
+      margin-left: 8px;
+    }
+    button:hover {
+      background: linear-gradient(135deg, #0059b3, #003d80);
+      transform: scale(1.03);
+    }
+
+    /* Notifications */
+    .notification {
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.95);
+      color: #222;
+      padding: 15px 20px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      font-weight: bold;
+      transition: all 0.5s ease;
+      z-index: 1000;
+      opacity: 0;
+      max-width: 350px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .notification.show {
+      top: 20px;
+      opacity: 1;
+    }
+    .notification.success { border-left: 6px solid #2ecc71; }
+    .notification.error { border-left: 6px solid #e74c3c; }
+    .notification.warning { border-left: 6px solid #f39c12; }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="claim-box">
+    <h1><i class="fa-solid fa-gift"></i> CLAIM CODE</h1>
+    <p>Input your claim code below and claim your reward</p>
+
+    <div class="input-group">
+      <input type="text" id="claimInput" placeholder="Enter Claim Code">
+      <i class="fa-solid fa-key"></i>
+    </div>
+    <button id="claimBtn">
+      Claim Reward <i class="fa-solid fa-check-circle"></i>
+    </button>
+  </div>
+
+  <div id="notify" class="notification"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const apis = [
+        "https://sheetdb.io/api/v1/qyn13nrtm1um7",
+        "https://sheetdb.io/api/v1/1siodve875sc4",
+        "https://sheetdb.io/api/v1/aldfwi86xgkil"
+      ];
+
+      const claimBtn = document.getElementById("claimBtn");
+      const notify = document.getElementById("notify");
+
+      // Function to show styled notifications
+      function showNotification(msg, type="info") {
+        notify.innerHTML = msg;
+        notify.className = `notification show ${type}`;
+        setTimeout(() => {
+          notify.classList.remove("show");
+        }, 5000);
+      }
+
+      claimBtn.addEventListener("click", async () => {
+        const inputCode = document.getElementById("claimInput").value.trim().toUpperCase();
+        if (!inputCode) {
+          showNotification("⚠️ Please enter a claim code", "warning");
+          return;
+        }
+
+        console.log("🔍 Claim process started... Code:", inputCode);
+
+        // Special block for MON261
+        if (inputCode === "MON261") {
+          console.log("⛔ Blocked special code:", inputCode);
+          showNotification("🚫 This code is not for your package.<br>Upgrade to Non-Students package to claim ₦500 free.", "error");
+          return;
+        }
+
+        const userId = localStorage.getItem("Id");
+        if (!userId) {
+          showNotification("⚠️ User not logged in. No ID found.", "warning");
+          return;
+        }
+
+        // check if already claimed
+        const claimedKey = `claimedCodes_${userId}`;
+        let claimedCodes = JSON.parse(localStorage.getItem(claimedKey) || "[]");
+
+        if (claimedCodes.includes(inputCode)) {
+          showNotification("⛔ You have already claimed this code!", "error");
+          console.log("⛔ User already claimed:", inputCode);
+          return;
+        }
+
+        let success = false;
+
+        for (let api of apis) {
+          try {
+            console.log("🌍 Trying API:", api);
+            const res = await fetch(api);
+            if (!res.ok) throw new Error("API fetch failed");
+
+            const data = await res.json();
+            console.log("✅ Data retrieved:", data);
+
+            // Find matching code
+            const match = data.find(row => row.claimCode === inputCode);
+            if (!match) {
+              console.log("❌ No match in this API, moving to next...");
+              continue;
+            }
+
+            console.log("🎯 Match found:", match);
+            const reward = parseFloat(match.reward || 0);
+            let clicks = parseInt(match.clicks || 0);
+
+            if (clicks > 0) {
+              clicks -= 1;
+
+              // Update API clicks
+              const updateRes = await fetch(`${api}/claimCode/${inputCode}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ clicks })
+              });
+
+              if (!updateRes.ok) throw new Error("Failed to update clicks");
+              console.log("📝 Clicks updated to:", clicks);
+
+              // Update local taskBalance
+              const key = `taskBalance_${userId}`;
+              let currentBalance = parseFloat(localStorage.getItem(key) || 0);
+              currentBalance += reward;
+              localStorage.setItem(key, currentBalance);
+
+              // Save code to prevent double claim
+              claimedCodes.push(inputCode);
+              localStorage.setItem(claimedKey, JSON.stringify(claimedCodes));
+
+              console.log(`💰 Reward of ₦${reward} added. New balance: ₦${currentBalance}`);
+              showNotification(`🎉 Successfully claimed ₦${reward}.<br>New balance: ₦${currentBalance}`, "success");
+              success = true;
+              break;
+            } else {
+              console.log("⚠️ Code exists but no clicks left.");
+              showNotification("⚠️ This claim code has already been used up.", "warning");
+              success = true;
+              break;
+            }
+
+          } catch (err) {
+            console.log("🚨 API error:", err.message);
+          }
+        }
+
+        if (!success) {
+          showNotification("❌ Claim failed. Please try again later.", "error");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

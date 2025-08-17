@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", () => {
   console.log("homepage.js loaded. Waiting for Id...");
 
@@ -27,18 +28,20 @@ document.addEventListener("DOMContentLoaded", () => {
 function showBlockingOverlay() {
   const overlay = document.createElement("div");
   overlay.id = "blockingOverlay";
-  overlay.style.position = "fixed";
-  overlay.style.top = "0";
-  overlay.style.left = "0";
-  overlay.style.width = "100%";
-  overlay.style.height = "100%";
-  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-  overlay.style.color = "#fff";
-  overlay.style.display = "flex";
-  overlay.style.flexDirection = "column";
-  overlay.style.justifyContent = "center";
-  overlay.style.alignItems = "center";
-  overlay.style.zIndex = "9999";
+  Object.assign(overlay.style, {
+    position: "fixed",
+    top: "0",
+    left: "0",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.8)",
+    color: "#fff",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: "9999"
+  });
   overlay.innerHTML = `
     <div style="text-align: center;">
       <h2>⏳ Please wait...</h2>
@@ -52,6 +55,14 @@ function showBlockingOverlay() {
 function hideBlockingOverlay() {
   const overlay = document.getElementById("blockingOverlay");
   if (overlay) overlay.remove();
+}
+
+// Generate referralCode (new logic)
+function generateReferralCode(email) {
+  const namePart = email.split("@")[0];
+  const firstTwo = namePart.substring(0, 2).toUpperCase();
+  const lastThree = namePart.slice(-3);
+  return firstTwo + lastThree;
 }
 
 async function runHomepageLogic(Id, email) {
@@ -93,15 +104,7 @@ async function runHomepageLogic(Id, email) {
   // Show blocking UI
   showBlockingOverlay();
 
-  // Generate referralCode
-  const generateReferralCode = (email) => {
-    const name = email.split("@")[0];
-    const letters = name.replace(/[^a-z]/gi, '').substring(0, 3).toUpperCase().padEnd(3, 'X');
-    const timestamp = Date.now().toString().slice(-6, -3);
-    const random = Math.floor(100 + Math.random() * 900);
-    return `PL-${letters}-${timestamp}-${random}`;
-  };
-
+  // Create referral code
   referralCode = generateReferralCode(email);
   localStorage.setItem("referralCode", referralCode);
   console.log("🎉 Generated referralCode:", referralCode);

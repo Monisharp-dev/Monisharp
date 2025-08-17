@@ -6,8 +6,11 @@ const badgeKeys = {
   quickBrainNew: "quickBrainNewSeen",
   tapSeen: "tapseen",
   createTaskSeen: "createTaskSeen",
-  referralSeen: "referralSeen", // ✅ NEW
-  referralContestSeen: "referralContestSeen" // ✅ NEW
+  referralSeen: "referralSeen",
+  referralContestSeen: "referralContestSeen",
+  claimCodeSeen: "claimCodeSeen",   // ✅ EXISTING
+  dataCouponSeen: "dataCouponSeen", // ✅ NEW
+  automaticTaskSeen: "automaticTaskSeen" // ✅ NEW
 };
 
 const badgeDurations = {
@@ -15,8 +18,11 @@ const badgeDurations = {
   quickBrainNew: 5,
   tapSeen: 5,
   createTaskSeen: 5,
-  referralSeen: 5, // ✅ NEW
-  referralContestSeen: 5 // ✅ NEW
+  referralSeen: 5,
+  referralContestSeen: 5,
+  claimCodeSeen: 5,   // ✅ EXISTING
+  dataCouponSeen: 5,  // ✅ NEW
+  automaticTaskSeen: 5 // ✅ NEW
 };
 
 function shouldShowBadge(key, duration) {
@@ -31,32 +37,35 @@ function shouldShowBadge(key, duration) {
   return diffDays < duration;
 }
 
-
-
+// Existing badges
 const referralBadge = shouldShowBadge(badgeKeys.referralSeen, badgeDurations.referralSeen)
-  ? `<span class="new-badge">NEW</span>`
-  : ``;
+  ? `<span class="new-badge">NEW</span>` : ``;
 
 const referralContestBadge = shouldShowBadge(badgeKeys.referralContestSeen, badgeDurations.referralContestSeen)
-  ? `<span class="new-badge">NEW</span>`
-  : ``;
+  ? `<span class="new-badge">NEW</span>` : ``;
 
 const createTaskBadge = shouldShowBadge(badgeKeys.createTaskSeen, badgeDurations.createTaskSeen)
-  ? `<span class="new-badge">NEW</span>`
-  : ``;
-
+  ? `<span class="new-badge">NEW</span>` : ``;
 
 const dailyBadge = shouldShowBadge(badgeKeys.dailyReward, badgeDurations.dailyReward)
-  ? `<span class="new-badge">NEW</span>`
-  : ``;
+  ? `<span class="new-badge">NEW</span>` : ``;
 
 const quickBrainBadge = shouldShowBadge(badgeKeys.quickBrainNew, badgeDurations.quickBrainNew)
-  ? `<span class="new-badge">NEW</span>`
-  : ``;
+  ? `<span class="new-badge">NEW</span>` : ``;
 
 const tapBadge = shouldShowBadge(badgeKeys.tapSeen, badgeDurations.tapSeen)
-  ? `<span class="new-badge">NEW</span>`
-  : ``;
+  ? `<span class="new-badge">NEW</span>` : ``;
+
+// ✅ Claim Code badge
+const claimCodeBadge = shouldShowBadge(badgeKeys.claimCodeSeen, badgeDurations.claimCodeSeen)
+  ? `<span class="new-badge">NEW</span>` : ``;
+
+// ✅ New badges
+const dataCouponBadge = shouldShowBadge(badgeKeys.dataCouponSeen, badgeDurations.dataCouponSeen)
+  ? `<span class="new-badge">NEW</span>` : ``;
+
+const automaticTaskBadge = shouldShowBadge(badgeKeys.automaticTaskSeen, badgeDurations.automaticTaskSeen)
+  ? `<span class="new-badge">NEW</span>` : ``;
 
 const navbarSidebarHTML = `
   <style>
@@ -186,20 +195,29 @@ const navbarSidebarHTML = `
     </div>
 
     <div class="scrollable-content">
-        <div class="sidebar-section">REFER & EARN</div>
-<nav class="nav-links">
-  <a href="refer.html"><i class="fas fa-link"></i> Refer Friends ${referralBadge}</a>
-  <a href="referral-contest.html"><i class="fas fa-chart-line"></i> Referral Contest ${referralContestBadge}</a>
-</nav>
+      <div class="sidebar-section">REFER & EARN</div>
+      <nav class="nav-links">
+        <a href="refer.html"><i class="fas fa-link"></i> Refer Friends ${referralBadge}</a>
+      </nav>
+
       <div class="sidebar-section">TASK</div>
       <nav class="nav-links">
-          <a href="Create Tasks.html"><i class="fas fa-plus-circle"></i> Create Task ${createTaskBadge}</a>
-          <a href="ad history.html"><i class="fas fa-history"></i> Task Creation History ${createTaskBadge}</a>
+        <a href="Create Tasks.html"><i class="fas fa-plus-circle"></i> Create Task ${createTaskBadge}</a>
+        <a href="ad history.html"><i class="fas fa-history"></i> Task Creation History ${createTaskBadge}</a>
         <a href="task.html"><i class="fas fa-tasks"></i> Task</a>
+        <a href="automaticTask.html"><i class="fas fa-robot"></i> Automatic Tasks ${automaticTaskBadge}</a> <!-- ✅ NEW -->
         <a href="Taskwithdrawal.html"><i class="fas fa-wallet"></i> Task Withdrawal</a>
         <a href="withdraw.html"><i class="fas fa-hand-holding-usd"></i> Withdraw</a>
         <a href="withdrawHistory.html"><i class="fas fa-history"></i> Withdrawal History</a>
       </nav>
+      
+      <!-- ✅ REWARDS SECTION (replaces CLAIMS) -->
+      <div class="sidebar-section">REWARDS</div>
+      <nav class="nav-links">
+        <a href="claimCode.html"><i class="fas fa-gift"></i> Claim Code ${claimCodeBadge}</a>
+        <a href="data.html"><i class="fas fa-sim-card"></i> Data Coupon ${dataCouponBadge}</a> <!-- ✅ NEW -->
+      </nav>
+
       <div class="sidebar-section">QUIZZES</div>
       <nav class="nav-links">
         <a href="intro.html"><i class="fas fa-brain"></i> What's QuickBrain Mini ${quickBrainBadge}</a>
@@ -207,7 +225,6 @@ const navbarSidebarHTML = `
         <a href="leaderboard.html"><i class="fas fa-trophy"></i> Leaderboard ${quickBrainBadge}</a>
       </nav>
 
-     
       <div class="sidebar-section">GAMES</div>
       <nav class="nav-links">
         <a href="wheelspin.html"><i class="fas fa-bullseye"></i> Spin & Win Game</a>
@@ -219,6 +236,7 @@ const navbarSidebarHTML = `
         <a href="about.html"><i class="fas fa-envelope"></i> About Us</a>
         <a href="contact.html"><i class="fas fa-phone-alt"></i> Contact Us</a>
         <a href="Help.html"><i class="fas fa-question-circle"></i> Help</a>
+        <a href="info.html"><i class="fas fa-sign-out-alt"></i> Logout</a> <!-- ✅ NEW -->
       </nav>
     </div>
   </div>
@@ -234,54 +252,3 @@ function toggleSidebar() {
   sidebar.classList.toggle("active");
   overlay.classList.toggle("active");
 }
-// Inject tooltip style
-const tooltipStyle = document.createElement("style");
-tooltipStyle.textContent = `
-  .menu-tooltip {
-    position: absolute;
-    background: #111;
-    color: #fff;
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 6px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-    z-index: 2000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .menu-tooltip.show {
-    opacity: 1;
-  }
-`;
-document.head.appendChild(tooltipStyle);
-
-// Inject tooltip element into the DOM
-const tooltipDiv = document.createElement("div");
-tooltipDiv.id = "menu-tooltip";
-tooltipDiv.className = "menu-tooltip";
-tooltipDiv.innerText = "Tap this ☰ Menu to explore features!";
-document.body.appendChild(tooltipDiv);
-
-// Function to show tooltip
-function showTooltip() {
-  const menuIcon = document.querySelector(".menu-icon");
-  const tooltip = document.getElementById("menu-tooltip");
-
-  if (!menuIcon || !tooltip) return;
-
-  const rect = menuIcon.getBoundingClientRect();
-  tooltip.style.top = `${rect.bottom + 10 + window.scrollY}px`;
-  tooltip.style.left = `${rect.left + rect.width / 2 - 60}px`; // center tooltip
-  tooltip.classList.add("show");
-
-  setTimeout(() => {
-    tooltip.classList.remove("show");
-  }, 3000); // show for 3 seconds
-}
-
-// Show the tooltip every 30 seconds
-const tooltipInterval = setInterval(showTooltip, 30000);
-
-// Also show it immediately once after 1 second
-setTimeout(showTooltip, 1000);
