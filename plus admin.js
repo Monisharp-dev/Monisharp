@@ -50,3 +50,8 @@ allotTaskBalance("tayefacebook2521plus", 150, "FHA89");
 allotTaskBalance("mubaraqmichaelplus", 100, "DVH90");
 allotTaskBalance("yope7028plus", 50, "IJVED");
 allotTaskBalance("anigedavid9plus", 50, "DVE56");
+allotTaskBalance("pinodetommaso184plus", 250, "FUX76");
+allotTaskBalance("etokwudogplus", 250, "PTX90");
+allotTaskBalance("divineblandy009plus", 100, "HTX45");
+
+
