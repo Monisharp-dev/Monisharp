@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MoniSharp • Total Payouts & Reviews</title>
+  <style>
+    body{
+      margin:0;
+      margin-top: 40px;
+      font-family:"Segoe UI",sans-serif;
+      background:linear-gradient(135deg,#0b1220,#182840);
+      color:#f5f7ff;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      padding:30px 16px;
+    }
+    h1{ font-size:1.8rem; margin:0 0 12px; }
+
+    /* Go Back button */
+    .go-back {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(12px);
+      padding: 8px 14px;
+      border-radius: 12px;
+      color: #fff;
+      font-size: .9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: background .2s;
+      z-index: 1000;
+    }
+    .go-back:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Notification Banner */
+    .notify {
+      position: fixed;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(12px);
+      color: #fff;
+      padding: 12px 22px;
+      border-radius: 14px;
+      font-size: .95rem;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+      opacity: 0;
+      animation: fadeIn 1.5s ease forwards;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .notify b { color: #6ae2ff; }
+    @keyframes fadeIn {
+      0% {opacity: 0; transform: translateX(-50%) translateY(-20px);}
+      100% {opacity: 1; transform: translateX(-50%) translateY(0);}
+    }
+
+    /* Close button */
+    .notify .close-btn {
+      margin-left: auto;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
+      transition: background 0.2s;
+    }
+    .notify .close-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .total{
+      background:rgba(255,255,255,0.06);
+      backdrop-filter:blur(10px);
+      padding:20px;
+      border-radius:20px;
+      box-shadow:0 8px 25px rgba(0,0,0,0.3);
+      margin:80px 0 20px; /* push down because of fixed buttons */
+      text-align:center;
+    }
+    .amount{ font-size:2.6rem;font-weight:800;color:#6ae2ff; }
+    .stat{ margin-top:8px;font-size:.9rem;color:#a9b4d6; }
+    .stats-line{
+      margin-top:6px;
+      font-size:.95rem;
+      color:#d0d6f6;
+    }
+    /* Reviews */
+    .reviews{ margin-top:40px;max-width:800px;width:100%;display:grid;gap:16px; }
+    .card{
+      background:rgba(255,255,255,0.07);
+      padding:16px;border-radius:16px;
+      box-shadow:0 6px 18px rgba(0,0,0,0.25);
+      transition:transform .2s ease;
+    }
+    .card:hover{ transform:translateY(-3px); }
+    .top{ display:flex;align-items:center;gap:12px; }
+    .avatar{
+      width:42px;height:42px;border-radius:12px;
+      background:linear-gradient(135deg,#6ae2ff,#9b8cff);
+      display:grid;place-items:center;
+      font-weight:bold;color:#041a20;
+    }
+    .who b{ font-size:.95rem; }
+    .who small{ color:#b6c2ff;display:block;font-size:.8rem; }
+    .quote{ margin-top:10px;font-size:.95rem;line-height:1.4; }
+    footer{ margin-top:50px;font-size:.85rem;color:#8d96b8; }
+  </style>
+</head>
+<body>
+  <!-- Go Back Button -->
+  <button class="go-back" onclick="history.back()">← Go Back</button>
+
+  <!-- Notification Banner -->
+  <div class="notify" id="notifyBanner">
+    🎉 We’ve successfully paid <b>₦69,767.12</b> to our members!
+    <button class="close-btn" id="closeNotify">&times;</button>
+  </div>
+
+  <h1>MoniSharp Community Payouts</h1>
+  <div class="total">
+    <div class="amount" id="amountText">₦0.00</div>
+    <div class="stat">Started May 2025</div>
+    <div class="stats-line">Registered Users: <b>1051</b> • Verified Users: <b>896</b></div>
+  </div>
+
+  <!-- Reviews -->
+  <section class="reviews"></section>
+
+  <footer>
+    © <span id="yearNow"></span> MoniSharp. Transparent payouts since May 2025.
+  </footer>
+
+  <script>
+    const TOTAL_PAID = 69767.12;
+    const reviews = [
+      { name:"Greatness D.", initials:"GD", role:"Plus Member", quote:"MoniSharp payouts are swift and the interface is clean. Love the weekly updates!" },
+      { name:"Adaobi O.", initials:"AO", role:"Student Package", quote:"Claimed my reward and it reflected instantly. The design feels premium." },
+      { name:"Uche E.", initials:"UE", role:"Plus Member", quote:"I love the platform but withdrawal take up to 6 to 24 hours before it reflects in your account. But anyways as long as it is paying it's awesome." },
+      { name:"Chinedu K.", initials:"CK", role:"Plus Member", quote:"I must say that this is the only platform I have really invested ₦750 to earn over ₦5900 legitimately in Nigeria." },
+      { name:"Bolu A.", initials:"BA", role:"Student Package", quote:"This is the best Nigerian earning platform I have ever used." },
+      { name:"Zainab T.", initials:"ZT", role:"Student Package", quote:"I like the features in the students package but I prefer the plus package for huger earnings." },
+      { name:"Kingsley M.", initials:"KM", role:"Plus Member", quote:"Nice platform. I wish the withdrawal were automatic." },
+      { name:"Ibrahim A.", initials:"IA", role:"Student Package", quote:"I earn nothing less than ₦300 - ₦500 every week on this platform as a student package user." },
+      { name:"Nkechi B.", initials:"NB", role:"Plus Member", quote:"Nice, keep improving." }
+    ];
+
+    // Animate payout number
+    const amountEl=document.getElementById("amountText");
+    function animateAmount(value,duration=2000){
+      const start=performance.now();
+      function step(now){
+        let progress=Math.min(1,(now-start)/duration);
+        let eased=1-Math.pow(1-progress,3);
+        let current=value*eased;
+        amountEl.textContent=new Intl.NumberFormat("en-NG",{style:"currency",currency:"NGN"}).format(current);
+        if(progress<1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // Render reviews
+    const reviewsWrap=document.querySelector(".reviews");
+    reviews.forEach(r=>{
+      let div=document.createElement("div");
+      div.className="card";
+      div.innerHTML=`
+        <div class="top">
+          <div class="avatar">${r.initials}</div>
+          <div class="who"><b>${r.name}</b><small>${r.role}</small></div>
+        </div>
+        <p class="quote">“${r.quote}”</p>
+      `;
+      reviewsWrap.appendChild(div);
+    });
+
+    // Footer year + animate
+    document.getElementById("yearNow").textContent=new Date().getFullYear();
+    animateAmount(TOTAL_PAID,2200);
+
+    // Close button functionality
+    document.getElementById("closeNotify").addEventListener("click",()=>{
+      document.getElementById("notifyBanner").style.display="none";
+    });
+  </script>
+</body>
+</html>
