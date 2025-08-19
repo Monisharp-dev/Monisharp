@@ -4,147 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Automatic Tasks</title>
-  <style>
-    body {
-      font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(145deg, #1e293b, #0f172a);
-      color: white;
-      margin: 0;
-      padding: 20px;
-    }
-
-    header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    header img {
-      height: 40px;
-      margin-right: 10px;
-    }
-
-    .back-btn {
-      margin-right: auto;
-      background: #334155;
-      border: none;
-      color: white;
-      padding: 8px 14px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-    .back-btn:hover {
-      background: #475569;
-    }
-
-    h1 {
-      font-size: 1.5rem;
-      margin: 0;
-    }
-
-    .balance-box {
-      margin-left: auto;
-      background: rgba(255,255,255,0.08);
-      padding: 6px 12px;
-      border-radius: 10px;
-      font-size: 0.9rem;
-    }
-
-    .intro {
-      margin: 15px 0 25px;
-      font-size: 0.95rem;
-      opacity: 0.9;
-      line-height: 1.4;
-    }
-
-    .task-container {
-      display: grid;
-      gap: 20px;
-    }
-
-    .task-card {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(12px);
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-      transition: transform 0.25s ease, background 0.25s ease;
-    }
-
-    .task-card:hover {
-      transform: translateY(-5px);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .task-title {
-      font-size: 1.1rem;
-      font-weight: bold;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .task-details {
-      font-size: 0.9rem;
-      opacity: 0.85;
-      margin-bottom: 10px;
-    }
-
-    .task-action a, 
-    .task-action button {
-      display: inline-block;
-      padding: 8px 12px;
-      border-radius: 8px;
-      background: #0ea5e9;
-      color: white;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: transform 0.2s ease, background 0.2s ease;
-    }
-
-    .task-action a:hover, 
-    .task-action button:hover {
-      background: #0284c7;
-      transform: scale(1.05);
-    }
-
-    .task-action input {
-      padding: 8px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      margin-right: 6px;
-      font-size: 0.9rem;
-      background: rgba(255,255,255,0.1);
-      color: white;
-    }
-
-    /* Notification */
-    #notification {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #22c55e;
-      color: white;
-      padding: 14px 20px;
-      border-radius: 12px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(20px);
-      transition: all 0.4s ease;
-    }
-
-    #notification.show {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
-  </style>
+  <link rel="stylesheet" href="plus-auto.css">
 </head>
 <body>
   <header>
@@ -202,6 +62,20 @@
     // TASKS
     const tasks = [
       {
+        id: "surveyflix_task",
+        title: "📝 Register on SurveyFlix (Free)",
+        details: `Click the link below to register with your Gmail account for FREE. 
+                  Then paste your referral link here to claim your reward.`,
+        reward: 8,
+        duration: "Instant (upon validation)",
+        action: `
+          <a href="https://surveyflix.org/Account/Index?refCode=YHVX7HX" target="_blank">Register Free</a><br><br>
+          <input type="text" id="surveyflixInput" placeholder="Paste your referral link here">
+          <button onclick="checkSurveyflix()">Submit</button>
+        `,
+        check: () => {}
+      },
+      {
         id: "join_whatsapp",
         title: "📱 Join WhatsApp Group",
         details: "Join our WhatsApp group and return here to claim your reward.",
@@ -251,6 +125,23 @@
         }
       },
       {
+        id: "visit_testimonials",
+        title: "⭐ Visit Testimonials Page",
+        details: "Visit testimonials.html and stay for at least 1 minute.",
+        reward: 50,
+        duration: "90 seconds",
+        action: `<a href="testimonials.html" onclick="localStorage.setItem('started_visit_testimonials', Date.now())">Visit Now</a>`,
+        check: () => {
+          const start = localStorage.getItem("started_visit_testimonials");
+          if (start && Date.now() - parseInt(start) >= 90000 && !isTaskDone("visit_testimonials")) {
+            addReward(`plus-activityBalance`, 50);
+            notify("✅ Rewarded ₦4 for visiting Testimonials Page!");
+            completeTask("visit_testimonials");
+            localStorage.removeItem("started_visit_testimonials");
+          }
+        }
+      },
+      {
         id: "deposit_100_exact",
         title: "💵 Deposit Exactly ₦100",
         details: "Keep exactly ₦100 in your deposit balance to get reward.",
@@ -265,16 +156,6 @@
             completeTask("deposit_100_exact");
           }
         }
-      },
-      {
-        id: "input_referral",
-        title: "🎟️ Enter Referral Code",
-        details: "Input your referral code and get rewarded.",
-        reward: 2,
-        duration: "Instant",
-        action: `<input type="text" id="refInput" placeholder="Enter referral code"> 
-                 <button onclick="checkReferral()">Submit</button>`,
-        check: () => {} // manual
       }
     ];
 
@@ -300,15 +181,21 @@
     function checkDeposit100() {
       tasks.find(t => t.id === "deposit_100_exact").check();
     }
-    function checkReferral() {
-      const input = document.getElementById("refInput").value.trim();
-      const stored = localStorage.getItem("referralCode");
-      if (input && stored && input === stored && !isTaskDone("input_referral")) {
-        addReward(`plus-plus-activityBalance`, 2);
-        notify("✅ Referral code valid! ₦2 rewarded.");
-        completeTask("input_referral");
+    function checkSurveyflix() {
+      const input = document.getElementById("surveyflixInput").value.trim();
+      const regex = /^https:\/\/surveyflix\.org\/Account\/Index\?refCode=[A-Za-z0-9]{6,10}$/;
+
+      if (input === "https://surveyflix.org/Account/Index?refCode=YHVX7HX") {
+        notify("⚠️ Warning: Do not submit the sample link. If you repeat this, you may be banned from tasks!", "#facc15");
+        return;
+      }
+
+      if (regex.test(input) && !isTaskDone("surveyflix_task")) {
+        addReward(`plus-activityBalance`, 100);
+        notify("✅ Rewarded ₦100 for completing SurveyFlix task!");
+        completeTask("surveyflix_task");
       } else {
-        notify("❌ Invalid referral code.", "#ef4444");
+        notify("❌ Invalid referral link format. Please check and try again.", "#ef4444");
       }
     }
 
