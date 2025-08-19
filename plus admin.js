@@ -32,26 +32,7 @@ function allotTaskBalance(userId, amount, uniqueKey) {
   console.log(`✅ Task balance of ₦${amount} credited to ${userId} (Key: ${uniqueKey}).`);
 }
 // These all run, but only the one matching localStorage.getItem("plus-Id") will get credited
-allotTaskBalance("realearners01plus", 50, "O7JMD");
+allotTaskBalance("divineblandy009plus", 50, "O7JMD");
 allotTaskBalance("mubaraqmichaelplus", 100, "ERZBM");
-allotTaskBalance("theyplus", 600, "FZMLC");
-allotTaskBalance("tayefacebook2521plus", 350, "FD56T");
-allotTaskBalance("petersonroland57plus", 350, "DMXLC");
-allotTaskBalance("petersonroland57plus", 500, "GUTXG");
-allotTaskBalance("tayefacebook2521plus", 500, "GM66T");
-allotTaskBalance("pinodetommaso184plus", 500, "GMTID");
-allotTaskBalance("yope7028plus", 500, "DT665");
-allotTaskBalance("yope7028plus", 2000, "DBY45");
- allotTaskBalance("mohammedmanyisa9680plus", 250, "FMT70");
-allotTaskBalance("tayefacebook2521plus", 500, "FWM56");
-allotTaskBalance("shikemiopeyemi0plus", 100, "GNM56");
-allotTaskBalance("tayefacebook2521plus", 150, "HTM76");
-allotTaskBalance("tayefacebook2521plus", 150, "FHA89");
-allotTaskBalance("mubaraqmichaelplus", 100, "DVH90");
-allotTaskBalance("yope7028plus", 50, "IJVED");
-allotTaskBalance("anigedavid9plus", 50, "DVE56");
-allotTaskBalance("pinodetommaso184plus", 250, "FUX76");
-allotTaskBalance("etokwudogplus", 250, "PTX90");
-allotTaskBalance("divineblandy009plus", 100, "HTX45");
-
-
+allotTaskBalance("shikemiopeyemi0plus", 100, "FZMLC");
+//hiii;
