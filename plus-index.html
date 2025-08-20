@@ -13,6 +13,49 @@
       margin-top: 8px;
       transition: all 0.3s ease;
     }
+    .dashboard-container {
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+    }
+    .balances {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .balance-card {
+      background: #f8f9fc;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+    .balance-card:hover {
+      transform: translateY(-4px);
+    }
+    .balance-card i {
+      font-size: 28px;
+      margin-bottom: 8px;
+      color: #0d6efd;
+    }
+    .profile {
+      text-align: center;
+    }
+    .profile img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+    .notify {
+      background: #0d6efd;
+      color: #fff;
+      padding: 12px;
+      text-align: center;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -83,14 +126,33 @@
       }, 20);
     }
 
-    // Load balances with correct user-specific deposit key
+    // Initialize balances per user
+    function initUserBalances() {
+      const userId = localStorage.getItem("plus-Id") || "guest";
+
+      const keys = {
+        activity: `plus-activityBalance`,
+        referral: `plus-referralBalance_${userId}`,
+        deposit: `plus-depositBalance_${userId}`,
+      };
+
+      Object.values(keys).forEach(key => {
+        if (!localStorage.getItem(key)) {
+          localStorage.setItem(key, "0");
+        }
+      });
+
+      return keys;
+    }
+
+    // Load balances with correct user-specific keys
     function loadBalancesAnimated() {
       const userId = localStorage.getItem("plus-Id") || "guest";
-      
-      const activity = parseInt(localStorage.getItem("plus-activityBalance")) || 0;
-      const referral = parseInt(localStorage.getItem("plus-referralBalance")) || 0;
-      const depositKey = `plls-depositBalance_${userId}`;
-      const deposit = parseInt(localStorage.getItem(depositKey)) || 0;
+      const keys = initUserBalances();
+
+      const activity = parseInt(localStorage.getItem(keys.activity)) || 0;
+      const referral = parseInt(localStorage.getItem(keys.referral)) || 0;
+      const deposit = parseInt(localStorage.getItem(keys.deposit)) || 0;
 
       animateCountUp(document.getElementById("activityBalance"), activity);
       animateCountUp(document.getElementById("referralBalance"), referral);
@@ -111,6 +173,7 @@
   <script src="plus-id.js"></script>
   <script src="plus-cop.js"></script>
   <script src="plus-homepage.js"></script>
-  <script src="plus-balance init.js"></script>
+  <script scr="plus-check.js"></script>
+  <script src="plus-balance init.js"><script>
 </body>
 </html>
