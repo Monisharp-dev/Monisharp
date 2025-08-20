@@ -57,3 +57,5 @@ allotTaskBalance("etokwudogplus", 100, "TXL76");
 allotTaskBalance("tayefacebook2521plus", 100, "PGM89");
 allotTaskBalance("freshnessjunior1plus", 550, "FNL06");
 allotTaskBalance("anigedavid9plus", 350, "DLN23");
+allotTaskBalance("shikemiopeyemi0plus", 150, "BTX78");
+allotTaskBalance("anigedavid9plus", 50, "DLN23");
