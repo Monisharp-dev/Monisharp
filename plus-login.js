@@ -1,4 +1,4 @@
-<script>
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   const apiList = [
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => window.location.href = "plus-index.html", 2000);
       } else {
         showNotification("First time login. Redirecting for verification...", "info");
-        setTimeout(() => window.location.href = "verify.html", 2000);
+        setTimeout(() => window.location.href = "plus-verification.html", 2000);
       }
       return;
     }
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isFirstLogin) {
         setPlus("firstTime", "true");
         showNotification("First time login. Redirecting for verification...", "info");
-        setTimeout(() => window.location.href = "verify.html", 2000);
+        setTimeout(() => window.location.href = "plus-verification.htmll", 2000);
       } else {
         if (alreadyVerified === "true") {
           showNotification("Login successful. Redirecting...", "success");
@@ -136,4 +136,3 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
-</script>

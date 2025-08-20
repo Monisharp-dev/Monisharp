@@ -139,7 +139,7 @@
       }
 
       popup.style.display = "block";
-      setTimeout(() => (popup.style.display = "none"), 5000);
+      // ❌ Removed auto-hide → stays visible until redirect
     }
 
     const userId = localStorage.getItem("plus-Id");
@@ -204,20 +204,34 @@
       try {
         const allData = await fetchAllRecords();
         const record = findRecord(allData, userId);
+
         if (!record || !record.qrCode) {
-          showPopup("❌ No saved data.", false);
+          console.warn("[Notice] No data found in API. Proceeding as validated.");
+          showPopup("⚠ No saved data found. Starting fresh...", true);
+          setTimeout(() => {
+            window.location.href = "plus-index.html";
+          }, 3000);
           return;
         }
+
         const ok = restoreLocalStorage(record.qrCode);
         if (ok) {
-          // ✅ Redirect after 3 seconds
+          setTimeout(() => {
+            window.location.href = "plus-index.html";
+          }, 3000);
+        } else {
+          console.warn("[Notice] Data decode failed. Proceeding anyway.");
+          showPopup("⚠ Data invalid. Starting fresh...", true);
           setTimeout(() => {
             window.location.href = "plus-index.html";
           }, 3000);
         }
       } catch (err) {
         console.error("[Error] Main process failed:", err);
-        showPopup("❌ Process failed.", false);
+        showPopup("⚠ System error, but proceeding...", true);
+        setTimeout(() => {
+          window.location.href = "plus-index.html";
+        }, 3000);
       }
     })();
   });

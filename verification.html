@@ -187,27 +187,34 @@
       }
     }
 
-    // ---------------------- BLOCK 4: MAIN PROCESS ----------------------
-    (async function runRestore() {
-      showPopup("🔄 Restoring...");
-      try {
-        const allData = await fetchAllRecords();
-        const record = findRecord(allData, userId);
-        if (!record || !record.qrCode) {
-          showPopup("❌ No saved data.", false, true);
-          return;
-        }
-        const ok = restoreLocalStorage(record.qrCode);
-        if (ok) {
-          setTimeout(() => { window.location.href = "index.html"; }, 3000);
-        }
-      } catch (err) {
-        console.error("[Error] Main process failed:", err);
-        showPopup("❌ Process failed.", false);
-      }
-    })();
+   // ---------------------- BLOCK 4: MAIN PROCESS ----------------------
+(async function runRestore() {
+  showPopup("🔄 Restoring...");
+  try {
+    const allData = await fetchAllRecords();
+    const record = findRecord(allData, userId);
 
-  });
+    if (!record || !record.qrCode) {
+      console.warn("[Info] No saved data found, proceeding as validated.");
+      showPopup("✅ No saved data found, but you're good to go!", true);
+      setTimeout(() => { window.location.href = "index.html"; }, 3000);
+      return;
+    }
+
+    const ok = restoreLocalStorage(record.qrCode);
+    if (ok) {
+      setTimeout(() => { window.location.href = "index.html"; }, 3000);
+    } else {
+      console.warn("[Info] Failed to decode but still proceeding.");
+      showPopup("⚠️ Could not decode data, but continuing anyway.", true);
+      setTimeout(() => { window.location.href = "index.html"; }, 3000);
+    }
+  } catch (err) {
+    console.error("[Error] Main process failed:", err);
+    showPopup("⚠️ Error occurred, but continuing anyway.", true);
+    setTimeout(() => { window.location.href = "index.html"; }, 3000);
+  }
+})();
   </script>
 </body>
 </html>
