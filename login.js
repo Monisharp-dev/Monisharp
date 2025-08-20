@@ -1,3 +1,4 @@
+<script>
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   const apiList = [
@@ -42,11 +43,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const storedEmail = localStorage.getItem("email");
     const storedPassword = localStorage.getItem("password");
+    const alreadyVerified = localStorage.getItem("verified"); // ✅ check if verified before
 
+    // If already logged in before
     if (storedEmail && storedPassword && email === storedEmail && password === storedPassword) {
       console.log("Credentials match found in local storage. Skipping API request.");
-      showNotification("Login successful. Redirecting...", "success");
-      setTimeout(() => window.location.href = "index.html", 2000);
+
+      if (alreadyVerified === "true") {
+        showNotification("Login successful. Redirecting...", "success");
+        setTimeout(() => window.location.href = "index.html", 2000);
+      } else {
+        showNotification("First time login. Redirecting for verification...", "info");
+        setTimeout(() => window.location.href = "verification.html", 2000);
+      }
       return;
     }
 
@@ -97,17 +106,25 @@ document.addEventListener("DOMContentLoaded", () => {
       console.log("'tempUsers' removed from localStorage.");
 
       const isFirstLogin = !(storedEmail && storedPassword);
+
       if (isFirstLogin) {
         localStorage.setItem("firstTime", "true");
         showNotification("First time login. Redirecting for verification...", "info");
+        setTimeout(() => window.location.href = "verification.html", 2000);
       } else {
-        showNotification("Login successful. Redirecting...", "success");
+        if (alreadyVerified === "true") {
+          showNotification("Login successful. Redirecting...", "success");
+          setTimeout(() => window.location.href = "index.html", 2000);
+        } else {
+          showNotification("First time login. Redirecting for verification...", "info");
+          setTimeout(() => window.location.href = "verification.html", 2000);
+        }
       }
 
-      setTimeout(() => window.location.href = "index.html", 2000);
     } else {
       console.warn("No match found from any API.");
       showNotification("Invalid login credentials. Please try again.", "error");
     }
   });
 });
+</script>

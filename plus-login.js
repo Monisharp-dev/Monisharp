@@ -1,3 +1,4 @@
+<script>
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector("form");
   const apiList = [
@@ -27,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (existing) existing.remove();
   };
 
-  // Helper to get/set plus-prefixed keys
+  // Helpers for localStorage
   const setPlus = (key, value) => localStorage.setItem(`plus-${key}`, value);
   const getPlus = (key) => localStorage.getItem(`plus-${key}`);
   const removePlus = (key) => localStorage.removeItem(`plus-${key}`);
@@ -47,14 +48,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const storedEmail = getPlus("email");
     const storedPassword = getPlus("password");
+    const alreadyVerified = getPlus("verified"); // check if user has verified before
 
+    // If already logged in before (credentials stored locally)
     if (storedEmail && storedPassword && email === storedEmail && password === storedPassword) {
       console.log("Credentials match found in local storage. Skipping API request.");
-      showNotification("Login successful. Redirecting...", "success");
-      setTimeout(() => window.location.href = "plus-index.html", 2000);
+
+      if (alreadyVerified === "true") {
+        showNotification("Login successful. Redirecting...", "success");
+        setTimeout(() => window.location.href = "plus-index.html", 2000);
+      } else {
+        showNotification("First time login. Redirecting for verification...", "info");
+        setTimeout(() => window.location.href = "verify.html", 2000);
+      }
       return;
     }
 
+    // Else check APIs
     showNotification("Processing login...", "info", true);
 
     let matchedUser = null;
@@ -94,25 +104,36 @@ document.addEventListener("DOMContentLoaded", () => {
     if (matchedUser) {
       console.log("Login successful via API. Saving credentials...");
 
+      // Save credentials
       setPlus("email", matchedUser.email);
       setPlus("password", matchedUser.password);
       setPlus("phoneNumber", matchedUser.phoneNumber || "");
 
+      // Clean up
       removePlus("tempUsers");
       console.log("'plus-tempUsers' removed from localStorage.");
 
+      // If first login (no previous local creds)
       const isFirstLogin = !(storedEmail && storedPassword);
+
       if (isFirstLogin) {
         setPlus("firstTime", "true");
         showNotification("First time login. Redirecting for verification...", "info");
+        setTimeout(() => window.location.href = "verify.html", 2000);
       } else {
-        showNotification("Login successful. Redirecting...", "success");
+        if (alreadyVerified === "true") {
+          showNotification("Login successful. Redirecting...", "success");
+          setTimeout(() => window.location.href = "plus-index.html", 2000);
+        } else {
+          showNotification("First time login. Redirecting for verification...", "info");
+          setTimeout(() => window.location.href = "plus-verification.html", 2000);
+        }
       }
 
-      setTimeout(() => window.location.href = "plus-index.html", 2000);
     } else {
       console.warn("No match found from any API.");
       showNotification("Invalid login credentials. Please try again.", "error");
     }
   });
 });
+</script>

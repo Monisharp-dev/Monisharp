@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Verifying | Monisharp</title>
   <style>
     body {
@@ -68,41 +68,50 @@
   </div>
 
   <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  // 🔹 Generate plus-Id if not available
+  function extractIdFromEmail(email) {
+    const baseId = email.split("@")[0];
+    const Id = `${baseId}plus`;
+    console.log(`Extracted Id from email '${email}':`, Id);
+    return Id;
+  }
 
-    // ---------------------- BLOCK 1: ID GENERATION ----------------------
-    function extractIdFromEmail(email) {
-      const Id = email.split("@")[0];
-      console.log(`Extracted Id from email '${email}':`, Id);
-      return Id;
-    }
+  function processStoredEmail() {
+    const emailKey = "plus-email";
+    const idKey = "plus-Id";
 
-    function processStoredEmail() {
-      const email = localStorage.getItem("email");
-      if (!email) {
-        console.warn("No email found in localStorage. Cannot process Id.");
-        return null;
-      }
-      console.log(`Starting Id processing for stored email: ${email}`);
-      const Id = extractIdFromEmail(email);
-      const localKey = "Id";
+    const email = localStorage.getItem(emailKey);
 
-      if (localStorage.getItem(localKey) === Id) {
-        console.log(`Id '${Id}' already exists in localStorage. Skipping.`);
-        return Id;
-      }
-      localStorage.setItem(localKey, Id);
-      console.log(`Id '${Id}' saved in localStorage.`);
-      return Id;
-    }
-
-    const userId = processStoredEmail();
-    if (!userId) {
-      console.error("[Error] No Id generated.");
+    if (!email) {
+      console.warn("No email found in localStorage. Cannot process Id.");
       return;
     }
 
-    // ---------------------- BLOCK 2: POPUP HANDLER ----------------------
+    console.log(`Starting Id processing for stored email: ${email}`);
+
+    const Id = extractIdFromEmail(email);
+
+    if (localStorage.getItem(idKey) === Id) {
+      console.log(`Id '${Id}' already exists in localStorage. Skipping.`);
+      return;
+    }
+
+    // Save the Id locally using the correct key
+    localStorage.setItem(idKey, Id);
+    console.log(`Id '${Id}' saved in localStorage under key '${idKey}'.`);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Ensure plus-Id exists before anything else
+    processStoredEmail();
+
+    const API_LISTTWO = [
+      "https://sheetdb.io/api/v1/3fhj4vu7fak0u",
+      "https://sheetdb.io/api/v1/xsn258gcncwv8",
+      "https://sheetdb.io/api/v1/a60myauvx0ay1",
+      "https://sheetdb.io/api/v1/n5g98bqmjh72j"
+    ];
+
     function showPopup(message, success = false, allowLink = false) {
       console.log("[Popup]", message);
       let popup = document.getElementById("retrieve-popup");
@@ -122,21 +131,24 @@
         document.body.appendChild(popup);
       }
       popup.style.background = success ? "#4caf50" : "#2196f3";
-      popup.innerHTML = allowLink
-        ? `${message}<br><a href="https://wa.me/2348146054930" target="_blank" style="color:yellow;text-decoration:underline;">Contact Admin</a>`
-        : message;
+
+      if (allowLink) {
+        popup.innerHTML = `${message}<br><a href="https://wa.me/2348146054930" target="_blank" style="color:yellow;text-decoration:underline;">Contact Admin</a>`;
+      } else {
+        popup.innerText = message;
+      }
 
       popup.style.display = "block";
       setTimeout(() => (popup.style.display = "none"), 5000);
     }
 
-    // ---------------------- BLOCK 3: API + RESTORE ----------------------
-    const API_LISTTWO = [
-      "https://sheetdb.io/api/v1/3fhj4vu7fak0u",
-      "https://sheetdb.io/api/v1/xsn258gcncwv8",
-      "https://sheetdb.io/api/v1/a60myauvx0ay1",
-      "https://sheetdb.io/api/v1/n5g98bqmjh72j"
-    ];
+    const userId = localStorage.getItem("plus-Id");
+    if (!userId) {
+      console.error("[Error] No Id in localStorage.");
+      showPopup("❌ No User ID found.", false, true);
+      return;
+    }
+    console.log("[Process] Found userId:", userId);
 
     async function fetchAllRecords() {
       let allData = [];
@@ -187,26 +199,27 @@
       }
     }
 
-    // ---------------------- BLOCK 4: MAIN PROCESS ----------------------
     (async function runRestore() {
       showPopup("🔄 Restoring...");
       try {
         const allData = await fetchAllRecords();
         const record = findRecord(allData, userId);
         if (!record || !record.qrCode) {
-          showPopup("❌ No saved data.", false, true);
+          showPopup("❌ No saved data.", false);
           return;
         }
         const ok = restoreLocalStorage(record.qrCode);
         if (ok) {
-          setTimeout(() => { window.location.href = "index.html"; }, 3000);
+          // ✅ Redirect after 3 seconds
+          setTimeout(() => {
+            window.location.href = "plus-index.html";
+          }, 3000);
         }
       } catch (err) {
         console.error("[Error] Main process failed:", err);
         showPopup("❌ Process failed.", false);
       }
     })();
-
   });
   </script>
 </body>
