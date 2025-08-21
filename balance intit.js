@@ -18,11 +18,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Step 5: Referral activation check
   const activateStatus = localStorage.getItem("activateStatus");
   const refereeCode = localStorage.getItem("refereeCode");
-  const referralCodeCopied = localStorage.getItem("referralCodeCopied");
+  const referralDone = localStorage.getItem("referralDone"); // NEW flag
 
-  // Only show modal if referred and code has NOT been copied
-  if (activateStatus && refereeCode && !referralCodeCopied) {
-    // Step 6: Show full-screen blocking modal
+  // Step 6: Show modal logic
+  if (activateStatus && refereeCode && !referralDone) {
     const modal = document.createElement("div");
     modal.innerHTML = `
       <div id="referral-block-modal">
@@ -33,7 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
             <strong>You must visit the referral page and send your special code to your inviter.</strong><br><br>
             Failure to do so will result in your account being <span style="color: red; font-weight: bold;">BLOCKED</span>.
           </p>
-          <p id="redirect-msg" style="margin-top: 20px; font-weight: bold; color: #0d6efd;">Preparing to redirect...</p>
+          <p id="redirect-msg" style="margin-top: 20px; font-weight: bold; color: #0d6efd;"></p>
+          <button id="done-btn" style="display:none; margin-top:20px; padding:10px 20px; background:#0d6efd; color:white; border:none; border-radius:6px; cursor:pointer;">
+            ✅ I have done it
+          </button>
         </div>
       </div>
       <style>
@@ -48,8 +50,12 @@ document.addEventListener("DOMContentLoaded", () => {
           display: flex;
           align-items: center;
           justify-content: center;
+          transition: opacity 0.8s ease, visibility 0.8s ease;
         }
-
+        #referral-block-modal.fade-out {
+          opacity: 0;
+          visibility: hidden;
+        }
         .referral-modal-content {
           background: #ffffff;
           padding: 40px 30px;
@@ -62,35 +68,48 @@ document.addEventListener("DOMContentLoaded", () => {
           color: #333;
           animation: fadeInScale 0.5s ease-out;
         }
-
         .referral-modal-content h2 {
           margin-top: 0;
           color: #dc3545;
         }
-
         @keyframes fadeInScale {
-          from {
-            opacity: 0;
-            transform: scale(0.95);
-          }
-          to {
-            opacity: 1;
-            transform: scale(1);
-          }
+          from { opacity: 0; transform: scale(0.95); }
+          to { opacity: 1; transform: scale(1); }
         }
       </style>
     `;
 
     document.body.appendChild(modal);
 
-    // Step 7: Wait and redirect
-    setTimeout(() => {
-      const msg = document.getElementById("redirect-msg");
-      msg.textContent = "Redirecting to referral page so you can copy your code...";
+    const msg = document.getElementById("redirect-msg");
+    const doneBtn = document.getElementById("done-btn");
+    const modalEl = document.getElementById("referral-block-modal");
 
+    // If it's the first time → redirect
+    if (!localStorage.getItem("referralRedirected")) {
+      msg.textContent = "Preparing to redirect...";
       setTimeout(() => {
-        window.location.href = "refer.html";
-      }, 4000);
-    }, 3000);
+        msg.textContent = "Redirecting to referral page so you can copy your code...";
+        localStorage.setItem("referralRedirected", "true"); // flag first redirect
+        setTimeout(() => {
+          window.location.href = "refer.html";
+        }, 4000);
+      }, 3000);
+
+    } else {
+      // If user already came back → show button
+      msg.textContent = "Once you’ve completed the step, confirm below:";
+      doneBtn.style.display = "inline-block";
+
+      doneBtn.addEventListener("click", () => {
+        doneBtn.disabled = true;
+        doneBtn.textContent = "⏳ Processing...";
+        setTimeout(() => {
+          localStorage.setItem("referralDone", "true"); // never show again
+          modalEl.classList.add("fade-out");
+          setTimeout(() => modalEl.remove(), 800); // remove after fade-out
+        }, 6000);
+      });
+    }
   }
 });
