@@ -28,8 +28,16 @@
     }
     h2 {
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       font-weight: 600;
+    }
+    .instructions {
+      font-size: 0.9rem;
+      background: rgba(255,255,255,0.12);
+      padding: 12px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      line-height: 1.5;
     }
     input, button {
       width: 100%;
@@ -74,6 +82,16 @@
 <body>
   <div class="referral-box">
     <h2>Claim Referral Bonus</h2>
+    
+    <div class="instructions">
+      <p>👉 To claim your referral reward:</p>
+      <ol>
+        <li>Get the referral code from the person who invited you.</li>
+        <li>Paste the code in the box below.</li>
+        <li>Click <strong>Claim Now</strong> to receive your bonus instantly.</li>
+      </ol>
+    </div>
+
     <input type="text" id="referralInput" placeholder="Enter Referral Code" />
     <button onclick="claimReferral()">Claim Now</button>
     <div id="statusMessage" class="status info">Awaiting input...</div>
@@ -180,7 +198,5 @@
       }
     }
   </script>
-  <script="plus-upload.js"></script>
-
 </body>
 </html>

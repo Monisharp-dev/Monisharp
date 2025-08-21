@@ -5,31 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard | MoniSharp</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <link rel="stylesheet" href="plus-index.css">
   <style>
-    .count {
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9fafc;
+      margin: 0;
+      padding: 0;
+    }
+    .notify {
+      background: #0d6efd;
+      color: #fff;
+      padding: 12px;
+      text-align: center;
       font-weight: bold;
-      font-size: 18px;
-      margin-top: 8px;
-      transition: all 0.3s ease;
     }
     .dashboard-container {
-      max-width: 700px;
+      max-width: 800px;
       margin: auto;
       padding: 20px;
+    }
+    .profile {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .profile img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     .balances {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
-      margin-top: 20px;
+      margin-bottom: 25px;
     }
     .balance-card {
-      background: #f8f9fc;
+      background: #fff;
       padding: 20px;
-      border-radius: 12px;
+      border-radius: 14px;
       text-align: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
       transition: transform 0.2s;
     }
     .balance-card:hover {
@@ -40,22 +57,54 @@
       margin-bottom: 8px;
       color: #0d6efd;
     }
-    .profile {
-      text-align: center;
-    }
-    .profile img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin-bottom: 10px;
-    }
-    .notify {
-      background: #0d6efd;
-      color: #fff;
-      padding: 12px;
-      text-align: center;
+    .count {
       font-weight: bold;
+      font-size: 18px;
+      margin-top: 8px;
     }
+
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 25px;
+    }
+    .action-card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.2s, background 0.3s;
+      cursor: pointer;
+      text-decoration: none;
+      color: #333;
+    }
+    .action-card:hover {
+      transform: translateY(-4px);
+      background: #e9f5ff;
+    }
+    .action-card i {
+      font-size: 26px;
+      margin-bottom: 10px;
+      color: #0d6efd;
+    }
+    .action-card h4 {
+      font-size: 15px;
+      margin: 0;
+      color: #222;
+    }
+
+    /* Suggested color accents */
+    .blue i { color: #0d6efd; }
+    .green i { color: #198754; }
+    .purple i { color: #6f42c1; }
+    .orange i { color: #fd7e14; }
+    .red i { color: #dc3545; }
+    .teal i { color: #20c997; }
+    .dark i { color: #343a40; }
+    .gold i { color: #f1c40f; } /* New for Daily Reward */
   </style>
 </head>
 
@@ -70,6 +119,7 @@
       <h2>Welcome, MoniSharp Member</h2>
     </div>
 
+    <!-- Balance Overview -->
     <div class="balances">
       <div class="balance-card">
         <i class="fas fa-bolt"></i>
@@ -82,12 +132,51 @@
         <h3>Referral Bonus</h3>
         <p id="referralBalance" class="count">₦0</p>
       </div>
+    </div>
 
-      <div class="balance-card">
+    <!-- Quick Actions Grid -->
+    <div class="quick-actions">
+      <a href="plus-index.html" class="action-card blue">
+        <i class="fas fa-home"></i>
+        <h4>Dashboard</h4>
+      </a>
+      <a href="plus-referral.html" class="action-card green">
+        <i class="fas fa-users"></i>
+        <h4>Referrals</h4>
+      </a>
+      <a href="plus-deposit.html" class="action-card purple">
         <i class="fas fa-wallet"></i>
-        <h3>Deposit Balance</h3>
-        <p id="depositBalance" class="count">₦0</p>
-      </div>
+        <h4>Deposit</h4>
+      </a>
+      <a href="depositBalance.html" class="action-card teal">
+        <i class="fas fa-coins"></i>
+        <h4>Deposit Balance</h4>
+      </a>
+      <a href="plus-claimCode.html" class="action-card orange">
+        <i class="fas fa-key"></i>
+        <h4>Claim Code</h4>
+      </a>
+      <a href="plus-withdrawal.html" class="action-card red">
+        <i class="fas fa-money-bill-wave"></i>
+        <h4>Withdraw</h4>
+      </a>
+      <a href="plus-automatic.html" class="action-card green">
+        <i class="fas fa-robot"></i>
+        <h4>Automatic Task</h4>
+      </a>
+      <!-- New Daily Reward -->
+      <a href="plus-daily.html" class="action-card gold">
+        <i class="fas fa-gift"></i>
+        <h4>Daily Reward</h4>
+      </a>
+      <a href="info.html" class="action-card blue">
+        <i class="fas fa-sign-out-alt"></i>
+        <h4>Logout</h4>
+      </a>
+      <a href="https://wa.me/2348146054930?text=Hello%20Admin%2C%20I%20need%20assistance%20with%20my%20MoniSharp%20account." class="action-card dark">
+        <i class="fab fa-whatsapp"></i>
+        <h4>Contact Admin</h4>
+      </a>
     </div>
   </div>
 
@@ -126,14 +215,11 @@
       }, 20);
     }
 
-    // Initialize balances per user
+    // Initialize balances
     function initUserBalances() {
-      const userId = localStorage.getItem("plus-Id") || "guest";
-
       const keys = {
         activity: `plus-activityBalance`,
-        referral: `plus-referralBalance_${userId}`,
-        deposit: `plus-depositBalance_${userId}`,
+        referral: `plus-referralBalance`,
       };
 
       Object.values(keys).forEach(key => {
@@ -145,35 +231,28 @@
       return keys;
     }
 
-    // Load balances with correct user-specific keys
+    // Load balances
     function loadBalancesAnimated() {
-      const userId = localStorage.getItem("plus-Id") || "guest";
       const keys = initUserBalances();
 
       const activity = parseInt(localStorage.getItem(keys.activity)) || 0;
       const referral = parseInt(localStorage.getItem(keys.referral)) || 0;
-      const deposit = parseInt(localStorage.getItem(keys.deposit)) || 0;
 
       animateCountUp(document.getElementById("activityBalance"), activity);
       animateCountUp(document.getElementById("referralBalance"), referral);
-      animateCountUp(document.getElementById("depositBalance"), deposit);
     }
 
     // Run
     loadBalancesAnimated();
   </script>
-
-  <!-- Other scripts -->
   <script src="plus admin.js"></script>
-  
   <script src="plus-popup.js"></script>
   <script src="display.js"></script>
   <script src="ad place.js"></script>
-  <script src="nav.js"></script>
   <script src="plus-id.js"></script>
   <script src="plus-cop.js"></script>
   <script src="plus-homepage.js"></script>
-  
-  <script src="plus-balance init.js"><script>
+  <script src="plus-check.js"></script>
+  <script src="plus-balance init.js"></script>
 </body>
 </html>

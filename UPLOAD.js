@@ -1,3 +1,4 @@
+<script>
 (function () {
   const API_LISTTWO = [
     "https://sheetdb.io/api/v1/3fhj4vu7fak0u",
@@ -173,16 +174,48 @@
     }
   }
 
-  // Hook localStorage.setItem
+  // ---- TRACKING LOGIC ----
+
+  // Backup originals
   const originalSetItem = localStorage.setItem;
+  const originalRemoveItem = localStorage.removeItem;
+  const originalClear = localStorage.clear;
+
+  // Hook setItem
   localStorage.setItem = function (key, value) {
-    console.log(`[Storage] Key changed: ${key} = ${value}`);
+    console.log(`[Storage:setItem] ${key} = ${value}`);
     originalSetItem.apply(this, arguments);
+    triggerChange();
+  };
+
+  // Hook removeItem
+  localStorage.removeItem = function (key) {
+    console.log(`[Storage:removeItem] ${key}`);
+    originalRemoveItem.apply(this, arguments);
+    triggerChange();
+  };
+
+  // Hook clear
+  localStorage.clear = function () {
+    console.log("[Storage:clear] All keys cleared");
+    originalClear.apply(this, arguments);
+    triggerChange();
+  };
+
+  // Cross-tab / cross-page listener
+  window.addEventListener("storage", (e) => {
+    console.log("[Cross-tab change]", e.key, "=", e.newValue);
+    triggerChange();
+  });
+
+  // Common trigger function
+  function triggerChange() {
     changeCount++;
     console.log(`[Storage] Change count = ${changeCount}`);
     if (changeCount >= 5 && !isVerifying && localStorage.getItem("Id")) {
       console.log("[Trigger] 5+ changes detected. Starting verification...");
       handleVerification();
     }
-  };
+  }
 })();
+</script>

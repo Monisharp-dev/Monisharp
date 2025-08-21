@@ -22,9 +22,9 @@
 
   /* --- BALANCES --- */
   .balances {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     margin-bottom: 30px;
   }
 
@@ -46,14 +46,8 @@
   }
 
   .balance-icon {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     opacity: 0.9;
-    animation: bounce 2s infinite;
-  }
-
-  @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
   }
 
   .balance-info p {
@@ -64,15 +58,16 @@
 
   .balance-info h2 {
     margin: 5px 0 0;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 700;
   }
 
-  /* --- ACTION BUTTONS --- */
+  /* --- ACTION BUTTONS GRID --- */
   .actions {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    justify-content: center;
   }
 
   .action-btn {
@@ -111,20 +106,20 @@
 <body>
 <main class="dashboard">
 
-  <!-- BALANCES: 2 rows, 2 cards each -->
+  <!-- BALANCES -->
   <section class="balances">
     <div class="balance-card">
       <i class="fas fa-wallet balance-icon"></i>
       <div class="balance-info">
         <p>Main Balance</p>
-        <h2>₦0.00</h2>
+        <h2 id="mainBalance">₦0.00</h2>
       </div>
     </div>
     <div class="balance-card">
       <i class="fas fa-users balance-icon"></i>
       <div class="balance-info">
         <p>Referral Balance</p>
-        <h2>₦0.00</h2>
+        <h2 id="referralBalance">₦0.00</h2>
       </div>
     </div>
     <div class="balance-card">
@@ -161,59 +156,85 @@
       <i class="fas fa-dharmachakra"></i>
       Spin Wheel
     </a>
+    <a href="ref-claim.html" class="action-btn">
+      <i class="fas fa-gift"></i>
+      Claim Referral Bonus
+    </a>
+    <a href="automatic.html" class="action-btn">
+      <i class="fas fa-robot"></i>
+      Automatic Tasks
+    </a>
+    <a href="testimonials.html" class="action-btn">
+      <i class="fas fa-comment-dots"></i>
+      Testimonials
+    </a>
     <a href="https://chat.whatsapp.com/DUb4GsMDGUR88kgV8j7dJN?mode=ac_t" class="action-btn" target="_blank">
       <i class="fab fa-whatsapp"></i>
-      Join WhatsApp Group
+      WhatsApp Group
     </a>
     <a href="https://whatsapp.com/channel/0029VbAtZIa8Pgs7e9ey7N3k" class="action-btn" target="_blank">
       <i class="fab fa-whatsapp"></i>
-      Join WhatsApp Channel
+      WhatsApp Channel
     </a>
   </section>
 
 </main>
 
 <script>
-function showUserDepositBalance() {
+function showUserBalances() {
   const userId = localStorage.getItem("Id");
   if (!userId) return;
+
+  // Deposit
   const depositBalanceKey = `depositBalance_${userId}`;
-  const balance = parseFloat(localStorage.getItem(depositBalanceKey)) || 0;
-  const displayElement = document.getElementById("depositBalance");
-  if (displayElement) displayElement.textContent = `₦${balance.toFixed(2)}`;
+  const depositBalance = parseFloat(localStorage.getItem(depositBalanceKey)) || 0;
+  document.getElementById("depositBalance").textContent = `₦${depositBalance.toFixed(2)}`;
+
+  // Referral
+  const referralBalance = parseFloat(localStorage.getItem("referralBalance")) || 0;
+  document.getElementById("referralBalance").textContent = `₦${referralBalance.toFixed(2)}`;
+
+  // Main balance = referral balance
+  localStorage.setItem("mainBalance", referralBalance);
+  document.getElementById("mainBalance").textContent = `₦${referralBalance.toFixed(2)}`;
+
+  // Task
+  const taskBalance = parseFloat(localStorage.getItem("taskBalance")) || 0;
+  document.getElementById("taskBalance").textContent = `₦${taskBalance.toFixed(2)}`;
 }
 
-document.addEventListener("DOMContentLoaded", showUserDepositBalance);
+document.addEventListener("DOMContentLoaded", showUserBalances);
 </script>
-  <!-- Operational Scripts -->
-  <script src="balance intit.js"></script>
-  <script src="block access.js"></script>
-  <script src="manual.js"></script>
-  <script src="deposit balance.js"></script>
-  <script src="id.js"></script>
-  <script src="homepage.js"></script>
-  <script src="cop.js"></script>
-  <script src="taskBal.js"></script>
-  <script src="admin.js"></script>
-  <script src="warning.js"></script>
-  <script src="local monitor.js"></script>
-  <script src="first time Cop.js"></script>
-  <script src="Local manager.js"></script>
-  <script src="monitor.js"></script>
-  <script src="daily.js"></script>
-  <script src="network Checker.js"></script>
-  <script src="taps.js"></script>
-  <script src="pop.js"></script>
-  <script src="popup 2.js"></script>
-  <script src="ad place.js"></script>
 
-  <!-- Structural Scripts -->
-  <script src="navbar.js"></script>
- <script src="bottom-nav.js"></script>
-  <script src="preview.js"></script>
-  <script src="corrector.js"></script>
-  <script src="notification.js"></script>
-  <script src="specific notification.js"></script>
+<!-- Scripts -->
+<script src="balance intit.js"></script>
+<script src="block access.js"></script>
+<script src="manual.js"></script>
+<script src="deposit balance.js"></script>
+<script src="id.js"></script>
+<script src="homepage.js"></script>
+<script src="cop.js"></script>
+<script src="taskBal.js"></script>
+<script src="admin.js"></script>
+<script src="warning.js"></script>
+<script src="local monitor.js"></script>
+<script src="first time Cop.js"></script>
+<script src="Local manager.js"></script>
+<script src="monitor.js"></script>
+<script src="daily.js"></script>
+<script src="network Checker.js"></script>>
+<script src="pop.js"></script>
+<script src="popup 2.js"></script>
+<script src="ad place.js"></script>
+
+<!-- Structural Scripts -->
+<script src="UPLOAD.js"></script>
+<script src="navbar.js"></script>
+<script src="bottom-nav.js"></script>
+<script src="preview.js"></script>
+<script src="corrector.js"></script>
+<script src="notification.js"></script>
+<script src="specific notification.js"></script>
 
 </body>
 </html>

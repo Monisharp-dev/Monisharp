@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Deposit Balance | MoniSharp</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #ffffff);
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    /* Go Back button */
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #0d6efd;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: background 0.3s ease;
+      z-index: 1000;
+    }
+
+    .back-btn:hover {
+      background: #0b5ed7;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      margin-top: 50px;
+    }
+
+    .header h1 {
+      font-size: 26px;
+      margin-bottom: 10px;
+      color: #0d6efd;
+    }
+
+    .header p {
+      font-size: 15px;
+      color: #555;
+    }
+
+    .balance-card {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .balance-card i {
+      font-size: 40px;
+      color: #0d6efd;
+      margin-bottom: 15px;
+    }
+
+    .balance-card h2 {
+      font-size: 22px;
+      margin: 0;
+      color: #222;
+    }
+
+    .balance-card .amount {
+      font-size: 30px;
+      font-weight: bold;
+      margin-top: 10px;
+      color: #198754;
+    }
+
+    .fund-btn {
+      margin-top: 20px;
+      background: #198754;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .fund-btn:hover {
+      background: #157347;
+      transform: translateY(-2px);
+    }
+
+    .usage {
+      background: #fff;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    }
+
+    .usage h3 {
+      margin-bottom: 15px;
+      color: #0d6efd;
+      font-size: 20px;
+    }
+
+    .usage ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .usage ul li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 15px;
+      color: #444;
+    }
+
+    .usage ul li i {
+      margin-right: 10px;
+      color: #198754;
+    }
+
+    @media (max-width: 600px) {
+      .balance-card, .usage {
+        padding: 20px;
+      }
+      .balance-card .amount {
+        font-size: 26px;
+      }
+      .back-btn {
+        padding: 8px 14px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Back button -->
+  <button class="back-btn" onclick="history.back()">
+    <i class="fas fa-arrow-left"></i> Back
+  </button>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>💳 Deposit Balance</h1>
+      <p>Your MoniSharp wallet for activating services and automations</p>
+    </div>
+
+    <!-- Balance -->
+    <div class="balance-card">
+      <i class="fas fa-wallet"></i>
+      <h2>Available Deposit Balance</h2>
+      <div id="depositBalance" class="amount">₦0</div>
+      <button class="fund-btn" onclick="window.location.href='plus-deposit.html'">
+        <i class="fas fa-plus-circle"></i> Fund Wallet
+      </button>
+    </div>
+
+    <!-- Usage Section -->
+    <div class="usage">
+      <h3>What you can use Deposit Balance for:</h3>
+      <ul>
+        <li><i class="fas fa-robot"></i> Activate the <strong>Automatic Auto Claimer</strong> for daily login rewards and earn ₦1,400 weekly</li>
+        <li><i class="fas fa-cogs"></i> Pay for premium services on MoniSharp</li>
+        <li><i class="fas fa-signal"></i> Buy data and other utilities conveniently</li>
+        <li><i class="fas fa-hand-holding-usd"></i> Seamlessly manage your activities and upgrades</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Get userId
+    const userId = localStorage.getItem("plus-Id");
+    const depositKey = `plus-depositBalance_${userId}`;
+
+    // Ensure balance exists
+    if (!localStorage.getItem(depositKey)) {
+      localStorage.setItem(depositKey, "0");
+    }
+
+    // Animate number
+    function animateCountUp(el, endValue, duration = 1000) {
+      let start = 0;
+      const step = Math.ceil(endValue / (duration / 20));
+      const counter = setInterval(() => {
+        start += step;
+        if (start >= endValue) {
+          start = endValue;
+          clearInterval(counter);
+        }
+        el.textContent = `₦${start.toLocaleString()}`;
+      }, 20);
+    }
+
+    // Load deposit balance
+    const deposit = parseInt(localStorage.getItem(depositKey)) || 0;
+    animateCountUp(document.getElementById("depositBalance"), deposit);
+  </script>
+  <script src="plus-deposit Admin.js"></script>
+  <script src="plus-upload.js"></script>
+  <script src="plus-popup.js"></script>
+ 
+</body>
+</html>
