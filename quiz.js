@@ -1,28 +1,28 @@
 const questions = [
   {
-    question: "What is 5 + 3?",
-    choices: ["6", "7", "8", "9"],
-    answer: "8"
+    question: "What is the largest ocean on Earth?",
+    choices: ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
+    answer: "Pacific Ocean"
   },
   {
-    question: "Which planet is known as the Red Planet?",
-    choices: ["Earth", "Mars", "Jupiter", "Saturn"],
-    answer: "Mars"
+    question: "Who developed the theory of relativity?",
+    choices: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Nikola Tesla"],
+    answer: "Albert Einstein"
   },
   {
-    question: "What is the capital of Nigeria?",
-    choices: ["Abuja", "Lagos", "Kano", "Ibadan"],
-    answer: "Abuja"
+    question: "What is the currency of Japan?",
+    choices: ["Yen", "Won", "Peso", "Ringgit"],
+    answer: "Yen"
   },
   {
-    question: "Which gas do plants absorb?",
-    choices: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
-    answer: "Carbon Dioxide"
+    question: "Which element has the chemical symbol 'O'?",
+    choices: ["Osmium", "Oxygen", "Oganesson", "Oxide"],
+    answer: "Oxygen"
   },
   {
-    question: "Which language is used for web styling?",
-    choices: ["HTML", "CSS", "Java", "Python"],
-    answer: "CSS"
+    question: "Which continent is the Sahara Desert located in?",
+    choices: ["Asia", "Africa", "Australia", "South America"],
+    answer: "Africa"
   }
 ];
 
