@@ -23,15 +23,32 @@
   <div id="notification"></div>
 
   <script>
-    const theUserId = localStorage.getItem("plus-Id") || "guest";
+    const theUserId = localStorage.getItem("Id") || "guest";
 
-    // Load current task balance
+    // --- TASK BALANCE FUNCTIONS ---
     function updateTaskBalance() {
-      const balance = parseFloat(localStorage.getItem(`plus-activityBalance`)) || 0;
+      const balance = parseFloat(localStorage.getItem(`taskBalance_${theUserId}`)) || 0;
       document.getElementById("taskBalanceBox").textContent = `Task Balance: ₦${balance}`;
     }
 
-    // Show notification
+    function addReward(amount) {
+      const key = `taskBalance_${theUserId}`;
+      let balance = parseFloat(localStorage.getItem(key)) || 0;
+      balance += amount;
+      localStorage.setItem(key, balance);
+      updateTaskBalance();
+    }
+
+    function completeTask(taskId) {
+      localStorage.setItem(`task_completed_${theUserId}_${taskId}`, "true");
+      document.getElementById(taskId)?.remove();
+    }
+
+    function isTaskDone(taskId) {
+      return localStorage.getItem(`task_completed_${theUserId}_${taskId}`) === "true";
+    }
+
+    // --- NOTIFICATIONS ---
     function notify(msg, color = "#22c55e") {
       const note = document.getElementById("notification");
       note.textContent = msg;
@@ -40,26 +57,7 @@
       setTimeout(() => note.classList.remove("show"), 4000);
     }
 
-    // Add reward
-    function addReward(key, amount) {
-      let balance = parseFloat(localStorage.getItem(key)) || 0;
-      balance += amount;
-      localStorage.setItem(key, balance);
-      updateTaskBalance();
-    }
-
-    // Mark task complete
-    function completeTask(taskId) {
-      localStorage.setItem(`task_completed_${theUserId}_${taskId}`, "true");
-      document.getElementById(taskId)?.remove();
-    }
-
-    // Check if task already done
-    function isTaskDone(taskId) {
-      return localStorage.getItem(`task_completed_${theUserId}_${taskId}`) === "true";
-    }
-
-    // TASKS
+    // --- TASK DEFINITIONS ---
     const tasks = [
       {
         id: "surveyflix_task",
@@ -73,7 +71,9 @@
           <input type="text" id="surveyflixInput" placeholder="Paste your referral link here">
           <button onclick="checkSurveyflix()">Submit</button>
         `,
-        check: () => {}
+        check: function() {
+          // Nothing automatic
+        }
       },
       {
         id: "join_whatsapp",
@@ -82,11 +82,11 @@
         reward: 2,
         duration: "1 minute",
         action: `<a href="https://chat.whatsapp.com/DUb4GsMDGUR88kgV8j7dJN" target="_blank" onclick="localStorage.setItem('started_join_whatsapp','true')">Join Now</a>`,
-        check: () => {
-          if (localStorage.getItem("started_join_whatsapp") && !isTaskDone("join_whatsapp")) {
-            addReward(`plus-activityBalance`, 2);
-            notify("✅ Rewarded ₦2 for joining WhatsApp!");
-            completeTask("join_whatsapp");
+        check: function() {
+          if (localStorage.getItem("started_join_whatsapp") && !isTaskDone(this.id)) {
+            addReward(this.reward);
+            notify(`✅ Rewarded ₦${this.reward} for joining WhatsApp!`);
+            completeTask(this.id);
             localStorage.removeItem("started_join_whatsapp");
           }
         }
@@ -97,13 +97,13 @@
         details: "Maintain at least ₦500 in your deposit balance.",
         reward: 350,
         duration: "Instant",
-        action: `<button onclick="checkDeposit500()">Check Now</button>`,
-        check: () => {
+        action: `<button onclick="checkTask('deposit_500')">Check Now</button>`,
+        check: function() {
           const deposit = parseFloat(localStorage.getItem(`plus-depositBalance_${theUserId}`)) || 0;
-          if (deposit >= 500 && !isTaskDone("deposit_500")) {
-            addReward(`plus-activityBalance`, 350);
-            notify("✅ Rewarded ₦350 for having ₦500 deposit!");
-            completeTask("deposit_500");
+          if (deposit >= 500 && !isTaskDone(this.id)) {
+            addReward(this.reward);
+            notify(`✅ Rewarded ₦${this.reward} for having ₦500 deposit!`);
+            completeTask(this.id);
           }
         }
       },
@@ -114,12 +114,12 @@
         reward: 2,
         duration: "2 minutes",
         action: `<a href="data.html" onclick="localStorage.setItem('started_visit_data', Date.now())">Visit Now</a>`,
-        check: () => {
+        check: function() {
           const start = localStorage.getItem("started_visit_data");
-          if (start && Date.now() - parseInt(start) >= 120000 && !isTaskDone("visit_data")) {
-            addReward(`plus-activityBalance`, 2);
-            notify("✅ Rewarded ₦2 for visiting Data Page!");
-            completeTask("visit_data");
+          if (start && Date.now() - parseInt(start) >= 120000 && !isTaskDone(this.id)) {
+            addReward(this.reward);
+            notify(`✅ Rewarded ₦${this.reward} for visiting Data Page!`);
+            completeTask(this.id);
             localStorage.removeItem("started_visit_data");
           }
         }
@@ -127,16 +127,16 @@
       {
         id: "visit_testimonials",
         title: "⭐ Visit Testimonials Page",
-        details: "Visit testimonials.html and stay for at least 1 minute.",
+        details: "Visit testimonials.html and stay for at least 90 seconds.",
         reward: 4,
         duration: "90 seconds",
         action: `<a href="testimonials.html" onclick="localStorage.setItem('started_visit_testimonials', Date.now())">Visit Now</a>`,
-        check: () => {
+        check: function() {
           const start = localStorage.getItem("started_visit_testimonials");
-          if (start && Date.now() - parseInt(start) >= 90000 && !isTaskDone("visit_testimonials")) {
-            addReward(`plus-activityBalance`, 4);
-            notify("✅ Rewarded ₦4 for visiting Testimonials Page!");
-            completeTask("visit_testimonials");
+          if (start && Date.now() - parseInt(start) >= 90000 && !isTaskDone(this.id)) {
+            addReward(this.reward);
+            notify(`✅ Rewarded ₦${this.reward} for visiting Testimonials Page!`);
+            completeTask(this.id);
             localStorage.removeItem("started_visit_testimonials");
           }
         }
@@ -147,40 +147,38 @@
         details: "Keep exactly ₦100 in your deposit balance to get reward.",
         reward: 50,
         duration: "Instant",
-        action: `<button onclick="checkDeposit100()">Check Now</button>`,
-        check: () => {
+        action: `<button onclick="checkTask('deposit_100_exact')">Check Now</button>`,
+        check: function() {
           const deposit = parseFloat(localStorage.getItem(`plus-depositBalance_${theUserId}`)) || 0;
-          if (deposit === 100 && !isTaskDone("deposit_100_exact")) {
-            addReward(`plus-activityBalance`, 50);
-            notify("✅ Rewarded ₦50 for having exactly ₦100 deposit!");
-            completeTask("deposit_100_exact");
+          if (deposit === 100 && !isTaskDone(this.id)) {
+            addReward(this.reward);
+            notify(`✅ Rewarded ₦${this.reward} for having exactly ₦100 deposit!`);
+            completeTask(this.id);
           }
         }
       }
     ];
 
-    // Render tasks
+    // --- RENDER TASKS ---
     const container = document.getElementById("taskContainer");
     tasks.forEach(task => {
       if (!isTaskDone(task.id)) {
         container.innerHTML += `
           <div class="task-card" id="${task.id}">
             <div class="task-title">${task.title}</div>
-            <div class="task-details">${task.details}<br>
-            Reward: ₦${task.reward} | Duration: ${task.duration}</div>
+            <div class="task-details">${task.details}<br>Reward: ₦${task.reward} | Duration: ${task.duration}</div>
             <div class="task-action">${task.action}</div>
           </div>
         `;
       }
     });
 
-    // Extra functions
-    function checkDeposit500() {
-      tasks.find(t => t.id === "deposit_500").check();
+    // --- CHECK FUNCTIONS ---
+    function checkTask(taskId) {
+      const task = tasks.find(t => t.id === taskId);
+      if (task) task.check();
     }
-    function checkDeposit100() {
-      tasks.find(t => t.id === "deposit_100_exact").check();
-    }
+
     function checkSurveyflix() {
       const input = document.getElementById("surveyflixInput").value.trim();
       const regex = /^https:\/\/surveyflix\.org\/Account\/Index\?refCode=[A-Za-z0-9]{6,10}$/;
@@ -191,7 +189,7 @@
       }
 
       if (regex.test(input) && !isTaskDone("surveyflix_task")) {
-        addReward(`plus-activityBalance`, 6);
+        addReward(6);
         notify("✅ Rewarded ₦6 for completing SurveyFlix task!");
         completeTask("surveyflix_task");
       } else {
@@ -199,7 +197,7 @@
       }
     }
 
-    // On load check delayed tasks
+    // --- AUTO-CHECK DELAYED TASKS ON LOAD ---
     window.addEventListener("load", () => {
       updateTaskBalance();
       tasks.forEach(task => task.check());
