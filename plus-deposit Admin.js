@@ -41,7 +41,7 @@ allotDepositBalance("destinysylvanus74", 200, "000VB");
 allotDepositBalance("omurogo9plus", 300, "000AA");
 allotDepositBalance("akpesiriedward5", 98, "000AB");
 allotDepositBalance("folarinagbesoyin19plus", 650,"000FG")
-allotDepositBalance("shikemiopeyemi0plus", 650,"000FG")
+allotDepositBalance("shikemiopeyemi0plus", 850,"001FG")
 
 // ✅ Optional: Credit the currently logged-in user (if any)
 const loggedInUserId = getCurrentUserId();
