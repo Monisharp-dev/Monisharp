@@ -68,3 +68,12 @@ allotTaskBalance("omurogo9plus", 250, "MRT70");
 allotTaskBalance("shikemiopeyemi0plus", 100, "BTH76");
 allotTaskBalance("folarinagbesoyin19plus", 550, "XNT90");
 allotTaskBalance("gfame682plus", 550, "GVT89");
+allotTaskBalance("winnerchukwuemeka70plus", 150, "MTU56");
+allotTaskBalance("iedidiong33plus", 500, "GFP99");
+allotTaskBalance("chizzeechisomplus", 50, "GZT09");
+allotTaskBalance("victoruduak2009plus", 550, "DHT70");
+allotTaskBalance("shanegray017plus", 350, "MGH89");
+allotTaskBalance("iedidiong33plus", 100, "DHM89");
+allotTaskBalance("shikemiopeyemi0plus", 100, "PLT70");
+
+
