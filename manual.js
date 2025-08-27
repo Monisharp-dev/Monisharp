@@ -246,7 +246,8 @@ const allowedIds = [
   "sisfathia120",
   "richesosimejom",
   "bartholomewmusa90",
-  "mahmudusman717"
+  "mahmudusman717",
+  "elizspyce"
 ];
 
 const currentUserId = localStorage.getItem("Id");
