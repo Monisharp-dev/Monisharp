@@ -36,7 +36,7 @@ allotTaskBalance("mohammedmanyisa9680plus", 10, "AUG27");
 allotTaskBalance("shikemiopeyemi0plus", 10, "EOZBM");
 allotTaskBalance("shikemiopeyemi0plus", 100, "FZMLC");
 allotTaskBalance("amarachiwfauplus", 550, "FZMLC");
-allotTaskBalance("omurogo9plus", 100, "FZZZC");
+allotTaskBalance("greatnessedet8plus", 1400, "FZZZC");
 allotTaskBalance("yhubeevictory08plus", 250, "FZMLC");
 
 //hiii;
