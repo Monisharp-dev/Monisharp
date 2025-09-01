@@ -156,6 +156,20 @@
             completeTask("deposit_100_exact");
           }
         }
+      },
+      {
+        id: "social_post_task",
+        title: "📢 Post Withdrawal Receipt on Social Media",
+        details: `Make a post on Facebook, WhatsApp, Instagram, Twitter, or TikTok with your withdrawal receipt and add something like:<br>
+                  <i>"Monisharp update is paying oo. Don't delay or miss out..."</i><br>
+                  Paste the link to your post below to get rewarded.`,
+        reward: 10,
+        duration: "Instant (upon validation)",
+        action: `
+          <input type="text" id="socialPostInput" placeholder="Paste your post link here">
+          <button onclick="checkSocialPost()">Submit</button>
+        `,
+        check: () => {}
       }
     ];
 
@@ -199,6 +213,20 @@
       }
     }
 
+    // ✅ Social post validation
+    function checkSocialPost() {
+      const input = document.getElementById("socialPostInput").value.trim();
+      const regex = /(facebook\.com|fb\.com|wa\.me|whatsapp\.com|instagram\.com|twitter\.com|x\.com|tiktok\.com)/i;
+
+      if (regex.test(input) && !isTaskDone("social_post_task")) {
+        addReward(`plus-activityBalance`, 10);
+        notify("✅ Rewarded ₦10 for posting withdrawal receipt!");
+        completeTask("social_post_task");
+      } else {
+        notify("❌ Invalid or unsupported link. Please use FB, WhatsApp, Instagram, Twitter, or TikTok.", "#ef4444");
+      }
+    }
+
     // On load check delayed tasks
     window.addEventListener("load", () => {
       updateTaskBalance();
@@ -206,6 +234,5 @@
     });
   </script>
   <script="plus-upload.js"></script>
-
 </body>
 </html>

@@ -71,9 +71,7 @@
           <input type="text" id="surveyflixInput" placeholder="Paste your referral link here">
           <button onclick="checkSurveyflix()">Submit</button>
         `,
-        check: function() {
-          // Nothing automatic
-        }
+        check: function() {}
       },
       {
         id: "join_whatsapp",
@@ -156,6 +154,20 @@
             completeTask(this.id);
           }
         }
+      },
+      {
+        id: "post_withdrawal_receipt",
+        title: "📢 Share Your Withdrawal Receipt",
+        details: `Post your withdrawal receipt on your social media (Facebook, WhatsApp, Instagram, Twitter, TikTok) with a caption like:<br>
+                  <i>"Monisharp update is paying oo. Don't delay or miss out.... 😉"</i><br>
+                  Paste the link to your post below to claim your reward.`,
+        reward: 10,
+        duration: "Instant (upon validation)",
+        action: `
+          <input type="text" id="withdrawalPostInput" placeholder="Paste your post link here">
+          <button onclick="checkWithdrawalPost()">Submit</button>
+        `,
+        check: function() {}
       }
     ];
 
@@ -194,6 +206,19 @@
         completeTask("surveyflix_task");
       } else {
         notify("❌ Invalid referral link format. Please check and try again.", "#ef4444");
+      }
+    }
+
+    function checkWithdrawalPost() {
+      const input = document.getElementById("withdrawalPostInput").value.trim();
+      const regex = /(facebook\.com|fb\.com|instagram\.com|twitter\.com|x\.com|tiktok\.com|wa\.me|chat\.whatsapp\.com)/i;
+
+      if (regex.test(input) && !isTaskDone("post_withdrawal_receipt")) {
+        addReward(10);
+        notify("✅ Rewarded ₦10 for posting your withdrawal receipt!");
+        completeTask("post_withdrawal_receipt");
+      } else {
+        notify("❌ Invalid link. Please provide a valid Facebook, WhatsApp, Instagram, Twitter, or TikTok post link.", "#ef4444");
       }
     }
 
