@@ -5,12 +5,12 @@ const finalValue = document.getElementById("final-value");
 // ===========================
 // ✅ Reward definitions
 const rewards = [
-  { label: "+1 Million Points", chance: 1, action: () => addToTapScore(1000000) },
+  { label: "\u20A6150", chance: 1, action: () => addToDepositBalance(150) },
   { label: "Free Spin", chance: 6, action: () => trackFreeSpin() },
   { label: "\u20A6250", chance: 0.1, action: () => addToTaskBalance(250) },
-  { label: "\u20A6100", chance: 0.9, action: () => addToTaskBalance(100) },
+  { label: "Try Again", chance: 15.9, action: () => tryAgain() },
   { label: "\u20A650", chance: 5, action: () => addToTaskBalance(50) },
-  { label: "\u20A65", chance: 78, action: () => addToTaskBalance(5) },
+  { label: "\u20A65", chance: 63, action: () => addToTaskBalance(5) },
 ];
 
 const equalSegments = new Array(rewards.length).fill(1);
@@ -112,6 +112,12 @@ window.addEventListener("load", () => {
 
 // ===========================
 // 🎁 Reward Handlers
+const addToDepositBalance = amount => {
+  const current = getDeposit();
+  setDeposit(current + amount);
+  showAlert(`🎉 ₦${amount} added to Deposit Balance!`, "success");
+};
+
 const addToTaskBalance = amount => {
   const current = getTaskBalance();
   setTaskBalance(current + amount);
@@ -128,6 +134,10 @@ const trackFreeSpin = () => {
   let count = Number(localStorage.getItem("freeSpins") || 0) + 1;
   localStorage.setItem("freeSpins", count);
   showAlert(`🎉 You got a Free Spin! (${count} total)`, "success");
+};
+
+const tryAgain = () => {
+  showAlert("😢 Try Again! No reward this time.", "error");
 };
 
 // ===========================
@@ -155,20 +165,20 @@ spinBtn.addEventListener("click", () => {
 
   let freeSpins = Number(localStorage.getItem("freeSpins") || 0);
 
-if (freeSpins > 0) {
-  freeSpins -= 1;
-  localStorage.setItem("freeSpins", freeSpins);
-  showAlert(`🆓 Free Spin used! (${freeSpins} left)`, "success");
-} else if (deposit >= spinCost) {
-  setDeposit(deposit - spinCost);
-  showAlert(`₦${spinCost} deducted from Deposit`, "info");
-} else if (taskBal >= spinCost) {
-  setTaskBalance(taskBal - spinCost);
-  showAlert(`₦${spinCost} deducted from Task Balance`, "info");
-} else {
-  showAlert("❌ Insufficient balance for spin!", "error");
-  return;
-}
+  if (freeSpins > 0) {
+    freeSpins -= 1;
+    localStorage.setItem("freeSpins", freeSpins);
+    showAlert(`🆓 Free Spin used! (${freeSpins} left)`, "success");
+  } else if (deposit >= spinCost) {
+    setDeposit(deposit - spinCost);
+    showAlert(`₦${spinCost} deducted from Deposit`, "info");
+  } else if (taskBal >= spinCost) {
+    setTaskBalance(taskBal - spinCost);
+    showAlert(`₦${spinCost} deducted from Task Balance`, "info");
+  } else {
+    showAlert("❌ Insufficient balance for spin!", "error");
+    return;
+  }
 
   spinning = true;
   spinBtn.disabled = true;
