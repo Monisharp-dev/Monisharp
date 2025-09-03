@@ -15,7 +15,6 @@
       flex-direction: column;
     }
 
-    /* HEADER */
     header {
       background: linear-gradient(90deg, #0284c7, #0ea5e9);
       color: #fff;
@@ -59,7 +58,7 @@
       backdrop-filter: blur(8px);
       padding: 5px 12px;
       border-radius: 18px;
-      font-size: 0.8rem;   /* 🔹 Reduced size */
+      font-size: 0.8rem;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -68,7 +67,6 @@
     }
     .balance span { font-weight: bold; color: #ffd700; }
 
-    /* MAIN */
     main { flex: 1; padding: 22px; max-width: 680px; margin: 0 auto; }
 
     .intro {
@@ -86,7 +84,6 @@
 
     @keyframes fadeInUp { from {opacity: 0; transform: translateY(40px);} to {opacity: 1;} }
 
-    /* Prediction Cards */
     .prediction-card {
       background: rgba(255,255,255,0.08);
       backdrop-filter: blur(14px);
@@ -115,14 +112,12 @@
 
     .after-stake { margin-top: 12px; font-size: 0.95rem; color:#ffd700; font-weight: 500; }
 
-    /* FOOTER */
     footer {
       padding: 14px; text-align: center; font-size: 0.9rem;
       color: #e2e8f0; background: rgba(0,0,0,0.6);
       border-top: 1px solid rgba(255,255,255,0.15);
     }
 
-    /* MODALS */
     .modal {
       position: fixed; inset: 0; background: rgba(15,23,42,.7);
       display: none; align-items: center; justify-content: center; z-index: 50;
@@ -136,7 +131,6 @@
     .btn-primary { background:#0ea5e9; color:#fff; }
     .btn-primary:hover { background:#0284c7; }
 
-    /* Help button */
     .help-btn {
       position: fixed; bottom: 20px; right: 20px;
       background: linear-gradient(135deg,#0ea5e9,#0284c7); color:#fff;
@@ -145,7 +139,6 @@
       cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.3);
     }
 
-    /* Countdown */
     .countdown { font-size: 1rem; color:#facc15; margin-top: 10px; font-weight: bold; }
   </style>
 </head>
@@ -166,34 +159,25 @@
       <div class="countdown" id="countdown"></div>
     </div>
 
-    <!-- Prediction Cards -->
-    <div class="prediction-card" data-id="PRED001">
+    <!-- Prediction 1 -->
+    <div class="prediction-card" data-id="PRED001" data-question="Will it rain in Lagos on Saturday?">
       <div class="prediction-icon">🌧️</div>
       <h3>Will it rain in Lagos on Saturday?</h3>
       <p><b>Stake: ₦20</b></p>
       <div class="options">
-        <button class="yes" onclick="placeStake('PRED001','YES')">✅ YES</button>
-        <button class="no" onclick="placeStake('PRED001','NO')">❌ NO</button>
+        <button class="yes" onclick="placeStake('PRED001','YES','Will it rain in Lagos on Saturday?')">✅ YES</button>
+        <button class="no" onclick="placeStake('PRED001','NO','Will it rain in Lagos on Saturday?')">❌ NO</button>
       </div>
     </div>
 
-    <div class="prediction-card" data-id="PRED002">
-      <div class="prediction-icon">⚽</div>
-      <h3>Will Nigeria score 2+ goals in their next match?</h3>
+    <!-- Prediction 2 -->
+    <div class="prediction-card" data-id="PRED002" data-question="Will AI take over humanity?">
+      <div class="prediction-icon">🤖</div>
+      <h3>Will AI take over humanity?</h3>
       <p><b>Stake: ₦20</b></p>
       <div class="options">
-        <button class="yes" onclick="placeStake('PRED002','YES')">✅ YES</button>
-        <button class="no" onclick="placeStake('PRED002','NO')">❌ NO</button>
-      </div>
-    </div>
-
-    <div class="prediction-card" data-id="PRED003">
-      <div class="prediction-icon">📱</div>
-      <h3>Will MTN increase data price before Sunday?</h3>
-      <p><b>Stake: ₦20</b></p>
-      <div class="options">
-        <button class="yes" onclick="placeStake('PRED003','YES')">✅ YES</button>
-        <button class="no" onclick="placeStake('PRED003','NO')">❌ NO</button>
+        <button class="yes" onclick="placeStake('PRED002','YES','Will AI take over humanity?')">✅ YES</button>
+        <button class="no" onclick="placeStake('PRED002','NO','Will AI take over humanity?')">❌ NO</button>
       </div>
     </div>
   </main>
@@ -221,7 +205,6 @@
     </div>
   </div>
 
-  <!-- Floating Help Button -->
   <div class="help-btn" onclick="openHelp()">❔</div>
 
   <script>
@@ -253,7 +236,7 @@
       return lockTime && Date.now() < new Date(lockTime).getTime();
     }
 
-    async function placeStake(predId, choice){
+    async function placeStake(predId, choice, question){
       if(isLocked(predId)){ showAlert("⏳ Already staked this week for this question."); return; }
 
       let deposit = parseInt(localStorage.getItem(depositKey)||"0");
@@ -261,7 +244,7 @@
       deposit -= fixedAmount; localStorage.setItem(depositKey,deposit);
       updateDepositBalance();
 
-      let data = { predictionId: predId, userId: userId, amount: fixedAmount, choice: choice, timestamp: new Date().toISOString() };
+      let data = { predictionId: predId, question: question, userId: userId, amount: fixedAmount, choice: choice, timestamp: new Date().toISOString() };
       try {
         await fetch(stakesApi,{ method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({data:[data]}) });
 
@@ -276,13 +259,11 @@
       } catch(e){ showAlert("⚠️ Network error, try again."); }
     }
 
-    // Disable buttons if already locked
     document.querySelectorAll(".prediction-card").forEach(card=>{
       let pid = card.dataset.id;
       if(isLocked(pid)){ card.querySelectorAll("button").forEach(b=>b.classList.add("locked")); }
     });
 
-    // Countdown
     function updateCountdown(){
       let now = new Date();
       let friday = new Date();
