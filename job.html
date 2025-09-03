@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monisharp Job Application</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #0f2027, #2c5364);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+      animation: fadeInDown 1s ease;
+    }
+
+    p {
+      font-size: 1.1rem;
+      margin-bottom: 40px;
+      color: #dfe6e9;
+      animation: fadeInUp 1s ease;
+    }
+
+    .jobs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+    }
+
+    .job-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 25px;
+      backdrop-filter: blur(6px);
+      transition: transform 0.3s ease, background 0.3s ease;
+      cursor: pointer;
+      animation: fadeIn 1s ease;
+    }
+
+    .job-card:hover {
+      transform: translateY(-8px);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .job-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #ffcc70;
+    }
+
+    .job-desc {
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .apply-btn {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .apply-btn:hover {
+      background: linear-gradient(135deg, #dd2476, #ff512f);
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Join Monisharp Team</h1>
+    <p>We’re offering opportunities to work with us. Choose a role and apply directly.</p>
+
+    <div class="jobs">
+      <!-- Advertiser Card -->
+      <div class="job-card">
+        <div class="job-title">Advertiser</div>
+        <div class="job-desc">
+          Help Monisharp reach more people by promoting our platform and services.  
+          Perfect for those with marketing and social media skills.
+        </div>
+        <a class="apply-btn" href="https://wa.me/2348146054930?text=I%20am%20interested%20in%20working%20as%20an%20Advertiser.%20My%20name%20is%20..." target="_blank">Apply Now</a>
+      </div>
+
+      <!-- Content Creator Card -->
+      <div class="job-card">
+        <div class="job-title">Content Creator</div>
+        <div class="job-desc">
+          Create engaging content for Monisharp, including graphics, posts, and videos.  
+          Ideal for creative thinkers with design and writing skills.
+        </div>
+        <a class="apply-btn" href="https://wa.me/2348146054930?text=I%20am%20interested%20in%20working%20as%20a%20Content%20Creator.%20My%20name%20is%20..." target="_blank">Apply Now</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -136,6 +136,13 @@
         <h2 id="taskBalance">₦0.00</h2>
       </div>
     </div>
+    <div class="balance-card">
+      <i class="fas fa-gamepad balance-icon"></i>
+      <div class="balance-info">
+        <p>Game Balance</p>
+        <h2 id="gameBalance">₦0.00</h2>
+      </div>
+    </div>
   </section>
 
   <!-- ACTIONS -->
@@ -163,6 +170,14 @@
     <a href="automaticTask.html" class="action-btn">
       <i class="fas fa-robot"></i>
       Automatic Tasks
+    </a>
+    <a href="playGame.html" class="action-btn">
+      <i class="fas fa-gamepad"></i>
+      Play Games
+    </a>
+    <a href="job.html" class="action-btn">
+      <i class="fas fa-briefcase"></i>
+      Job Opportunities
     </a>
     <a href="testimonials.html" class="action-btn">
       <i class="fas fa-comment-dots"></i>
@@ -202,6 +217,11 @@ function showUserBalances() {
   const taskBalanceKey = `taskBalance_${userId}`;
   const taskBalance = parseFloat(localStorage.getItem(taskBalanceKey)) || 0;
   document.getElementById("taskBalance").textContent = `₦${taskBalance.toFixed(2)}`;
+
+  // Game
+  const gameBalanceKey = `gameBalance_${userId}`;
+  const gameBalance = parseFloat(localStorage.getItem(gameBalanceKey)) || 0;
+  document.getElementById("gameBalance").textContent = `₦${gameBalance.toFixed(2)}`;
 }
 
 document.addEventListener("DOMContentLoaded", showUserBalances);
@@ -223,7 +243,7 @@ document.addEventListener("DOMContentLoaded", showUserBalances);
 <script src="Local manager.js"></script>
 <script src="monitor.js"></script>
 <script src="daily.js"></script>
-<script src="network Checker.js"></script>>
+<script src="network Checker.js"></script>
 <script src="pop.js"></script>
 <script src="popup 2.js"></script>
 <script src="ad place.js"></script>

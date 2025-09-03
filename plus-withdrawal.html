@@ -30,6 +30,7 @@
         <option value="">-- Select Balance --</option>
         <option value="referral">Referral Balance</option>
         <option value="activity">Activity Balance</option>
+        <option value="game">Game Balance</option>
       </select>
     </div>
 
@@ -107,16 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
     let balance = 0;
 
     if (type === 'activity') {
+      balance = parseFloat(localStorage.getItem('plus-activityBalance')) || 0;
       const today = new Date();
       if (today.getDate() !== 20) {
-        amountInput.value = "₦0.00";
+        // Show balance but disable withdrawal
+        amountInput.value = `₦${balance.toFixed(2)}`;
         finalAmountInput.value = "₦0.00";
-        showNotification("Activity balance can only be withdrawn on the 20th.", "warning");
+        showNotification("Activity balance is visible but can only be withdrawn on the 20th.", "warning");
         return;
       }
-      balance = parseFloat(localStorage.getItem('plus-activityBalance')) || 0;
     } else if (type === 'referral') {
       balance = parseFloat(localStorage.getItem('plus-referralBalance')) || 0;
+    } else if (type === 'game') {
+      balance = parseFloat(localStorage.getItem(`plusgameBalance_${Id}`)) || 0;
     }
 
     const deduction = balance * 0.15;
@@ -147,19 +151,32 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // Auto scroll down
     window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
     const type = balanceType.value;
-    const rawAmount = (type === 'activity')
-      ? parseFloat(localStorage.getItem('plus-activityBalance')) || 0
-      : (type === 'referral')
-        ? parseFloat(localStorage.getItem('plus-referralBalance')) || 0
-        : 0;
+    let rawAmount = 0;
+
+    if (type === 'activity') {
+      rawAmount = parseFloat(localStorage.getItem('plus-activityBalance')) || 0;
+      const today = new Date();
+      if (today.getDate() !== 20) {
+        return showNotification("You can only withdraw Activity balance on the 20th.", "error");
+      }
+    } else if (type === 'referral') {
+      rawAmount = parseFloat(localStorage.getItem('plus-referralBalance')) || 0;
+    } else if (type === 'game') {
+      rawAmount = parseFloat(localStorage.getItem(`plusgameBalance_${Id}`)) || 0;
+    }
 
     const deduction = rawAmount * 0.15;
     const netAmount = rawAmount - deduction;
 
-    const minAmount = type === 'activity' ? 9000 : 1000;
+    // Minimums
+    const minAmount = (type === 'activity') ? 9000 : 
+                      (type === 'referral') ? 1000 : 
+                      (type === 'game') ? 350 : 0;
+
     const bankName = document.getElementById('bankName').value.trim();
     const accountName = document.getElementById('accountName').value.trim();
     const accountNumber = document.getElementById('accountNumber').value.trim();
@@ -188,7 +205,11 @@ document.addEventListener('DOMContentLoaded', () => {
     loaderOverlay.classList.remove('active');
 
     if (success) {
-      localStorage.setItem(`plus-${type}Balance`, '0');
+      if (type === 'game') {
+        localStorage.setItem(`plusgameBalance_${Id}`, '0');
+      } else {
+        localStorage.setItem(`plus-${type}Balance`, '0');
+      }
 
       const history = JSON.parse(localStorage.getItem('plus-withdrawalHistory')) || [];
       history.push({ ...payload, status: 'Submitted', deducted: deduction.toFixed(2) });

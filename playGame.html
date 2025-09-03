@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monisharp Games</title>
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      margin: 0;
+      padding: 0;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    header {
+      padding: 60px 20px 20px;
+      text-align: center;
+      animation: fadeIn 1.5s ease;
+    }
+
+    header h1 {
+      font-size: 2em;
+      margin: 0;
+      animation: bounce 2s infinite;
+    }
+
+    header p {
+      font-size: 1.1em;
+      margin: 5px 0 0;
+      opacity: 0.9;
+    }
+
+    .game-balance {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: rgba(0,0,0,0.3);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      z-index: 10;
+    }    
+
+    .game-balance i {
+      color: gold;
+    }
+
+    .games-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px auto;
+      gap: 20px;
+      max-width: 900px;
+    }
+
+    .game-card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      width: 280px;
+      text-align: center;
+      transition: transform 0.3s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    .game-card:hover {
+      transform: scale(1.05);
+    }
+
+    .game-card i {
+      font-size: 40px;
+      margin-bottom: 10px;
+      animation: pulse 2s infinite;
+    }
+
+    .game-card h2 {
+      margin: 10px 0;
+    }
+
+    .game-card p {
+      font-size: 0.9em;
+      line-height: 1.4em;
+    }
+
+    .play-btn {
+      margin-top: 15px;
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 8px;
+      background: #ffcc00;
+      color: #000;
+      font-weight: bold;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+
+    .play-btn:hover {
+      background: #ffaa00;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.2); opacity: 0.7; }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Game Balance -->
+  <div class="game-balance" id="gameBalance">
+    <i class="fas fa-coins"></i> ₦0
+  </div>
+
+  <!-- Header -->
+  <header>
+    <h1>🎮 Monisharp Game Hub</h1>
+    <p>Play, Earn & Enjoy! Collect coins, predict right, and cash out big.</p>
+  </header>
+
+  <!-- Games Container -->
+  <div class="games-container">
+    <!-- Tap Game -->
+    <div class="game-card">
+      <i class="fas fa-hand-pointer"></i>
+      <h2>Tap Game</h2>
+      <p>
+        ✅ Free trial once every day<br>
+        🕐 50 seconds per round<br>
+        💰 100 coins = ₦20 (Students)<br>
+        💰 100 coins = ₦25 (Non-Students)<br>
+        💣 Avoid bombs & grab as many coins as possible!
+      </p>
+      <a href="tapGame.html" class="play-btn">Play Now</a>
+    </div>
+
+    <!-- Prediction Game -->
+    <div class="game-card">
+      <i class="fas fa-crystal-ball"></i>
+      <h2>Prediction Game</h2>
+      <p>
+        🔮 Test your instincts!<br>
+        🎯 Predict outcomes of random draws, spins & mini-events.<br>
+        💵 Stake as low as ₦50 & multiply instantly!<br>
+        🏆 Hit streaks for MEGA bonuses & leaderboard rewards.<br>
+        ⚡ Fast, thrilling & very rewarding.
+      </p>
+      <a href="predictionGame.html" class="play-btn">Start Predicting</a>
+    </div>
+  </div>
+
+  <script>
+    // Load Game Balance from localStorage
+    const userId = localStorage.getItem("Id");
+    let gameBalance = localStorage.getItem("gameBalance_" + userId) || "0";
+    document.getElementById("gameBalance").innerHTML =
+      '<i class="fas fa-coins"></i> ₦' + gameBalance;
+  </script>
+</body>
+</html>

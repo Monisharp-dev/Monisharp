@@ -1,14 +1,14 @@
 // ==============================
-// HTML & STYLE FOR DATA POPUP
+// HTML & STYLE FOR GAME POPUP
 // ==============================
-const adPopupHTML = `
+const gamePopupHTML = `
   <style>
-    .ad-popup {
+    .game-popup {
       position: fixed;
       bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
-      background: linear-gradient(135deg, #0f2027, #2c5364);
+      background: linear-gradient(135deg, #ff512f, #dd2476);
       color: white;
       width: 90%;
       max-width: 850px;
@@ -24,39 +24,39 @@ const adPopupHTML = `
       flex-wrap: wrap;
     }
 
-    .ad-popup i.main-icon {
-      font-size: 50px;
+    .game-popup i.main-icon {
+      font-size: 52px;
       animation: bounce 1.5s infinite;
       margin-top: 6px;
       color: #FFD700;
     }
 
-    .ad-popup .content {
+    .game-popup .content {
       flex: 1;
     }
 
-    .ad-popup .content h4 {
+    .game-popup .content h4 {
       margin: 0 0 10px;
       font-size: 24px;
       font-weight: bold;
     }
 
-    .ad-popup .content p {
+    .game-popup .content p {
       margin: 0 0 14px;
       font-size: 16px;
       line-height: 1.6;
     }
 
-    .ad-popup .highlight {
+    .game-popup .highlight {
       font-weight: bold;
       color: #00ffcc;
     }
 
-    .ad-popup .cta-btn {
+    .game-popup .cta-btn {
       display: inline-block;
       padding: 10px 20px;
       background: #fff;
-      color: #0f2027;
+      color: #dd2476;
       font-weight: bold;
       border-radius: 10px;
       text-decoration: none;
@@ -64,14 +64,14 @@ const adPopupHTML = `
       transition: transform 0.2s ease, background 0.3s;
     }
 
-    .ad-popup .cta-btn:hover {
+    .game-popup .cta-btn:hover {
       background: #f2f2f2;
       transform: scale(1.06);
     }
 
-    .ad-popup .close-btn {
+    .game-popup .close-btn {
       background: white;
-      color: #0f2027;
+      color: #dd2476;
       border: none;
       border-radius: 50%;
       width: 32px;
@@ -82,7 +82,7 @@ const adPopupHTML = `
       transition: background 0.2s;
     }
 
-    .ad-popup .close-btn:hover {
+    .game-popup .close-btn:hover {
       background: #e0e0e0;
     }
 
@@ -97,40 +97,40 @@ const adPopupHTML = `
     }
 
     @media (max-width: 768px) {
-      .ad-popup {
+      .game-popup {
         width: 95%;
         flex-direction: column;
         align-items: flex-start;
       }
 
-      .ad-popup i.main-icon {
-        font-size: 40px;
+      .game-popup i.main-icon {
+        font-size: 44px;
       }
 
-      .ad-popup .content h4 {
+      .game-popup .content h4 {
         font-size: 20px;
       }
 
-      .ad-popup .content p {
+      .game-popup .content p {
         font-size: 15px;
       }
     }
   </style>
 
-  <!-- AD CONTENT -->
-  <div class="ad-popup" id="adPopup">
-    <i class="fas fa-sim-card main-icon"></i>
+  <!-- GAME AWARENESS POPUP -->
+  <div class="game-popup" id="gamePopup">
+    <i class="fas fa-coins main-icon"></i>
     <div class="content">
-      <h4>🔥 Weekly Data Deals on Monisharp!</h4>
+      <h4>💥 New Tap Game is Here!</h4>
       <p>
-        📶 Every week you can grab amazing <span class="highlight">MTN Data</span>:<br>
-        👉 <b>Plus Users</b> (Non-Students): <span class="highlight">1GB for ₦50</span><br>
-        👉 <b>Students Package</b>: <span class="highlight">110MB for ₦10</span><br><br>
-        ⏳ Hurry! Slots are limited.
+        🕹️ Get <span class="highlight">50 seconds</span> to collect as many coins as possible.<br>
+        💰 <span class="highlight">100 coins = ₦20 (Students)</span><br>
+        💰 <span class="highlight">100 coins = ₦25 (Non-Students)</span><br><br>
+        🚀 Avoid bombs, grab coins & cash out directly to your Game Balance!
       </p>
-      <a href="data.html" class="cta-btn"><i class="fas fa-bolt"></i> Book Now</a>
+      <a href="tapGame.html" class="cta-btn"><i class="fas fa-play"></i> Try Free Today</a>
     </div>
-    <button class="close-btn" onclick="document.getElementById('adPopup').remove()">×</button>
+    <button class="close-btn" onclick="document.getElementById('gamePopup').remove()">×</button>
   </div>
 `;
 
@@ -138,5 +138,5 @@ const adPopupHTML = `
 // INJECT POPUP AFTER DELAY
 // ==============================
 setTimeout(() => {
-  document.body.insertAdjacentHTML("beforeend", adPopupHTML);
+  document.body.insertAdjacentHTML("beforeend", gamePopupHTML);
 }, 4000); // Show after 4 seconds

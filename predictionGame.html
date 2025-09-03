@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monisharp Prediction Game</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #f0f9ff, #ffffff);
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: linear-gradient(90deg, #0284c7, #0ea5e9);
+      color: #fff;
+      padding: 14px 18px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0,0,0,.15);
+      animation: slideDown 0.6s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    @keyframes slideDown { from {transform: translateY(-100%);} to {transform: translateY(0);} }
+
+    .left-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .results-btn {
+      background: #facc15;
+      color: #0f172a;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .results-btn:hover { background: #eab308; }
+
+    .balance {
+      background: rgba(255,255,255,0.15);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .balance span { font-weight: bold; }
+
+    main { flex: 1; padding: 20px; max-width: 640px; margin: 0 auto; }
+
+    .intro {
+      background: #fff; padding: 16px 20px; border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,.08); margin-bottom: 24px;
+      line-height: 1.6; animation: fadeInUp 0.8s ease;
+    }
+    .intro h2 { font-size: 1.2rem; margin-bottom: 8px; color: #0284c7; }
+
+    @keyframes fadeInUp { from {opacity: 0; transform: translateY(40px);} to {opacity: 1;} }
+
+    .prediction-card {
+      background: #fff; padding: 20px; border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.12);
+      text-align: center; margin-bottom: 20px; position: relative;
+      animation: fadeInUp 0.8s ease;
+    }
+    .prediction-card h3 { font-size: 1.25rem; margin-bottom: 12px; }
+    .prediction-icon { font-size: 2rem; margin-bottom: 10px; }
+
+    .options { display: flex; gap: 12px; margin: 16px 0; }
+    .options button {
+      flex: 1; padding: 12px; border: 0; border-radius: 12px;
+      font-weight: bold; cursor: pointer; font-size: 1rem;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .options button:hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(0,0,0,.2); }
+    .yes { background:#22c55e; color:#fff; }
+    .no { background:#ef4444; color:#fff; }
+    .locked { background:#94a3b8 !important; cursor: not-allowed !important; }
+
+    .after-stake { margin-top: 12px; font-size: 0.95rem; color:#0284c7; font-weight: 500; }
+
+    footer {
+      padding: 14px; text-align: center; font-size: 0.9rem;
+      color: #334155; background: #f8fafc; border-top: 1px solid #e2e8f0;
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed; inset: 0; background: rgba(15,23,42,.5);
+      display: none; align-items: center; justify-content: center; z-index: 50;
+    }
+    .modal .card {
+      background: #fff; padding: 22px; border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,.25); max-width: 380px; text-align: center;
+    }
+    .modal .card p { margin-bottom: 14px; }
+    .btn { border: 0; padding: 10px 16px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    .btn-primary { background:#0ea5e9; color:#fff; }
+    .btn-primary:hover { background:#0284c7; }
+
+    /* Help button */
+    .help-btn {
+      position: fixed; bottom: 20px; right: 20px; background:#0ea5e9; color:#fff;
+      border-radius: 50%; width: 46px; height: 46px; font-size: 1.5rem;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,.2);
+    }
+
+    /* Countdown */
+    .countdown { font-size: 1rem; color:#ef4444; margin-top: 10px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="left-group">
+      <div>🔮 Monisharp Prediction</div>
+      <button class="results-btn" onclick="window.location.href='prediction-leaderboard.html'">📊 Results</button>
+    </div>
+    <div class="balance">💰 Deposit: <span id="depositBalance">₦0</span></div>
+  </header>
+
+  <main>
+    <div class="intro">
+      <h2>How It Works</h2>
+      <p>Stake <b>₦20</b> on each prediction. Choose <b>YES</b> or <b>NO</b>.  
+      Stakes close <b>Friday 10pm</b>. Winners share rewards on <b>Saturday night</b> after service fee.</p>
+      <div class="countdown" id="countdown"></div>
+    </div>
+
+    <!-- Prediction cards -->
+    <div class="prediction-card" data-id="PRED001">
+      <div class="prediction-icon">🌧️</div>
+      <h3>Will it rain in Lagos on Saturday?</h3>
+      <p><b>Stake: ₦20</b></p>
+      <div class="options">
+        <button class="yes" onclick="placeStake('PRED001','YES')">✅ YES</button>
+        <button class="no" onclick="placeStake('PRED001','NO')">❌ NO</button>
+      </div>
+    </div>
+
+    <div class="prediction-card" data-id="PRED002">
+      <div class="prediction-icon">⚽</div>
+      <h3>Will Nigeria score 2+ goals in their next match?</h3>
+      <p><b>Stake: ₦20</b></p>
+      <div class="options">
+        <button class="yes" onclick="placeStake('PRED002','YES')">✅ YES</button>
+        <button class="no" onclick="placeStake('PRED002','NO')">❌ NO</button>
+      </div>
+    </div>
+
+    <div class="prediction-card" data-id="PRED003">
+      <div class="prediction-icon">📱</div>
+      <h3>Will MTN increase data price before Sunday?</h3>
+      <p><b>Stake: ₦20</b></p>
+      <div class="options">
+        <button class="yes" onclick="placeStake('PRED003','YES')">✅ YES</button>
+        <button class="no" onclick="placeStake('PRED003','NO')">❌ NO</button>
+      </div>
+    </div>
+  </main>
+
+  <footer>⏰ Stake closes Friday 10pm | 🎉 Results Saturday night</footer>
+
+  <!-- Alert Modal -->
+  <div id="alertModal" class="modal">
+    <div class="card">
+      <p id="alertMsg"></p>
+      <button class="btn btn-primary" onclick="closeAlert()">OK</button>
+    </div>
+  </div>
+
+  <!-- Help Modal -->
+  <div id="helpModal" class="modal">
+    <div class="card">
+      <h3>❔ How to Play</h3>
+      <p>1. Choose YES or NO for each question.<br>
+         2. Each stake costs ₦20 from your deposit.<br>
+         3. Stakes close Friday 10pm.<br>
+         4. Results Saturday night.<br>
+         5. Winners share the reward pool 🚀</p>
+      <button class="btn btn-primary" onclick="closeHelp()">Got it!</button>
+    </div>
+  </div>
+
+  <!-- Floating Help Button -->
+  <div class="help-btn" onclick="openHelp()">❔</div>
+
+  <script>
+    const stakesApi = "https://sheetdb.io/api/v1/ogkheevy1xcan";
+    const userId = localStorage.getItem("Id") || "guest";
+    const depositKey = "depositBalance_" + userId;
+    const fixedAmount = 20;
+
+    if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey,"200");
+
+    function updateDepositBalance(){
+      let bal = parseInt(localStorage.getItem(depositKey)||"0");
+      document.getElementById("depositBalance").innerText = "₦" + bal;
+    }
+    updateDepositBalance();
+
+    function showAlert(msg){
+      document.getElementById("alertMsg").innerHTML = msg;
+      document.getElementById("alertModal").style.display = "flex";
+    }
+    function closeAlert(){ document.getElementById("alertModal").style.display = "none"; }
+
+    function openHelp(){ document.getElementById("helpModal").style.display = "flex"; }
+    function closeHelp(){ document.getElementById("helpModal").style.display = "none"; }
+
+    function isLocked(predId){
+      const lockKey = "stakeLock_" + predId + "_" + userId;
+      const lockTime = localStorage.getItem(lockKey);
+      return lockTime && Date.now() < new Date(lockTime).getTime();
+    }
+
+    async function placeStake(predId, choice){
+      if(isLocked(predId)){ showAlert("⏳ Already staked this week for this question."); return; }
+
+      let deposit = parseInt(localStorage.getItem(depositKey)||"0");
+      if(deposit < fixedAmount){ showAlert("❌ Not enough deposit."); return; }
+      deposit -= fixedAmount; localStorage.setItem(depositKey,deposit);
+      updateDepositBalance();
+
+      let data = { predictionId: predId, userId: userId, amount: fixedAmount, choice: choice, timestamp: new Date().toISOString() };
+      try {
+        await fetch(stakesApi,{ method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({data:[data]}) });
+
+        let unlock = new Date(); unlock.setDate(unlock.getDate() + ((6 - unlock.getDay() + 7) % 7)); unlock.setHours(23,0,0,0);
+        localStorage.setItem("stakeLock_"+predId+"_"+userId, unlock.toISOString());
+
+        const card = document.querySelector(`.prediction-card[data-id='${predId}']`);
+        card.querySelectorAll("button").forEach(b=>b.classList.add("locked"));
+        let percent = Math.floor(Math.random() * (87 - 45 + 1)) + 45;
+        card.insertAdjacentHTML("beforeend", `<div class='after-stake'>🎉 You staked ₦${fixedAmount} on <b>${choice}</b>. <br>📊 ${percent}% people agree with you!</div>`);
+        showAlert(`🎉 You staked ₦${fixedAmount} on <b>${choice}</b>.`);
+      } catch(e){ showAlert("⚠️ Network error, try again."); }
+    }
+
+    // Disable buttons if already locked
+    document.querySelectorAll(".prediction-card").forEach(card=>{
+      let pid = card.dataset.id;
+      if(isLocked(pid)){ card.querySelectorAll("button").forEach(b=>b.classList.add("locked")); }
+    });
+
+    // Countdown
+    function updateCountdown(){
+      let now = new Date();
+      let friday = new Date();
+      friday.setDate(friday.getDate() + ((5 - friday.getDay() + 7) % 7));
+      friday.setHours(22,0,0,0);
+      let diff = friday - now;
+      if(diff <= 0){ document.getElementById("countdown").innerText = "⏰ Stakes closed!"; return; }
+      let hrs = Math.floor(diff/1000/60/60);
+      let mins = Math.floor((diff/1000/60)%60);
+      let secs = Math.floor((diff/1000)%60);
+      document.getElementById("countdown").innerText = `⏳ Time left: ${hrs}h ${mins}m ${secs}s`;
+    }
+    setInterval(updateCountdown,1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+<!-- https://sheetdb.io/api/v1/ghzu566zwxo4s -->
+<!-- https://sheetdb.io/api/v1/ogkheevy1xcan -->

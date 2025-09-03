@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prediction Leaderboard</title>
+  <style>
+    /* ===== Global Styles ===== */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e293b, #0f2027);
+      color: #f8fafc;
+      margin: 0;
+      padding: 20px;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* ===== Heading ===== */
+    h1 {
+      text-align: center;
+      color: #38bdf8;
+      margin-bottom: 10px;
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding-top: 20px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    /* ===== Notice ===== */
+    .notice {
+      text-align: center;
+      font-size: 1rem;
+      color: #cbd5e1;
+      margin-bottom: 25px;
+      animation: fadeIn 1.2s ease;
+    }
+    .notice span {
+      color: #38bdf8;
+      font-weight: bold;
+    }
+
+    /* ===== Balance Card ===== */
+    .balance {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(56, 189, 248, 0.2);
+      color: #f8fafc;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 1rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(56,189,248,0.4);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    /* ===== Table Wrapper ===== */
+    .table-container {
+      margin-top: 30px;
+      overflow-x: auto;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 20px;
+      border-radius: 16px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* ===== Table ===== */
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 950px;
+    }
+    th, td {
+      padding: 14px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    th {
+      background: rgba(56,189,248,0.15);
+      color: #f1f5f9;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+    }
+    tr:nth-child(even) {
+      background: rgba(255,255,255,0.03);
+    }
+
+    /* ===== Winner & Loser ===== */
+    .winner {
+      color: #22c55e;
+      font-weight: bold;
+    }
+    .loser {
+      color: #ef4444;
+      font-weight: bold;
+    }
+
+    /* ===== Buttons ===== */
+    .btn {
+      background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(14,165,233,0.4);
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(14,165,233,0.55);
+    }
+
+    /* ===== Fade Animation ===== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <h1>🏆 Prediction Leaderboard</h1>
+  <p class="notice">ℹ️ Results update only on <span>Saturdays</span>. You can <b>claim rewards</b> if you’re a winner.</p>
+  <div class="balance">Game Balance: ₦<span id="balance">0</span></div>
+
+  <div class="table-container">
+    <table id="leaderboard">
+      <thead>
+        <tr>
+          <th>Prediction ID</th>
+          <th>Question</th>
+          <th>User ID</th>
+          <th>Choice</th>
+          <th>Result</th>
+          <th>Status</th>
+          <th>Stake</th>
+          <th>Reward</th>
+          <th>Claim</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script>
+    const apiUrl = "https://sheetdb.io/api/v1/ghzu566zwxo4s";
+    const localKey = "leaderboardData";
+    const userId = localStorage.getItem("plus-Id") || "guest";
+
+    function updateBalanceDisplay() {
+      let balanceKey = "plusgameBalance_" + userId;
+      let balance = parseInt(localStorage.getItem(balanceKey) || "0");
+      document.getElementById("balance").textContent = balance;
+    }
+
+    async function fetchLeaderboard() {
+      try {
+        const now = new Date();
+        const day = now.getDay(); 
+        const weekKey = "leaderboardWeek";
+        const currentWeek = getWeekNumber(now);
+
+        if (day === 0 && localStorage.getItem(weekKey) !== currentWeek) {
+          localStorage.removeItem(localKey);
+          localStorage.setItem(weekKey, currentWeek);
+        }
+
+        let data;
+        if (day === 6) {
+          let res = await fetch(apiUrl);
+          data = await res.json();
+          localStorage.setItem(localKey, JSON.stringify(data));
+          localStorage.setItem(weekKey, currentWeek);
+        } else {
+          data = JSON.parse(localStorage.getItem(localKey) || "[]");
+        }
+
+        buildTable(data);
+        updateBalanceDisplay();
+      } catch (e) {
+        console.error("Error fetching leaderboard:", e);
+      }
+    }
+
+    function buildTable(data) {
+      const tbody = document.querySelector("#leaderboard tbody");
+      tbody.innerHTML = "";
+
+      data.forEach(row => {
+        let isWinner = row.status?.toUpperCase() === "WINNER" && row.userId === userId;
+        let alreadyClaimed = localStorage.getItem("claimed_" + row.predictionId + "_" + userId);
+
+        let claimButton = "";
+        if (isWinner && !alreadyClaimed) {
+          claimButton = `<button class="btn" id="claim_${row.predictionId}" onclick="claimReward('${row.predictionId}', ${row.reward || 0})">Claim</button>`;
+        } else if (isWinner && alreadyClaimed) {
+          claimButton = `<span style="color:#22c55e;font-weight:bold;">✅ Claimed</span>`;
+        }
+
+        tbody.insertAdjacentHTML("beforeend", `
+          <tr>
+            <td>${row.predictionId}</td>
+            <td>${row.question}</td>
+            <td class="${row.status === "WINNER" ? "winner" : "loser"}">${row.userId}</td>
+            <td>${row.choice}</td>
+            <td>${row.result}</td>
+            <td class="${row.status === "WINNER" ? "winner" : "loser"}">${row.status}</td>
+            <td>₦${row.amount}</td>
+            <td>₦${row.reward || 0}</td>
+            <td>${claimButton}</td>
+          </tr>
+        `);
+      });
+    }
+
+    function claimReward(predictionId, reward) {
+      const claimKey = "claimed_" + predictionId + "_" + userId;
+      if (localStorage.getItem(claimKey)) {
+        alert("⚠️ You already claimed this reward.");
+        return;
+      }
+
+      let balanceKey = "gameBalance_" + userId;
+      let balance = parseInt(localStorage.getItem(balanceKey) || "0");
+      balance += reward;
+      localStorage.setItem(balanceKey, balance);
+
+      localStorage.setItem(claimKey, "true");
+
+      updateBalanceDisplay();
+      alert("✅ Reward of ₦" + reward + " credited successfully!");
+      document.getElementById("claim_" + predictionId).outerHTML = `<span style="color:#22c55e;font-weight:bold;">✅ Claimed</span>`;
+    }
+
+    function getWeekNumber(d) {
+      d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+      let weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+      return d.getUTCFullYear() + "-" + weekNo;
+    }
+
+    fetchLeaderboard();
+  </script>
+</body>
+</html>

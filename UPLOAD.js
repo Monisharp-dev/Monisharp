@@ -1,4 +1,4 @@
-<script>
+
 (function () {
   const API_LISTTWO = [
     "https://sheetdb.io/api/v1/3fhj4vu7fak0u",
@@ -218,4 +218,3 @@
     }
   }
 })();
-</script>

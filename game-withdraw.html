@@ -15,6 +15,7 @@
       margin: 0;
       padding: 20px;
       color: #333;
+      padding-bottom: 100px;
     }
 
     .container {
@@ -196,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ==== Populate Fields ====
   const id = localStorage.getItem("Id");
-  const balance = parseFloat(localStorage.getItem("mainBalance")) || 0;
+  const balance = parseFloat(localStorage.getItem(`gameBalance_${id}`)) || 0;
   if (id) document.getElementById("Id").value = id;
   amountInput.value = balance.toFixed(2);
   document.getElementById("date").value = new Date().toLocaleString();
@@ -226,6 +227,18 @@ document.addEventListener("DOMContentLoaded", () => {
       loader.style.display = "none";
       return showAlert("Enter a valid amount.", "error");
     }
+    if (enteredAmount < 300) {
+      loader.style.display = "none";
+      return showAlert("Minimum withdrawal is ₦300.", "warning");
+    }
+    if (balance <= 0) {
+      loader.style.display = "none";
+      return showAlert("Balance is zero. Cannot withdraw.", "error");
+    }
+    if (enteredAmount > balance) {
+      loader.style.display = "none";
+      return showAlert("Insufficient balance.", "error");
+    }
     if (!bankName || !accountName || !accountNumber) {
       loader.style.display = "none";
       return showAlert("All fields are required.", "warning");
@@ -233,14 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (accountNumber.length < 10) {
       loader.style.display = "none";
       return showAlert("Account number must be at least 10 digits.", "warning");
-    }
-    if (enteredAmount > balance) {
-      loader.style.display = "none";
-      return showAlert("Insufficient balance.", "error");
-    }
-    if (balance <= 0) {
-      loader.style.display = "none";
-      return showAlert("Balance is zero. Cannot withdraw.", "error");
     }
 
     const data = {
@@ -251,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
       accountName,
       accountNumber,
       date: new Date().toLocaleString(),
-      status: "Pending"
+      status: "Game Pending"
     };
 
     try {
@@ -285,7 +290,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 </script>
-
   <script src="submit.js"></script>
   <script src="bottom-nav.js"></script>
   <script src="navbar.js"></script>

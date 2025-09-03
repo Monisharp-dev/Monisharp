@@ -105,11 +105,10 @@
     .teal i { color: #20c997; }
     .dark i { color: #343a40; }
     .gold i { color: #f1c40f; }
-    .pink i { color: #e83e8c; }  /* For Testimonials */
-    .indigo i { color: #6610f2; } /* For Tasks */
+    .pink i { color: #e83e8c; }
+    .indigo i { color: #6610f2; }
   </style>
 </head>
-
 <body>
   <!-- Welcome Notification -->
   <div class="notify" id="welcomeMessage">👋 Welcome back, Sharp User!</div>
@@ -133,6 +132,13 @@
         <i class="fas fa-users"></i>
         <h3>Referral Bonus</h3>
         <p id="referralBalance" class="count">₦0</p>
+      </div>
+
+      <!-- NEW Game Balance -->
+      <div class="balance-card">
+        <i class="fas fa-gamepad"></i>
+        <h3>Game Balance</h3>
+        <p id="gameBalance" class="count">₦0</p>
       </div>
     </div>
 
@@ -166,21 +172,31 @@
         <i class="fas fa-robot"></i>
         <h4>Automatic Task</h4>
       </a>
-      <!-- New Daily Reward -->
       <a href="plus-daily.html" class="action-card gold">
         <i class="fas fa-gift"></i>
         <h4>Daily Reward</h4>
       </a>
-      <!-- New Testimonials -->
       <a href="testimonials.html" class="action-card pink">
         <i class="fas fa-comment-dots"></i>
         <h4>Testimonials</h4>
       </a>
-      <!-- New Tasks -->
       <a href="plus-task.html" class="action-card indigo">
         <i class="fas fa-tasks"></i>
         <h4>Tasks</h4>
       </a>
+
+      <!-- ✅ NEW Play Games Option -->
+      <a href="plus-playgame.html" class="action-card teal">
+        <i class="fas fa-gamepad"></i>
+        <h4>Play Games</h4>
+      </a>
+
+      <!-- ✅ NEW Job Options -->
+      <a href="job.html" class="action-card gold">
+        <i class="fas fa-briefcase"></i>
+        <h4>Job Opportunities</h4>
+      </a>
+
       <a href="info.html" class="action-card blue">
         <i class="fas fa-sign-out-alt"></i>
         <h4>Logout</h4>
@@ -228,35 +244,45 @@
     }
 
     // Initialize balances
-    function initUserBalances() {
+    function initUserBalances(userId) {
       const keys = {
         activity: `plus-activityBalance`,
         referral: `plus-referralBalance`,
+        game: `plusgameBalance_${userId}`
       };
 
-      Object.values(keys).forEach(key => {
-        if (!localStorage.getItem(key)) {
-          localStorage.setItem(key, "0");
-        }
-      });
+      // Ensure default values
+      if (!localStorage.getItem(keys.activity)) localStorage.setItem(keys.activity, "0");
+      if (!localStorage.getItem(keys.referral)) localStorage.setItem(keys.referral, "0");
+      if (!localStorage.getItem(keys.game)) localStorage.setItem(keys.game, "0");
 
       return keys;
     }
 
     // Load balances
     function loadBalancesAnimated() {
-      const keys = initUserBalances();
+      const userId = localStorage.getItem("plus-Id");
+      if (!userId) {
+        console.error("❌ No user ID found in localStorage.");
+        return;
+      }
+
+      const keys = initUserBalances(userId);
 
       const activity = parseInt(localStorage.getItem(keys.activity)) || 0;
       const referral = parseInt(localStorage.getItem(keys.referral)) || 0;
+      const game = parseInt(localStorage.getItem(keys.game)) || 0;
 
       animateCountUp(document.getElementById("activityBalance"), activity);
       animateCountUp(document.getElementById("referralBalance"), referral);
+      animateCountUp(document.getElementById("gameBalance"), game);
     }
 
     // Run
     loadBalancesAnimated();
   </script>
+
+  <!-- Other scripts -->
   <script src="plus admin.js"></script>
   <script src="plus-popup.js"></script>
   <script src="display.js"></script>

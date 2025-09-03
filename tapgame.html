@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Monisharp Tap Game</title>
+  <style>
+    :root{
+      --primary:#0ea5e9;
+      --primary-dark:#0284c7;
+      --gold:#ffd700;
+      --danger:#ef4444;
+      --bg:linear-gradient(180deg,#e6f6ff 0%,#ffffff 100%);
+      --glass:rgba(255,255,255,0.6);
+      --shadow:0 8px 20px rgba(0,0,0,.12);
+      --success:#10b981;
+      --speed:#f97316;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%; margin:0; padding:0;}
+    body{
+      font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell;
+      background:var(--bg);
+      color:#0f172a;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
+    header{background:linear-gradient(90deg,#0284c7,#0ea5e9);color:#fff;padding:8px 12px;box-shadow:0 2px 10px rgba(2,132,199,.25);}
+    .topbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;}
+    .brand{font-weight:800; font-size:1rem;}
+    .stat-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+    .pill{background:var(--glass);padding:6px 10px;border-radius:12px;font-size:.9rem;box-shadow:var(--shadow);backdrop-filter:blur(8px);display:flex;align-items:center;gap:5px;}
+    .timer-wrap{background:rgba(255,255,255,.55);border-radius:10px;height:8px;overflow:hidden;width:120px;}
+    .timer-bar{height:100%;background:#10b981;transition:width .2s linear;}
+
+    #gameArea{flex:1;position:relative;overflow:hidden;touch-action:none;user-select:none;}
+
+    .coin,.bomb{position:absolute;width:12vw;max-width:52px;min-width:34px;aspect-ratio:1/1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(0,0,0,.2);user-select:none;touch-action:manipulation;will-change:transform;}
+    .coin{background:var(--gold);border:2px solid #c28e0e;}
+    .bomb{background:var(--danger);border:2px solid #b91c1c;color:#fff;}
+    .coin:active,.bomb:active{transform:scale(.9)}
+
+    .modal{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.35);backdrop-filter:blur(2px);z-index:50;}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:18px;width:min(92vw,420px);box-shadow:var(--shadow);text-align:center;}
+    .btn{border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;}
+    .btn-primary{background:var(--primary);color:#fff;} 
+    .btn-primary:hover{background:var(--primary-dark);}
+    .btn-ghost{background:#f1f5f9;}
+    .actions{display:flex;gap:8px;justify-content:center;margin-top:12px;}
+
+    #helpBtn{position:absolute;right:12px;bottom:12px;z-index:20;width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #e5e7eb;box-shadow:var(--shadow);font-weight:900;color:#0ea5e9;}
+
+    footer{text-align:center;font-size:.85rem;background:#f8fafc;padding:6px;}
+
+    /* Toast alert */
+    .toast{position:fixed;top:20px;right:20px;background:#fff;box-shadow:var(--shadow);padding:12px 16px;border-radius:10px;font-size:.9rem;display:none;z-index:100;animation:fadeIn .3s ease-out;}
+    .toast.success{border-left:5px solid var(--success);}
+    .toast.error{border-left:5px solid var(--danger);}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+
+    /* Speed badge */
+    #speedBadge{display:none;background:rgba(249,115,22,.15);color:#fff;border:1px solid rgba(249,115,22,.35);background-image:linear-gradient(90deg,#fb923c55,#f9731655);text-shadow:0 1px 2px rgba(0,0,0,.25);animation:pulse 1s infinite;}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(249,115,22,.5)}50%{box-shadow:0 0 0 8px rgba(249,115,22,0)}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="topbar">
+      <div class="brand">💠 Monisharp Tap</div>
+      <div class="stat-row">
+        <div class="pill">💰 Coins: <b id="coinsBalanceText">0</b>
+          <button id="convertBtnTop" class="btn btn-primary" style="padding:2px 8px;font-size:.8rem;">Convert</button>
+        </div>
+        <div class="pill">👛 Deposit: <b id="depositText">₦0</b></div>
+        <div class="pill">🎮 Game balance : <b id="taskText">₦0</b></div>
+        <div class="pill" id="speedBadge">⚡ x1 SPEED</div>
+        <div class="timer-wrap"><div id="timerBar" class="timer-bar"></div></div>
+      </div>
+    </div>
+  </header>
+
+  <div id="gameArea"></div>
+
+  <!-- Tooltip -->
+  <div id="tooltipModal" class="modal" style="display:none;">
+    <div class="card">
+      <h3>👋 Welcome!</h3>
+      <p>Tap coins to earn. Avoid bombs 💣.<br/>You get 1 free round daily. Extra rounds cost ₦20.</p>
+      <div class="actions">
+        <button class="btn btn-ghost" id="soundToggleBtn">Mute</button>
+        <button class="btn btn-primary" id="startBtn">Start</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game over -->
+  <div id="gameOverModal" class="modal" style="display:none;">
+    <div class="card">
+      <h3>⏰ Game Over</h3>
+      <p>You collected <b><span id="finalScore">0</span></b> coins.</p>
+      <p>Deposit: <b id="depositInModal">₦0</b></p>
+      <div class="actions">
+        <button class="btn btn-primary" id="retryBtn">Retry (₦20)</button>
+        <button class="btn btn-ghost" id="convertBtn">Convert 100 Coins → ₦20 Game balance </button>
+        <button class="btn btn-ghost" id="closeOverBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Styled Alerts -->
+  <div id="convertAlert" class="toast success">✅ Converted 100 coins → ₦20 Game Balance </div>
+  <div id="errorAlert" class="toast error">⚠️ Error</div>
+
+  <button id="helpBtn">?</button>
+  <footer>Play free once/day 🎁 | Extra plays ₦20 | Convert 100 coins → ₦20 Game Balance </footer>
+
+  <script>
+    // Keys
+    const userId=localStorage.getItem("Id")||"guest";
+    const depositKey="depositBalance_"+userId;
+    const taskKey="gameBalance_"+userId;
+    const lastFreeKey="tapGameLastFree";
+
+    // Seed
+    if(!localStorage.getItem("coinsBalance")) localStorage.setItem("coinsBalance","0");
+    if(!localStorage.getItem(depositKey)) localStorage.setItem(depositKey,"100");
+    if(!localStorage.getItem(taskKey)) localStorage.setItem(taskKey,"0");
+
+    // Elements
+    const coinsText=document.getElementById("coinsBalanceText");
+    const depositText=document.getElementById("depositText");
+    const taskText=document.getElementById("taskText");
+    const timerBar=document.getElementById("timerBar");
+    const tooltipModal=document.getElementById("tooltipModal");
+    const gameOverModal=document.getElementById("gameOverModal");
+    const finalScoreEl=document.getElementById("finalScore");
+    const depositInModal=document.getElementById("depositInModal");
+    const startBtn=document.getElementById("startBtn");
+    const retryBtn=document.getElementById("retryBtn");
+    const convertBtn=document.getElementById("convertBtn");
+    const convertBtnTop=document.getElementById("convertBtnTop");
+    const closeOverBtn=document.getElementById("closeOverBtn");
+    const helpBtn=document.getElementById("helpBtn");
+    const soundToggleBtn=document.getElementById("soundToggleBtn");
+    const gameArea=document.getElementById("gameArea");
+    const convertAlert=document.getElementById("convertAlert");
+    const errorAlert=document.getElementById("errorAlert");
+    const speedBadge=document.getElementById("speedBadge");
+
+    // Audio
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    const audioCtx=new AudioCtx();
+    const masterGain=audioCtx.createGain();
+    masterGain.gain.value=0.9; masterGain.connect(audioCtx.destination);
+    let soundEnabled=true;
+    function unlockAudio(){if(audioCtx.state!=='running') audioCtx.resume();}
+    function tone(f=880,d=0.08,t='square',v=0.9){if(!soundEnabled)return;const now=audioCtx.currentTime;const osc=audioCtx.createOscillator();const g=audioCtx.createGain();osc.type=t;osc.frequency.setValueAtTime(f,now);g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(v,now+0.01);g.gain.exponentialRampToValueAtTime(0.0001,now+d);osc.connect(g);g.connect(masterGain);osc.start(now);osc.stop(now+d+0.02);}
+    function glide(sf,ef,d=0.25,t='sawtooth',v=0.8){if(!soundEnabled)return;const now=audioCtx.currentTime;const osc=audioCtx.createOscillator();const g=audioCtx.createGain();osc.type=t;osc.frequency.setValueAtTime(sf,now);osc.frequency.exponentialRampToValueAtTime(Math.max(1,ef),now+d);g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(v,now+0.01);g.gain.exponentialRampToValueAtTime(0.0001,now+d);osc.connect(g);g.connect(masterGain);osc.start(now);osc.stop(now+d+0.02);}
+    function coinSound(){tone(1000,0.07,'square',0.8);}function bombSound(){glide(220,60,0.28,'sawtooth',0.9);}function overSound(){tone(440,0.1,'triangle',0.8);setTimeout(()=>tone(330,0.12,'triangle',0.8),110);setTimeout(()=>tone(262,0.14,'triangle',0.8),230);}function cashSound(){tone(1200,0.08,'square',0.9);setTimeout(()=>tone(1400,0.08,'square',0.9),80);}
+
+    // Helpers
+    function fmtNaira(n){return "₦"+Number(n).toLocaleString();}
+    function updBalances(){coinsText.textContent=localStorage.getItem("coinsBalance")||"0";depositText.textContent=fmtNaira(localStorage.getItem(depositKey)||"0");taskText.textContent=fmtNaira(localStorage.getItem(taskKey)||"0");}
+    function canPlayFree(){const last=parseInt(localStorage.getItem(lastFreeKey)||"0");return (Date.now()-last)>86400000;}
+    function showToast(el,msg){el.textContent=msg;el.style.display="block";setTimeout(()=>{el.style.display="none";},2200);}
+
+    // Game State
+    let score=0,gameRunning=false;const roundMs=60000;let roundStart=0;
+    let spawnRate=900,minSpawn=450,lastSpawnAdjust=0,baseFall=180,speedMultiplier=1,spawnAccumulator=0,entities=[],lastFrame=0,loopId=null;
+
+    function startGame(){unlockAudio();score=0;spawnRate=900;baseFall=180;speedMultiplier=1;lastSpawnAdjust=0;spawnAccumulator=0;entities=[];gameRunning=true;roundStart=performance.now();lastFrame=roundStart;timerBar.style.width="100%";gameOverModal.style.display="none";speedBadge.style.display="none";document.querySelectorAll(".coin,.bomb").forEach(n=>n.remove());loopId=requestAnimationFrame(gameLoop);}
+    function endGame(){gameRunning=false;if(loopId)cancelAnimationFrame(loopId);entities.forEach(o=>o.el.remove());entities.length=0;finalScoreEl.textContent=score;depositInModal.textContent=fmtNaira(localStorage.getItem(depositKey)||"0");gameOverModal.style.display="flex";overSound();}
+    function gameLoop(now){if(!gameRunning)return;const dt=Math.min(50,now-lastFrame);lastFrame=now;const elapsed=now-roundStart;const leftMs=Math.max(0,roundMs-elapsed);timerBar.style.width=(leftMs/roundMs*100)+"%";if(leftMs<=15000){if(speedMultiplier!==0.5){speedMultiplier=0.5;speedBadge.style.display="flex";speedBadge.textContent="⚡ x0.5 SPEED";}spawnRate=Math.max(300,spawnRate-150);}else{if(speedMultiplier!==0.5){speedMultiplier=0.5;speedBadge.style.display="none";}}if(lastSpawnAdjust===0)lastSpawnAdjust=now;if(now-lastSpawnAdjust>=7000){spawnRate=Math.max(minSpawn,spawnRate-100);baseFall+=30;lastSpawnAdjust=now;}spawnAccumulator+=dt;while(spawnAccumulator>=spawnRate){spawnEntity();spawnAccumulator-=spawnRate;}updateEntities(dt);if(elapsed>=roundMs){endGame();return;}loopId=requestAnimationFrame(gameLoop);}
+    function spawnEntity(){const isBomb=Math.random()<0.25;const el=document.createElement("div");el.className=isBomb?"bomb":"coin";el.textContent=isBomb?"💣":"+1";const gw=gameArea.clientWidth;const gh=gameArea.clientHeight;const size=Math.min(Math.max(gw*0.12,34),52);const x=Math.random()*(gw-size);const y=-60;el.style.transform=`translate(${x}px, ${y}px)`;gameArea.appendChild(el);const obj={el,x,y,isBomb,speedF:0.85+Math.random()*0.5,alive:true};entities.push(obj);el.addEventListener("pointerdown",(e)=>{if(!gameRunning||!obj.alive)return;e.preventDefault();obj.alive=false;el.style.pointerEvents="none";el.remove();let coins=parseInt(localStorage.getItem("coinsBalance")||"0");if(obj.isBomb){coins=Math.max(0,coins-5);bombSound();}else{coins+=1;score++;coinSound();}localStorage.setItem("coinsBalance",coins);updBalances();},{once:true});}
+    function updateEntities(dt){const gh=gameArea.clientHeight;const pxPerMs=(baseFall*speedMultiplier)/1000;for(let i=entities.length-1;i>=0;i--){const o=entities[i];if(!o.alive){entities.splice(i,1);continue;}o.y+=dt*pxPerMs*o.speedF;if(o.y>gh){o.alive=false;o.el.remove();entities.splice(i,1);continue;}o.el.style.transform=`translate(${o.x}px, ${o.y}px)`;}}
+    
+    // Actions
+    function retry(){unlockAudio();if(canPlayFree()){localStorage.setItem(lastFreeKey,Date.now());startGame();return;}let dep=parseInt(localStorage.getItem(depositKey)||"0");if(dep<20){showToast(errorAlert,"Need ₦20 deposit");return;}dep-=20;localStorage.setItem(depositKey,dep);updBalances();startGame();}
+    function convertCoins(){unlockAudio();let coins=parseInt(localStorage.getItem("coinsBalance")||"0");if(coins<100){showToast(errorAlert,"Need at least 100 coins");return;}coins-=100;let task=parseInt(localStorage.getItem(taskKey)||"0");task+=20;localStorage.setItem("coinsBalance",coins);localStorage.setItem(taskKey,task);updBalances();cashSound();showToast(convertAlert,"✅ Converted 100 coins → ₦20 Game Balance ");}
+
+    // UI
+    startBtn.onclick=()=>{
+      unlockAudio();
+      tooltipModal.style.display="none";
+      if(canPlayFree()){
+        localStorage.setItem(lastFreeKey, Date.now());
+      } else {
+        let dep=parseInt(localStorage.getItem(depositKey)||"0");
+        if(dep<20){
+          showToast(errorAlert,"Need ₦20 deposit");
+          return;
+        }
+        dep-=20;
+        localStorage.setItem(depositKey, dep);
+        updBalances();
+      }
+      startGame();
+    };
+
+    retryBtn.onclick=retry;
+    closeOverBtn.onclick=()=>gameOverModal.style.display="none";
+    convertBtn.onclick=convertCoins;
+    convertBtnTop.onclick=convertCoins;
+    helpBtn.onclick=()=>tooltipModal.style.display="flex";
+
+    soundToggleBtn.onclick=()=>{
+      soundEnabled=!soundEnabled;
+      masterGain.gain.value=soundEnabled?0.9:0.0;
+      soundToggleBtn.textContent=soundEnabled?"Mute":"Unmute";
+      unlockAudio();
+    };
+
+    // First interaction unlocks audio
+    document.addEventListener("pointerdown", unlockAudio, {once:true});
+
+    // Init balances + show tooltip
+    updBalances();
+    tooltipModal.style.display="flex";
+  </script>
+</body>
+</html>
