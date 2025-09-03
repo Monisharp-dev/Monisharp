@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Referral Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 20px 20px; /* Added top padding so content never hides */
+      overflow-x: hidden;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      padding: 25px;
+      margin-top: 30px; /* Extra spacing below the back button */
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(15px);
+      animation: fadeIn 1.2s ease-in-out;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      background: linear-gradient(45deg, #ff7eb3, #ff758c, #ff9472);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: slideIn 1s ease forwards;
+    }
+
+    section {
+      margin: 20px 0;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      text-align: center;
+      animation: fadeUp 1s ease;
+    }
+
+    .code-box, .link-box {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    button {
+      background: linear-gradient(45deg, #ff758c, #ff7eb3);
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: 600;
+    }
+
+    button:hover {
+      transform: scale(1.08);
+      background: linear-gradient(45deg, #ff9472, #ff7eb3);
+      box-shadow: 0 4px 15px rgba(255, 118, 136, 0.5);
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      display: none;
+      animation: slideUp 0.5s ease forwards;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes slideUp {
+      from { transform: translate(-50%, 30px); opacity: 0; }
+      to { transform: translate(-50%, 0); opacity: 1; }
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div style="margin-bottom: 10px; position: absolute; top: 20px; left: 20px;">
+    <button onclick="window.history.back()">
+      <i class="fas fa-arrow-left"></i> Go Back
+    </button>
+  </div>
+
+  <div class="container">
+    <h1>Referral Program</h1>
+
+    <section class="referral-count">
+      <h2>Number of Referrals</h2>
+      <p id="referralNumber">0</p>
+    </section>
+
+    <section class="plusreferral-code">
+      <h2>My Referral Code</h2>
+      <div class="code-box">
+        <span id="plus-referralCode">ELyce</span>
+        <button id="copyBtn">Copy</button>
+      </div>
+    </section>
+
+    <section class="app-link">
+      <h2>MoniSharp App Link</h2>
+      <div class="link-box">
+        <span id="appLink">https://tinyurl.com/MoniSharp</span>
+        <button onclick="copyAppLink()">Copy Link</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Always show default referral code
+      document.getElementById("plus-referralCode").textContent = "ELyce";
+
+      // Load referral count from "ad-no"
+      const count = localStorage.getItem("ad-no") || "0";
+      document.getElementById("referralNumber").textContent = count;
+    });
+
+    document.getElementById("copyBtn").onclick = () => {
+      const code = document.getElementById("plus-referralCode").textContent;
+      navigator.clipboard.writeText(code);
+      showToast("Referral code copied!");
+    };
+
+    function copyAppLink() {
+      const link = document.getElementById("appLink").textContent;
+      navigator.clipboard.writeText(link);
+      showToast("App link copied!");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      toast.textContent = msg;
+      toast.style.display = "block";
+      toast.style.opacity = "1";
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => (toast.style.display = "none"), 400);
+      }, 2500);
+    }
+  </script>
+</body>
+</html>

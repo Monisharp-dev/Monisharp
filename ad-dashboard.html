@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Advertiser Dashboard | MoniSharp</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b1220; --panel:#0f172aee; --panel-2:#111a30ee; --text:#e6e8ee; --muted:#a9b1c7;
+    --brand:#6c5ce7; --brand-2:#00d1ff;
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color:var(--text); background:
+      radial-gradient(1200px 600px at 10% -10%, rgba(108,92,231,.25), transparent 60%),
+      radial-gradient(1000px 500px at 110% 10%, rgba(0,209,255,.18), transparent 60%),
+      linear-gradient(180deg,#0a0f1c,#0b1220 35%, #0b1220);
+    min-height:100vh;
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 20px; backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, rgba(15,23,42,.9), rgba(15,23,42,.6));
+    border-bottom:1px solid rgba(255,255,255,.06);
+  }
+  .brand{display:flex; gap:10px; align-items:center}
+  .logo{
+    width:36px; height:36px; border-radius:12px;
+    background: radial-gradient(60% 60% at 30% 20%, #9b8cff, #6c5ce7 60%, #3a2fce);
+    box-shadow: 0 6px 20px rgba(108,92,231,.45);
+  }
+  .brand h1{font-size:16px; margin:0}
+
+  .wrap{max-width:1100px; margin:20px auto; padding:0 16px;}
+  .grid{display:grid; gap:16px; grid-template-columns: repeat(12, 1fr)}
+  .card{
+    grid-column: span 12;
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border:1px solid rgba(255,255,255,.06);
+    border-radius: var(--radius);
+    padding:18px;
+  }
+  @media (min-width:720px){ .span-6{grid-column: span 6} }
+
+  .greet{
+    font-size:22px; font-weight:700; margin-bottom:18px;
+    background: linear-gradient(90deg, var(--brand), var(--brand-2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: fadeSlide 1s ease;
+  }
+
+  .metrics{display:flex; align-items:center; justify-content:space-between}
+  .metric-title{color:var(--muted); font-size:13px; font-weight:600}
+  .metric-value{font-size:28px; font-weight:800}
+  .sub{font-size:12px; color:var(--muted)}
+  .ring{
+    --size:72px; width:var(--size); height:var(--size); border-radius:50%;
+    display:grid; place-items:center; background:conic-gradient(var(--brand) var(--p), rgba(255,255,255,.08) 0);
+    position:relative;
+  }
+  .ring::before{
+    content:""; position:absolute; inset:6px; border-radius:50%;
+    background:linear-gradient(180deg, #0f172a, #0c1426);
+  }
+  .ring span{position:relative; font-size:12px; color:var(--muted); font-weight:700}
+  .bar{height:10px; background:#1f2a44; border-radius:10px; overflow:hidden}
+  .bar > div{height:100%; background:linear-gradient(90deg, var(--brand), var(--brand-2)); width:0%}
+
+  .quick-grid{display:grid; gap:14px; grid-template-columns: repeat(2, 1fr)}
+  .qcard{
+    background:rgba(255,255,255,.02); border:1px dashed rgba(255,255,255,.12);
+    border-radius:14px; padding:16px; cursor:pointer; transition:.2s;
+  }
+  .qcard:hover{transform: translateY(-2px); border-color: rgba(108,92,231,.6); background:rgba(108,92,231,.08)}
+  .qicon{width:36px; height:36px; border-radius:10px; display:grid; place-items:center; color:#fff;
+    background: linear-gradient(135deg, #6c5ce7, #00d1ff); margin-bottom:10px;
+  }
+  .qtitle{font-weight:800}
+  .qdesc{font-size:12px; color:var(--muted)}
+
+  table{width:100%; border-collapse:collapse; margin-top:20px;
+    background:var(--panel-2); border-radius:12px; overflow:hidden}
+  th,td{padding:12px 14px; text-align:left; font-size:14px;
+    border-bottom:1px solid rgba(255,255,255,.05)}
+  th{background:rgba(255,255,255,.05); color:var(--brand-2); font-weight:700}
+  tr:hover{background:rgba(255,255,255,.03)}
+
+  .alert-container{position:fixed; top:20px; right:20px; display:flex; flex-direction:column; gap:10px; z-index:9999}
+  .alert{
+    background: linear-gradient(135deg, #6c5ce7, #00d1ff);
+    color:#fff; padding:12px 16px; border-radius:12px; font-size:14px; font-weight:600;
+    box-shadow:0 8px 20px rgba(0,0,0,.3);
+    opacity:0; transform:translateX(100%);
+    animation: slideIn 0.5s forwards, fadeOut 0.5s 3.5s forwards;
+  }
+  @keyframes slideIn{from{opacity:0; transform:translateX(100%)} to{opacity:1; transform:translateX(0)}}
+  @keyframes fadeOut{to{opacity:0; transform:translateX(100%)}}
+  .foot{padding:30px 0; text-align:center; color:var(--muted); font-size:12px}
+  @keyframes fadeSlide{from{opacity:0; transform:translateY(-10px)} to{opacity:1; transform:translateY(0)}}
+</style>
+</head>
+<body>
+  <header class="nav">
+    <div class="brand">
+      <div class="logo"></div>
+      <h1>MoniSharp • Advertiser</h1>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="greet">Hello, Elijah 👋 Welcome back!</div>
+
+    <!-- Metrics -->
+    <section class="grid" style="margin-bottom:10px">
+      <div class="card span-6">
+        <div class="metrics">
+          <div>
+            <div class="metric-title">Current Referrals</div>
+            <div class="metric-value" id="refCount">0</div>
+            <div class="sub">For selected target</div>
+          </div>
+          <div class="ring" id="ring" style="--p:0deg"><span id="ringPct">0%</span></div>
+        </div>
+        <div style="margin-top:14px">
+          <div class="bar"><div id="barFill"></div></div>
+          <div class="sub" style="margin-top:6px" id="progressText">0 / 10 (non-students target)</div>
+        </div>
+      </div>
+
+      <div class="card span-6">
+        <div class="metric-title" style="margin-bottom:8px">This Week’s Target</div>
+        <label style="display:flex; align-items:center; gap:10px">
+          <span class="sub">Non-students (10)</span>
+          <input type="checkbox" id="targetToggle">
+          <span class="sub">Students Package (25)</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Quick actions -->
+    <section class="grid">
+      <div class="span-6">
+        <div class="quick-grid">
+          <div class="qcard" onclick="location.href='ad-ref.html'">
+            <div class="qicon"><i class="fa-solid fa-user-plus"></i></div>
+            <div class="qtitle">Add Referral</div>
+            <div class="qdesc">Redirects to referral form</div>
+          </div>
+          <div class="qcard" onclick="location.href='ad-refer.html'">
+            <div class="qicon"><i class="fa-solid fa-link"></i></div>
+            <div class="qtitle">Affiliate Details</div>
+            <div class="qdesc">Redirects to affiliate setup</div>
+          </div>
+          <div class="qcard" onclick="downloadData()">
+            <div class="qicon"><i class="fa-solid fa-download"></i></div>
+            <div class="qtitle">Download Data</div>
+            <div class="qdesc">Export referrals (weekly limit)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Referral Codes -->
+    <section class="grid">
+      <div class="card span-12">
+        <div class="metric-title" style="margin-bottom:10px">Referral Codes</div>
+        <table id="codesTable">
+          <thead><tr><th>#</th><th>Referral Code</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="foot">© MoniSharp • Advertiser Suite</div>
+  </main>
+
+  <div class="alert-container" id="alertBox"></div>
+
+
+  <script>
+  const store = {
+    read:(k,f)=>{try{return JSON.parse(localStorage.getItem(k))??f}catch{return f}},
+    write:(k,v)=>localStorage.setItem(k,JSON.stringify(v))
+  };
+
+  const K = {
+    referGroup:'ad-referGroup',
+    target:'ms_adv_target',
+    lastDownload:'ms_last_download'
+  };
+
+  let referGroup = store.read(K.referGroup,[]);
+  let targetType = store.read(K.target,'non');
+
+  const refCount=document.getElementById('refCount');
+  const ring=document.getElementById('ring');
+  const ringPct=document.getElementById('ringPct');
+  const barFill=document.getElementById('barFill');
+  const progressText=document.getElementById('progressText');
+  const targetToggle=document.getElementById('targetToggle');
+  const codesTable=document.querySelector('#codesTable tbody');
+
+  targetToggle.checked=(targetType==='student');
+
+  // helper: detect student vs non-student
+  function isStudentCode(code){
+    return !code.startsWith("PL-"); // everything except "PL-" is student
+  }
+
+  function render(){
+    // split codes into groups
+    const studentCodes = referGroup.filter(c=>isStudentCode(c));
+    const nonCodes = referGroup.filter(c=>c.startsWith("PL-"));
+
+    const refs = targetType==='student' ? studentCodes.length : nonCodes.length;
+    const baseGoal=targetType==='student'?25:10;
+
+    let goal=baseGoal;
+    if(refs>=baseGoal){
+      goal=targetType==='student'?50:20; // allow extra target
+      showAlert("Target reached! Inform admin. You can continue extra referrals.");
+    }
+
+    const pct=Math.min(100,Math.round((refs/goal)*100));
+
+    refCount.textContent=refs;              // show numeric count only
+    ring.style.setProperty('--p',pct*3.6+'deg');
+    ringPct.textContent=pct+'%';
+    barFill.style.width=pct+'%';
+    progressText.textContent=`${refs} / ${goal} (${targetType==='student'?'students':'non-students'} target)`;
+
+    // fill referral table with codes
+    codesTable.innerHTML="";
+    referGroup.forEach((code,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td>${i+1}</td><td>${code}</td>`;
+      codesTable.appendChild(tr);
+    });
+  }
+
+  function showAlert(msg){
+    const box=document.getElementById('alertBox');
+    const div=document.createElement('div');
+    div.className='alert';
+    div.textContent=msg;
+    box.appendChild(div);
+    setTimeout(()=>div.remove(),4000);
+  }
+
+  targetToggle.addEventListener('change',()=>{
+    targetType=targetToggle.checked?'student':'non';
+    store.write(K.target,targetType);
+    render();
+    showAlert(`Target switched to ${targetType==='student'?'25 Students':'10 Non-students'}`);
+  });
+
+  function downloadData(){
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0,10); // "2025-09-02"
+  const allowUnlimited = (todayStr === "2025-09-02");
+
+  const last = store.read(K.lastDownload,0);
+
+  if(!allowUnlimited){
+    const oneWeek = 7*24*60*60*1000;
+    if(now - last < oneWeek){
+      showAlert("Download available once per week. Try later.");
+      return;
+    }
+  }
+
+  let allData={};
+  for(let i=0;i<localStorage.length;i++){
+    let key=localStorage.key(i);
+    allData[key]=localStorage.getItem(key);
+  }
+
+  const blob=new Blob([JSON.stringify(allData,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="Monisharp.json";
+
+  // safer: append link to DOM
+  document.body.appendChild(a);
+
+  // try to auto trigger
+  a.click();
+
+  // cleanup after a delay
+  setTimeout(()=>{
+    URL.revokeObjectURL(url);
+    a.remove();
+    showAlert("Download finished. Check your downloads folder.");
+  },1000);
+
+  store.write(K.lastDownload,now.getTime());
+  showAlert("Preparing data file... Download starting.");
+}
+</script>
+</body>
+</html>
