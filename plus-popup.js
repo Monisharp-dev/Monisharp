@@ -1,5 +1,5 @@
 // ==============================
-// HTML & STYLE FOR DATA POPUP
+// HTML & STYLE FOR GAMES POPUP
 // ==============================
 const adPopupHTML = `
   <style>
@@ -8,7 +8,7 @@ const adPopupHTML = `
       bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
-      background: linear-gradient(135deg, #0f2027, #2c5364);
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
       color: white;
       width: 90%;
       max-width: 850px;
@@ -56,7 +56,7 @@ const adPopupHTML = `
       display: inline-block;
       padding: 10px 20px;
       background: #fff;
-      color: #0f2027;
+      color: #1e3c72;
       font-weight: bold;
       border-radius: 10px;
       text-decoration: none;
@@ -71,7 +71,7 @@ const adPopupHTML = `
 
     .ad-popup .close-btn {
       background: white;
-      color: #0f2027;
+      color: #1e3c72;
       border: none;
       border-radius: 50%;
       width: 32px;
@@ -119,16 +119,16 @@ const adPopupHTML = `
 
   <!-- AD CONTENT -->
   <div class="ad-popup" id="adPopup">
-    <i class="fas fa-sim-card main-icon"></i>
+    <i class="fas fa-gamepad main-icon"></i>
     <div class="content">
-      <h4>🔥 Weekly Data Deals on Monisharp!</h4>
+      <h4>🎮 New Games on MoniSharp!</h4>
       <p>
-        📶 Every week you can grab amazing <span class="highlight">MTN Data</span>:<br>
-        👉 <b>Plus Users</b> (Non-Students): <span class="highlight">1GB for ₦50</span><br>
-        👉 <b>Students Package</b>: <span class="highlight">110MB for ₦10</span><br><br>
-        ⏳ Hurry! Slots are limited.
+        Now you can earn while having fun 🤩<br><br>
+        👉 <span class="highlight">Coin Toss</span> 🎲 – stake ₦10, win ₦20+<br>
+        👉 <span class="highlight">Rock–Paper–Scissors</span> ✊✋✌ – stake ₦20, win ₦30<br><br>
+        🔥 More exciting games dropping soon!
       </p>
-      <a href="plus-data.html" class="cta-btn"><i class="fas fa-bolt"></i> Book Now</a>
+      <a href="plus-playgame.html" class="cta-btn"><i class="fas fa-play"></i> Play Now</a>
     </div>
     <button class="close-btn" onclick="document.getElementById('adPopup').remove()">×</button>
   </div>

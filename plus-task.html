@@ -8,9 +8,7 @@
   <link rel="stylesheet" href="bottom-nav.css"/>
   <link rel="stylesheet" href="image.css">
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -40,6 +38,8 @@
       text-align: center;
       margin-bottom: 25px;
       color: #93c5fd;
+      font-weight: bold;
+      letter-spacing: 0.5px;
     }
 
     .instruction-box {
@@ -50,6 +50,7 @@
       margin-bottom: 25px;
       font-size: 15.5px;
       color: #dbeafe;
+      line-height: 1.6;
     }
 
     .category-filter {
@@ -58,6 +59,12 @@
       flex-wrap: wrap;
       gap: 12px;
       margin-bottom: 30px;
+      position: sticky;
+      top: 10px;
+      background: linear-gradient(to right, #0f172a, #1e3a8a);
+      padding: 10px;
+      z-index: 1000;
+      border-radius: 12px;
     }
 
     .category-filter button {
@@ -68,13 +75,14 @@
       border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: all 0.3s;
     }
 
     .category-filter button.active,
     .category-filter button:hover {
       background-color: #2563eb;
       color: #fff;
+      transform: scale(1.05);
     }
 
     .task-card {
@@ -84,11 +92,12 @@
       margin-bottom: 25px;
       overflow: hidden;
       box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      transition: transform 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .task-card:hover {
       transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     }
 
     .task-header {
@@ -110,20 +119,32 @@
       margin: 0 0 8px;
       color: #93c5fd;
       font-size: 20px;
+      font-weight: 600;
     }
 
     .task-text ul {
       margin: 0;
       padding-left: 18px;
-      list-style: square;
+      list-style: none;
       color: #e2e8f0;
       font-size: 14.5px;
+      line-height: 1.5;
     }
 
-    .task-text p {
-      margin-top: 8px;
+    .task-text ul li::before {
+      content: "✅ ";
+      color: #3b82f6;
+    }
+
+    .reward-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      color: #fff;
       font-weight: bold;
-      color: #60a5fa;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      margin-top: 8px;
     }
 
     .task-details {
@@ -168,16 +189,15 @@
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
-      transition: background-color 0.3s;
+      transition: all 0.3s;
     }
 
     .submit-btn:hover {
       background-color: #2563eb;
+      transform: translateY(-2px);
     }
 
-    .hidden-id {
-      display: none;
-    }
+    .hidden-id { display: none; }
   </style>
 </head>
 <body>
@@ -198,152 +218,142 @@
   <i class="fas fa-arrow-left"></i> Go Back
 </button>
 
+<div class="task-container">
+  <h1 class="header"><i class="fas fa-tasks"></i> Complete Tasks</h1>
 
-  <div class="task-container">
-    <h1 class="header"><i class="fas fa-tasks"></i> Complete Tasks</h1>
-
-    <!-- Instruction Box -->
-    <div id="instruction" class="instruction-box">
-      <p><i class="fas fa-info-circle"></i> Click on a task below to start performing it.<br>
-        <b>👇 NEW TASKS ARE BELOW THE OLD ONES 👇</b></p>
-    </div>
-
-    <!-- Category Filter -->
-    <div class="category-filter" role="tablist" aria-label="Task categories">
-      <button class="active" onclick="filterTasks(event, 'all')" role="tab" aria-selected="true">
-        <i class="fas fa-globe"></i> All
-      </button>
-      <button onclick="filterTasks(event, 'social')" role="tab" aria-selected="false">
-        <i class="fas fa-share-alt"></i> Social Tasks
-      </button>
-      <button onclick="filterTasks(event, 'business')" role="tab" aria-selected="false">
-        <i class="fas fa-briefcase"></i> Business Tasks
-      </button>
-      <button onclick="filterTasks(event, 'other')" role="tab" aria-selected="false">
-        <i class="fas fa-ellipsis-h"></i> Other Tasks
-      </button>
-    </div>
-
-    <!-- Task Cards -->
-    <div id="task-list">
-
-      <!-- Task Card: YouTube -->
-      <div class="task-card" data-category="social" data-task-id="F73">
-        <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-F73">
-          <img src="logo2.png" alt="Task Thumbnail" />
-          <div class="task-text">
-            <h2><i class="fab fa-youtube"></i> Subscribe to YouTube Channel</h2>
-            <ul>
-              <li>Tap LINK below to view channel</li>
-              <li><a href="https://www.youtube.com/@Blossom-x2b" target="_blank">LINK</a></li>
-              <li>Subscribe to the YouTube Channel</li>
-              <li>Send screenshot</li>
-            </ul>
-            <p><i class="fas fa-coins"></i> Reward: ₦50</p>
-          </div>
-        </div>
-        <div class="task-details" id="task-details-F73">
-          <div class="how-to-do">
-            <strong><i class="fas fa-lightbulb"></i> How to do:</strong>
-            <p>1. Tap <b>LINK</b> above<br>2. Subscribe<br>3. Send screenshot</p>
-          </div>
-          <form class="task-form" novalidate>
-            <input type="hidden" name="Id" class="hidden-id" />
-            <textarea name="text" placeholder="Text proof ..." required></textarea>
-            <input type="file" name="screenshot" accept="image/*" required />
-            <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Task</button>
-          </form>
-        </div>
-      </div>
-
-      <!-- Task Card: WhatsApp Group -->
-      <div class="task-card" data-category="social" data-task-id="GY1">
-        <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-GY1">
-          <img src="logo2.png" alt="Task Thumbnail" />
-          <div class="task-text">
-            <h2><i class="fab fa-whatsapp"></i> Join WhatsApp Group</h2>
-            <ul>
-              <li>Get instant access to updates, tips, and resources! 🌟</li>
-              <li><a href="https://chat.whatsapp.com/FoKNB9GDMTb9nTZRGS2WkV" target="_blank">Join Group</a></li>
-              <li>Engage & send screenshot</li>
-            </ul>
-            <p><i class="fas fa-coins"></i> Reward: ₦50</p>
-          </div>
-        </div>
-        <div class="task-details" id="task-details-GY1">
-          <div class="how-to-do">
-            <strong><i class="fas fa-lightbulb"></i> How to do:</strong>
-            <p>1. Tap the link<br>2. Join the group<br>3. Send screenshot</p>
-          </div>
-          <form class="task-form" novalidate>
-            <input type="hidden" name="Id" class="hidden-id" />
-            <textarea name="text" placeholder="Text proof ..." required></textarea>
-            <input type="file" name="screenshot" accept="image/*" required />
-            <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Task</button>
-          </form>
-        </div>
-      </div>
-      
-      <!-- Task Card -->
-<div class="task-card" data-category="business" data-task-id="G2">
-  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-G2">
-    <img src="logo2.png" alt="Task Thumbnail" />
-    <div class="task-text">
-      <h2>Sign up for FREE ! 🔥</h2>
-      <ul>
-<li>Click the link below </li>
-<li> <a href="https://surveyflix.org/Account/Index?refCode=YHVX7HX" target="_blank" rel="noopener noreferrer">https://surveyflix.org/Account/Index?refCode=YHVX7HX</a></li>
-<li>Sign up properly </li>
-<li>Send screenshot of your Dashboard on the website After <b> SUCCESSFUL </b> registration</li>
-      </ul>
-      <p>Reward: ₦200</p>
-    </div>
+  <!-- Instruction Box -->
+  <div id="instruction" class="instruction-box">
+    <p><i class="fas fa-info-circle"></i> Click on a task below to start performing it.<br>
+      <b>👇 NEW TASKS ARE BELOW THE OLD ONES 👇</b></p>
   </div>
 
-  <div class="task-details" id="task-details-G2" style="display: none;">
-    <div class="how-to-do">
-      <strong>How to do:</strong>
-      <p>1. Click the link above in the instructions<br>2. Sign up properly<br>3. Screenshot your dashboard in the website After a <b> SUCCESSFUL</b> registration</p>
-    </div>
-    <form class="task-form" novalidate>
-      <input type="hidden" name="Id" class="hidden-id" />
-      <textarea name="text" placeholder="Text proof ..." required></textarea>
-      <input type="file" name="screenshot" accept="image/*" required />
-      <button type="submit" class="submit-btn">Submit Task</button>
-    </form>
+  <!-- Category Filter -->
+  <div class="category-filter" role="tablist" aria-label="Task categories">
+    <button class="active" onclick="filterTasks(event, 'all')" role="tab" aria-selected="true">
+      <i class="fas fa-globe"></i> All
+    </button>
+    <button onclick="filterTasks(event, 'social')" role="tab" aria-selected="false">
+      <i class="fas fa-share-alt"></i> Social Tasks
+    </button>
+    <button onclick="filterTasks(event, 'business')" role="tab" aria-selected="false">
+      <i class="fas fa-briefcase"></i> Business Tasks
+    </button>
+    <button onclick="filterTasks(event, 'other')" role="tab" aria-selected="false">
+      <i class="fas fa-ellipsis-h"></i> Other Tasks
+    </button>
   </div>
-</div>
 
-      
-      <!-- Task Card -->
+  <!-- Task Cards -->
+  <div id="task-list">
+
+    <!-- YouTube Task -->
+    <div class="task-card" data-category="social" data-task-id="F73">
+      <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-F73">
+        <img src="logo2.png" alt="Task Thumbnail" />
+        <div class="task-text">
+          <h2><i class="fab fa-youtube"></i> Subscribe to YouTube Channel</h2>
+          <ul>
+            <li>Tap <a href="https://www.youtube.com/@Blossom-x2b" target="_blank">LINK</a> to view channel</li>
+            <li>Subscribe to the channel</li>
+            <li>Send screenshot</li>
+          </ul>
+          <span class="reward-badge"><i class="fas fa-coins"></i> ₦50</span>
+        </div>
+      </div>
+      <div class="task-details" id="task-details-F73">
+        <div class="how-to-do">
+          <strong><i class="fas fa-lightbulb"></i> How to do:</strong>
+          <p>1. Tap the link above<br>2. Subscribe<br>3. Send screenshot</p>
+        </div>
+        <form class="task-form" novalidate>
+          <input type="hidden" name="Id" class="hidden-id" />
+          <textarea name="text" placeholder="Text proof ..." required></textarea>
+          <input type="file" name="screenshot" accept="image/*" required />
+          <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Task</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- WhatsApp Group Task -->
+    <div class="task-card" data-category="social" data-task-id="GY1">
+      <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-GY1">
+        <img src="logo2.png" alt="Task Thumbnail" />
+        <div class="task-text">
+          <h2><i class="fab fa-whatsapp"></i> Join WhatsApp Group</h2>
+          <ul>
+            <li>Get instant access to updates, tips, and resources! 🌟</li>
+            <li><a href="https://chat.whatsapp.com/FoKNB9GDMTb9nTZRGS2WkV" target="_blank">Join Group</a></li>
+            <li>Engage & send screenshot</li>
+          </ul>
+          <span class="reward-badge"><i class="fas fa-coins"></i> ₦50</span>
+        </div>
+      </div>
+      <div class="task-details" id="task-details-GY1">
+        <div class="how-to-do">
+          <strong><i class="fas fa-lightbulb"></i> How to do:</strong>
+          <p>1. Tap the link<br>2. Join the group<br>3. Send screenshot</p>
+        </div>
+        <form class="task-form" novalidate>
+          <input type="hidden" name="Id" class="hidden-id" />
+          <textarea name="text" placeholder="Text proof ..." required></textarea>
+          <input type="file" name="screenshot" accept="image/*" required />
+          <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Task</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Business Task -->
+    <div class="task-card" data-category="business" data-task-id="G2">
+      <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-G2">
+        <img src="logo2.png" alt="Task Thumbnail" />
+        <div class="task-text">
+          <h2><i class="fas fa-briefcase"></i> Sign up for FREE ! 🔥</h2>
+          <ul>
+            <li>Click the link below</li>
+            <li><a href="https://surveyflix.org/Account/Index?refCode=YHVX7HX" target="_blank">Sign Up Here</a></li>
+            <li>Complete registration</li>
+            <li>Send screenshot of your dashboard</li>
+          </ul>
+          <span class="reward-badge"><i class="fas fa-coins"></i> ₦200</span>
+        </div>
+      </div>
+      <div class="task-details" id="task-details-G2">
+        <div class="how-to-do">
+          <strong><i class="fas fa-lightbulb"></i> How to do:</strong>
+          <p>1. Tap the link above<br>2. Sign up properly<br>3. Screenshot your dashboard after <b>successful</b> registration</p>
+        </div>
+        <form class="task-form" novalidate>
+          <input type="hidden" name="Id" class="hidden-id" />
+          <textarea name="text" placeholder="Text proof ..." required></textarea>
+          <input type="file" name="screenshot" accept="image/*" required />
+          <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Submit Task</button>
+        </form>
+      </div>
+    </div>
+
+<!-- Task Card -->
 <div class="task-card" data-category="business" data-task-id="GJHLM">
   <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-GJHLM">
     <img src="logo2.png" alt="Task Thumbnail" />
     <div class="task-text">
       <h2>Write a Review about MoniSharp 😊</h2>
       <ul>
-<li>Share your honest opinion about MoniSharp! Let us know what you like, any features you enjoy, or suggestions you have.</li>
-<li></li>
-<li><b>✅ Requirements:</b></li>
-<li></li>
-<li>Write at least 2–3 sentences</li>
-<li></li>
-<li>Post it on either Facebook, Twitter, WhatsApp Status, or Instagram Story</li>
-<li></li>
-<li>Include the word "<strong>MoniSharp</strong>" in the review</li>
-<li></li>
-<li></li>
-<li><b>📸 Proof Needed:</b></li>
-<li>Screenshot of your post/story with your review clearly visible.</li>
+        <li>Share your honest opinion about MoniSharp! Let us know what you like, which features you enjoy, or any suggestions you have.</li>
+        <li><b>✅ Requirements:</b></li>
+        <li>Write at least 2–3 sentences</li>
+        <li>Post it on Facebook, Twitter, WhatsApp Status, or Instagram Story</li>
+        <li>Include the word "<strong>MoniSharp</strong>" in your review</li>
+        <li><b>📸 Proof Needed:</b></li>
+        <li>Screenshot of your post/story with your review clearly visible.</li>
       </ul>
-      <p>Reward: ₦50</p>
+      <span class="reward-badge"><i class="fas fa-coins"></i> ₦50</span>
     </div>
   </div>
 
   <div class="task-details" id="task-details-GJHLM" style="display: none;">
     <div class="how-to-do">
       <strong>How to do:</strong>
-      <p>1. Write at least 2–3 sentences<br>2. <br>3. Post it on either Facebook, Twitter, WhatsApp Status, or Instagram Story<br>4. <br>5. Include the word "<strong>MoniSharp</strong>" in the review<br>6. <br>7. <br>8. <b>📸 Proof Needed:</b><br>9. Screenshot of your post/story with your review clearly visible.</p>
+      <p>1. Write at least 2–3 sentences<br>2. Post it on Facebook, Twitter, WhatsApp Status, or Instagram Story<br>3. Include the word "<strong>MoniSharp</strong>" in your review<br>4. <b>📸 Proof Needed:</b><br>5. Take a screenshot of your post/story with your review clearly visible.</p>
     </div>
     <form class="task-form" novalidate>
       <input type="hidden" name="Id" class="hidden-id" />
@@ -359,19 +369,19 @@
   <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-BNMCZ">
     <img src="logo.png" alt="Task Thumbnail" />
     <div class="task-text">
-      <h2>Tell us Something 😊</h2>
+      <h2>Tell Us Something 😊</h2>
       <ul>
-<li><h2> How is our referral system? </h2></li>
-<li><h2> Do you understand it ? </h2></li>
+        <li><h2>How is our referral system?</h2></li>
+        <li><h2>Do you understand it?</h2></li>
       </ul>
-      <p>Reward: ₦50</p>
+      <span class="reward-badge"><i class="fas fa-coins"></i> ₦50</span>
     </div>
   </div>
 
   <div class="task-details" id="task-details-BNMCZ" style="display: none;">
     <div class="how-to-do">
       <strong>How to do:</strong>
-      <p>1. Type your answer below<br>2. Send Screenshot of your referral code</p>
+      <p>1. Type your answer below<br>2. Send a screenshot of your referral code</p>
     </div>
     <form class="task-form" novalidate>
       <input type="hidden" name="Id" class="hidden-id" />
@@ -389,20 +399,20 @@
     <div class="task-text">
       <h2>Post Something Nice about MoniSharp 😊</h2>
       <ul>
-<li>Create a post on Facebook </li>
-<li>Type something nice about MoniSharp 😊 </li>
-<li>Post it</li>
-<li>Send Screenshot </li>
-<li>Send post link</li>
+        <li>Create a post on Facebook</li>
+        <li>Write something nice about MoniSharp 😊</li>
+        <li>Post it</li>
+        <li>Send a screenshot</li>
+        <li>Share the post link</li>
       </ul>
-      <p>Reward: ₦50</p>
+      <span class="reward-badge"><i class="fas fa-coins"></i> ₦50</span>
     </div>
   </div>
 
   <div class="task-details" id="task-details-KMNLV" style="display: none;">
     <div class="how-to-do">
       <strong>How to do:</strong>
-      <p>1. Create a post on Facebook<br>2. Type something nice about MoniSharp 😊<br>3. Post it<br>4. Send Screenshot<br>5. Send post link</p>
+      <p>1. Create a post on Facebook<br>2. Write something nice about MoniSharp 😊<br>3. Post it<br>4. Take a screenshot<br>5. Share the post link</p>
     </div>
     <form class="task-form" novalidate>
       <input type="hidden" name="Id" class="hidden-id" />
@@ -418,100 +428,20 @@
   <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-DGSUB">
     <img src="logo.png" alt="Task Thumbnail" />
     <div class="task-text">
-      <h2>Download app and Register for FREE ✅</h2>
+      <h2>Download the App and Register for FREE ✅</h2>
       <ul>
-<li>Download Vend App NOW & use my referral code: <b>wFo5P24</b></li>
-<li> <a href="https://play.google.com/store/apps/details?id=com.codegreenie.vend" target="_blank" rel="noopener noreferrer">CLICK HERE TO DOWNLOAD</a></li>
-<li>Send screenshot of your dashboard <b> AFTER</b> successful REGISTRATION</li>
+        <li>Download the Vend App NOW & use my referral code: <b>wFo5P24</b></li>
+        <li><a href="https://play.google.com/store/apps/details?id=com.codegreenie.vend" target="_blank" rel="noopener noreferrer">CLICK HERE TO DOWNLOAD</a></li>
+        <li>Send a screenshot of your dashboard <b>AFTER</b> successful registration</li>
       </ul>
-      <p>Reward: ₦100</p>
+      <span class="reward-badge"><i class="fas fa-coins"></i> ₦100</span>
     </div>
   </div>
 
   <div class="task-details" id="task-details-DGSUB" style="display: none;">
     <div class="how-to-do">
       <strong>How to do:</strong>
-      <p>1. Download the Vend app by clicking the above in the instructions<br>2. Register with referral code<br>3. Send screenshot of your dashboard <b> AFTER</b> successful REGISTRATION</p>
-    </div>
-    <form class="task-form" novalidate>
-      <input type="hidden" name="Id" class="hidden-id" />
-      <textarea name="text" placeholder="Text proof ..." required></textarea>
-      <input type="file" name="screenshot" accept="image/*" required />
-      <button type="submit" class="submit-btn">Submit Task</button>
-    </form>
-  </div>
-</div>
-
-<!-- Task Card -->
-<div class="task-card" data-category="business" data-task-id="MON4433">
-  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-MON4433">
-    <img src="logo.png" alt="Task Thumbnail" />
-    <div class="task-text">
-      <h2>Link WhatsApp Account for 24 hours 🔥</h2>
-      <ul>
-<li>Click the link below 👇👇</li>
-<li> <a href="https://znnns.vip/pages/login/register?promo_code=07D681F8" target="_blank" rel="noopener noreferrer"><b>CLICK HERE</b></a></li>
-<li>Register and <b>link/bind your WhatsApp account</b></li>
-<li>Allow it for 24 hours before disconnecting </li>
-<li>Send your WhatsApp number </li>
-<li>Send screenshot of you linking your WhatsApp account</li>
-      </ul>
-      <p>Reward: ₦250</p>
-    </div>
-  </div>
-
-  <div class="task-details" id="task-details-MON4433" style="display: none;">
-    <div class="how-to-do">
-      <strong>How to do:</strong>
-      <p>1. Click the link above in the instructions<br>2. Register and <b>link/bind your WhatsApp account</b><br>3. Allow it for 24 hours before disconnecting<br>4. Send your WhatsApp number<br>5. Send screenshot of you linking your WhatsApp account</p>
-    </div>
-    <form class="task-form" novalidate>
-      <input type="hidden" name="Id" class="hidden-id" />
-      <textarea name="text" placeholder="Text proof ..." required></textarea>
-      <input type="file" name="screenshot" accept="image/*" required />
-      <button type="submit" class="submit-btn">Submit Task</button>
-    </form>
-  </div>
-</div>
-
-<div class="task-details" id="task-details-MON4433" style="display: none;">
-    <div class="how-to-do">
-      <strong>How to do:</strong>
-      <p>1. Click the link above in the instructions<br>2. Register and <b>link/bind your WhatsApp account</b><br>3. Allow it for 24 hours before disconnecting<br>4. Send your WhatsApp number<br>5. Send screenshot of you linking your WhatsApp account</p>
-    </div>
-    <form class="task-form" novalidate>
-      <input type="hidden" name="Id" class="hidden-id" />
-      <textarea name="text" placeholder="Text proof ..." required></textarea>
-      <input type="file" name="screenshot" accept="image/*" required />
-      <button type="submit" class="submit-btn">Submit Task</button>
-    </form>
-  </div>
-</div>
-
-<!-- Task Card -->
-<div class="task-card" data-category="business" data-task-id="WEDTHU">
-  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-WEDTHU">
-    <img src="logo.png" alt="Task Thumbnail" />
-    <div class="task-text">
-      <h2>WhatsApp linking ✅🔥</h2>
-      <ul>
-<li> <a href="https://task33.vip/#/reg?i=8KTJNLMF" target="_blank" rel="noopener noreferrer"><b>CLICK HERE</b></a></li>
-<li></li>
-<li>Click on the link above 👆register and link your Whatsapp account.  </li>
-<li>Send screenshot </li>
-<li></li>
-<li>When done </li>
-<li>Dm me on Whatsapp for extra reward </li>
-<li>07051791141</li>
-      </ul>
-      <p>Reward: ₦100</p>
-    </div>
-  </div>
-
-  <div class="task-details" id="task-details-WEDTHU" style="display: none;">
-    <div class="how-to-do">
-      <strong>How to do:</strong>
-      <p>1. Click the link above 👆 in the instructions<br>2. Register and link your WhatsApp account<br>3. Send screenshot<br>4. Message the person on WhatsApp for more rewards</p>
+      <p>1. Download the Vend app using the link above<br>2. Register with the referral code<br>3. Take a screenshot of your dashboard <b>AFTER</b> successful registration</p>
     </div>
     <form class="task-form" novalidate>
       <input type="hidden" name="Id" class="hidden-id" />
@@ -523,138 +453,51 @@
 </div>
 
 
-<!-- Task Card -->
-<div class="task-card" data-category="business" data-task-id="NWTHURS">
-  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-NWTHURS">
-    <img src="logo.png" alt="Task Thumbnail" />
-    <div class="task-text">
-      <h2>REGISTER ON XRP 🔥🔥</h2>
-      <ul>
-<li>Get ready to be earning in xrp currency, which 1xrp =3$ </li>
-<li>Register with my link below</li>
-<li>👇👇</li>
-<li> <a href="https://t.me/FaucetEarner_bot/app?startapp=770611022087" target="_blank" rel="noopener noreferrer">CLICK HERE</a></li>
-<li>Send screenshot</li>
-      </ul>
-      <p>Reward: ₦100</p>
-    </div>
-  </div>
-
-  <div class="task-details" id="task-details-NWTHURS" style="display: none;">
-    <div class="how-to-do">
-      <strong>How to do:</strong>
-      <p>1. Click link above 👆 in the instructions<br>2. Register carefully<br>3. Send screenshot</p>
-    </div>
-    <form class="task-form" novalidate>
-      <input type="hidden" name="Id" class="hidden-id" />
-      <textarea name="text" placeholder="Text proof ..." required></textarea>
-      <input type="file" name="screenshot" accept="image/*" required />
-      <button type="submit" class="submit-btn">Submit Task</button>
-    </form>
   </div>
 </div>
 
-<!-- Task Card -->
-<div class="task-card" data-category="social" data-task-id="SOCIALJK">
-  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-SOCIALJK">
-    <img src="logo.png" alt="Task Thumbnail" />
-    <div class="task-text">
-      <h2>JOIN WHATSAPP GROUP</h2>
-      <ul>
-<li>Join WhatsApp group for update 👇</li>
-<li> <a href="https://chat.whatsapp.com/HdUf4aHYjkwGZwakvCFsZY?mode=ac_t" target="_blank" rel="noopener noreferrer">https://chat.whatsapp.com...</a></li>
-      </ul>
-      <p>Reward: ₦10</p>
-    </div>
-  </div>
+<!-- JavaScript -->
+<script>
+  // Toggle task details
+  function toggleTaskDetails(header) {
+    const details = header.nextElementSibling;
+    const isVisible = details.style.display === "flex";
+    details.style.display = isVisible ? "none" : "flex";
+    details.style.flexDirection = "column";
+    header.setAttribute('aria-expanded', !isVisible);
+  }
 
-  <div class="task-details" id="task-details-SOCIALJK" style="display: none;">
-    <div class="how-to-do">
-      <strong>How to do:</strong>
-      <p>1. Click the group link above<br>2. Join the group<br>3. Screenshot it<br>4. Type your phone number</p>
-    </div>
-    <form class="task-form" novalidate>
-      <input type="hidden" name="Id" class="hidden-id" />
-      <textarea name="text" placeholder="Text proof ..." required></textarea>
-      <input type="file" name="screenshot" accept="image/*" required />
-      <button type="submit" class="submit-btn">Submit Task</button>
-    </form>
-  </div>
-</div>
-
-<!-- Task Card -->
-<div class="task-card" data-category="business" data-task-id="GGGGG">
-  <div class="task-header" onclick="toggleTaskDetails(this)" tabindex="0" role="button" aria-expanded="false" aria-controls="task-details-GGGGG">
-    <img src="logo.png" alt="Task Thumbnail" />
-    <div class="task-text">
-      <h2>Download game and Play 🔥✨</h2>
-      <ul>
-<li>Hi Mate! There is no room for losers just winner on waje game. click the link below to download the app  and <b>don't forget to input my code 63951119 in the referral to get free bonuses</b> to help you win more. Enjoy! <a href="https://www.wajegame.net/?shareMsgIdx=3&id=com.hfhy.wajecasino.palmgame" target="_blank" rel="noopener noreferrer">https://www.wajegame.net/?shareMsgIdx=3&id=com.hfhy.wajecasino.palmgame</a></li>
-      </ul>
-      <p>Reward: ₦50</p>
-    </div>
-  </div>
-
-  <div class="task-details" id="task-details-GGGGG" style="display: none;">
-    <div class="how-to-do">
-      <strong>How to do:</strong>
-      <p>1. Click link above 👆<br>2. Download game and <b>PLAY</b><br>3. Send screenshot that you have downloaded the app<br>4. Type in your email address</p>
-    </div>
-    <form class="task-form" novalidate>
-      <input type="hidden" name="Id" class="hidden-id" />
-      <textarea name="text" placeholder="Text proof ..." required></textarea>
-      <input type="file" name="screenshot" accept="image/*" required />
-      <button type="submit" class="submit-btn">Submit Task</button>
-    </form>
-  </div>
-</div>
-
-
-    </div>
-  </div>
-
-  <!-- JavaScript -->
-  <script>
-    // Toggle task details
-    function toggleTaskDetails(header) {
-      const details = header.nextElementSibling;
-      const isVisible = details.style.display === "flex";
-      details.style.display = isVisible ? "none" : "flex";
-      details.style.flexDirection = "column";
-      header.setAttribute('aria-expanded', !isVisible);
-    }
-
-    // Filter by category
-    function filterTasks(event, category) {
-      const buttons = document.querySelectorAll('.category-filter button');
-      buttons.forEach(btn => {
-        btn.classList.remove('active');
-        btn.setAttribute('aria-selected', 'false');
-      });
-
-      event.target.classList.add('active');
-      event.target.setAttribute('aria-selected', 'true');
-
-      const tasks = document.querySelectorAll('.task-card');
-      tasks.forEach(task => {
-        const taskCategory = task.getAttribute('data-category');
-        task.style.display = (category === 'all' || taskCategory === category) ? "block" : "none";
-      });
-    }
-
-    // Prefill Id fields
-    document.addEventListener('DOMContentLoaded', () => {
-      const userId = localStorage.getItem('plus-Id');
-      document.querySelectorAll('.hidden-id').forEach(input => {
-        input.value = userId || '';
-      });
+  // Filter by category
+  function filterTasks(event, category) {
+    const buttons = document.querySelectorAll('.category-filter button');
+    buttons.forEach(btn => {
+      btn.classList.remove('active');
+      btn.setAttribute('aria-selected', 'false');
     });
-  </script>
+
+    event.target.classList.add('active');
+    event.target.setAttribute('aria-selected', 'true');
+
+    const tasks = document.querySelectorAll('.task-card');
+    tasks.forEach(task => {
+      const taskCategory = task.getAttribute('data-category');
+      task.style.display = (category === 'all' || taskCategory === category) ? "block" : "none";
+    });
+  }
+
+  // Prefill Id fields
+  document.addEventListener('DOMContentLoaded', () => {
+    const userId = localStorage.getItem('plus-Id');
+    document.querySelectorAll('.hidden-id').forEach(input => {
+      input.value = userId || '';
+    });
+  });
+</script>
 <script src="plus-task.js"></script>
-  <script src="image.js"></script>
-  <script src="plus-copylink.js"></script>
-  <script src="pop.js"></script>
-  <script src="ad place.js"></script>
+<script src="image.js"></script>
+<script src="plus-copylink.js"></script>
+<script src="pop.js"></script>
+<script src="ad place.js"></script>
 <script src="online.js"></script>
 </body>
 </html>

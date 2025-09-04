@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MoniSharp Coin Toss</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+  body {
+    background: radial-gradient(circle at top, #141E30, #243B55);
+    color:#fff; display:flex; flex-direction:column; align-items:center;
+    padding:20px; min-height:100vh; overflow:hidden;
+  }
+  header { width:100%; display:flex; justify-content:space-between; margin-bottom:20px; }
+  .balance-box {
+    background: rgba(255,255,255,0.1);
+    padding:12px 20px; border-radius:12px; backdrop-filter:blur(8px);
+    font-weight:600; box-shadow:0 4px 12px rgba(0,0,0,0.4);
+  }
+  .game-container {
+    background: rgba(255,255,255,0.08); padding:30px 25px; border-radius:20px;
+    text-align:center; max-width:420px; width:100%; box-shadow:0 8px 25px rgba(0,0,0,0.4);
+    transition: transform 0.3s ease; position:relative;
+  }
+  .game-container:hover { transform:scale(1.02); }
+  h1 { font-size:1.8rem; margin-bottom:10px; letter-spacing:1px; }
+  .bot-name { font-size:1rem; margin-bottom:15px; display:flex; justify-content:center; align-items:center; gap:8px; }
+  .bot-avatar {
+    width:35px; height:35px; background:#ff6b6b; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-weight:bold; color:#fff;
+    box-shadow:0 3px 6px rgba(0,0,0,0.3);
+  }
+  .coin {
+    width:120px; height:120px; margin:20px auto; border-radius:50%;
+    background: radial-gradient(circle, #FFD700 40%, #b8860b 100%);
+    display:flex; align-items:center; justify-content:center; font-size:1.8rem; font-weight:bold;
+    box-shadow:0 10px 25px rgba(0,0,0,0.4); transition: transform 1s ease-in-out;
+  }
+  .stake-box { margin:15px 0; }
+  .stake-btn {
+    padding:8px 16px; margin:5px; border:none; border-radius:8px;
+    background:linear-gradient(135deg,#007bff,#0056b3); color:#fff; cursor:pointer; font-weight:600;
+    transition:0.3s;
+  }
+  .stake-btn.active { background:linear-gradient(135deg,#28a745,#218838); }
+  .buttons { margin:25px 0; }
+  button {
+    padding:12px 22px; margin:5px; border:none; border-radius:8px;
+    font-size:1rem; cursor:pointer; font-weight:600; transition:0.3s; color:#fff;
+  }
+  button:hover { transform:scale(1.05); }
+  .heads { background: linear-gradient(135deg,#28a745,#218838); }
+  .tails { background: linear-gradient(135deg,#dc3545,#b52a37); }
+  .popup {
+    position:fixed; top:30px; left:50%; transform:translateX(-50%);
+    background: linear-gradient(135deg,#FFD700,#FF8C00); color:#000;
+    padding:14px 22px; border-radius:10px; box-shadow:0 8px 20px rgba(0,0,0,0.4);
+    opacity:0; pointer-events:none; transition:all 0.4s ease; font-weight:600; z-index:1000;
+  }
+  .popup.show { opacity:1; top:50px; pointer-events:auto; }
+
+  /* Help icon */
+  .help-icon {
+    position:fixed; bottom:20px; right:20px;
+    background:#FFD700; color:#000; font-size:1.5rem;
+    width:45px; height:45px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.4); z-index:1100;
+  }
+  .help-box {
+    position:fixed; bottom:80px; right:20px;
+    background:#fff; color:#000; font-size:0.9rem;
+    padding:15px; border-radius:12px; width:250px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.4);
+    display:none; animation:fadeIn 0.3s ease forwards; z-index:1090;
+  }
+  .help-box ul { margin-left:15px; }
+  @keyframes fadeIn { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+
+  /* Confetti */
+  .confetti-piece {
+    position:absolute; width:8px; height:8px; background:gold; top:0; left:50%;
+    animation:fall 1.5s linear forwards; opacity:0.9; z-index:999;
+  }
+  @keyframes fall {
+    0% { transform:translateY(0) rotate(0deg); opacity:1; }
+    100% { transform:translateY(300px) rotate(720deg); opacity:0; }
+  }
+
+  /* Floating stars */
+  .star {
+    position:absolute; width:2px; height:2px; background:white; border-radius:50%; opacity:0.7;
+    animation:twinkle 3s infinite alternate;
+  }
+  @keyframes twinkle { 0%{opacity:0.2;} 100%{opacity:0.8;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="balance-box">Deposit: ₦<span id="depositBalance">0</span></div>
+  <div class="balance-box">Game: ₦<span id="gameBalance">0</span></div>
+</header>
+
+<div class="game-container">
+  <h1>🎲 Coin Toss</h1>
+  <div class="bot-name">
+    <div class="bot-avatar" id="botAvatar">B</div>
+    <span id="botName"></span>
+  </div>
+  <div class="coin" id="coin">?</div>
+
+  <div class="stake-box">
+    <span>Choose Stake:</span>
+    <button class="stake-btn active" onclick="setStake(10)">₦10</button>
+    <button class="stake-btn" onclick="setStake(30)">₦30</button>
+    <button class="stake-btn" onclick="setStake(50)">₦50</button>
+  </div>
+
+  <div class="buttons">
+    <button class="heads" onclick="playGame('Heads')">Heads</button>
+    <button class="tails" onclick="playGame('Tails')">Tails</button>
+  </div>
+</div>
+
+<div class="help-icon" id="helpIcon">❓</div>
+<div class="help-box" id="helpBox">
+  <h3>📖 How to Play</h3>
+  <ul>
+    <li>Choose your stake (₦10, ₦30, ₦50).</li>
+    <li>Each play deducts that stake from Deposit Balance.</li>
+    <li>Guess Heads or Tails.</li>
+    <li>If correct → win <b>2× your stake</b> into Game Balance.</li>
+    <li>If wrong → you lose your stake.</li>
+  </ul>
+</div>
+
+<div class="popup" id="popup"></div>
+
+<!-- Audio -->
+<audio id="flipSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
+<audio id="winSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
+<audio id="loseSound" src="https://www.fesliyanstudios.com/play-mp3/4381" preload="auto"></audio>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+
+  const userId = localStorage.getItem("plus-Id")||"defaultUser";
+  const depositKey = `plus-depositBalance_${userId}`;
+  const gameKey = `plusgameBalance_${userId}`;
+
+  if(!localStorage.getItem(depositKey)) localStorage.setItem(depositKey,0);
+  if(!localStorage.getItem(gameKey)) localStorage.setItem(gameKey,0);
+
+  updateBalances();
+
+  const botNames=["Michael","Sophia","Ayo","Grace","Daniel","Amara","Chinedu","Rose","David","Kemi"];
+  const randomBot=botNames[Math.floor(Math.random()*botNames.length)];
+  document.getElementById("botName").textContent=randomBot;
+  document.getElementById("botAvatar").textContent=randomBot[0].toUpperCase();
+
+  const flipSound=document.getElementById("flipSound");
+  const winSound=document.getElementById("winSound");
+  const loseSound=document.getElementById("loseSound");
+
+  // floating stars
+  for(let i=0;i<50;i++){
+    const star=document.createElement("div");
+    star.className="star";
+    star.style.top=Math.random()*window.innerHeight+"px";
+    star.style.left=Math.random()*window.innerWidth+"px";
+    star.style.animationDuration=2+Math.random()*3+"s";
+    document.body.appendChild(star);
+  }
+
+  // --- Random win/loss generator (4–7 wins per 15 rounds) ---
+  let resultsPool = [];
+  function refillPool(){
+    const winCount = Math.floor(Math.random()*4)+4;
+    const lossCount = 15 - winCount;
+    resultsPool = Array(winCount).fill("WIN").concat(Array(lossCount).fill("LOSE"));
+    for(let i=resultsPool.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [resultsPool[i],resultsPool[j]]=[resultsPool[j],resultsPool[i]];
+    }
+  }
+  refillPool();
+
+  // Stake handling
+  let currentStake = 10;
+  window.setStake = (val)=>{
+    currentStake = val;
+    document.querySelectorAll(".stake-btn").forEach(btn=>btn.classList.remove("active"));
+    event.target.classList.add("active");
+  };
+
+  window.playGame=(choice)=>{
+    let deposit=parseInt(localStorage.getItem(depositKey));
+    let game=parseInt(localStorage.getItem(gameKey));
+
+    if(deposit<currentStake){
+      showPopup("❌ Insufficient deposit balance!");
+      return;
+    }
+
+    deposit-=currentStake;
+    localStorage.setItem(depositKey,deposit);
+
+    const tossResult=Math.random()<0.5?"Heads":"Tails";
+    const coin=document.getElementById("coin");
+    coin.style.transform="rotateY(1440deg)";
+    flipSound.play();
+
+    setTimeout(()=>{
+      coin.textContent=tossResult==="Heads"?"H":"T";
+      coin.style.transform="rotateY(0deg)";
+
+      if(resultsPool.length===0) refillPool();
+      const outcome = resultsPool.pop();
+
+      if(outcome==="WIN" && choice===tossResult){
+        let winAmount=currentStake*2;
+        game+=winAmount;
+        localStorage.setItem(gameKey,game);
+        showPopup(`🎉 WIN! It was ${tossResult} (+₦${winAmount})`);
+        winSound.play();
+        launchConfetti();
+      } else {
+        showPopup(`😢 You lost! It was ${tossResult}`);
+        loseSound.play();
+      }
+      updateBalances();
+    },1000);
+  };
+
+  function updateBalances(){
+    document.getElementById("depositBalance").textContent=localStorage.getItem(depositKey);
+    document.getElementById("gameBalance").textContent=localStorage.getItem(gameKey);
+  }
+
+  function showPopup(msg){
+    const popup=document.getElementById("popup");
+    popup.textContent=msg;
+    popup.classList.add("show");
+    setTimeout(()=>popup.classList.remove("show"),3500);
+  }
+
+  function launchConfetti(){
+    for(let i=0;i<30;i++){
+      const conf=document.createElement("div");
+      conf.className="confetti-piece";
+      conf.style.left=Math.random()*document.querySelector(".game-container").offsetWidth+"px";
+      document.querySelector(".game-container").appendChild(conf);
+      setTimeout(()=>conf.remove(),1500);
+    }
+  }
+
+  // Help toggle
+  document.getElementById("helpIcon").addEventListener("click",()=>{
+    const box=document.getElementById("helpBox");
+    box.style.display = box.style.display==="block" ? "none" : "block";
+  });
+
+});
+</script>
+</body>
+</html>

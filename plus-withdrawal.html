@@ -94,12 +94,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('withdrawForm');
   const loaderOverlay = document.getElementById('loaderOverlay');
 
-  // Show messages
+  // 🔔 Centered, professional notification
   function showNotification(message, type) {
     notification.textContent = message;
     notification.className = `notification ${type}`;
-    notification.style.display = 'block';
-    setTimeout(() => notification.style.display = 'none', 5000);
+    notification.style.display = 'flex';
+    notification.style.position = 'fixed';
+    notification.style.top = '50%';
+    notification.style.left = '50%';
+    notification.style.transform = 'translate(-50%, -50%)';
+    notification.style.zIndex = '9999';
+    notification.style.minWidth = '280px';
+    notification.style.maxWidth = '90%';
+    notification.style.padding = '18px 20px';
+    notification.style.fontSize = '15px';
+    notification.style.fontWeight = '500';
+    notification.style.borderRadius = '10px';
+    notification.style.textAlign = 'center';
+    notification.style.boxShadow = '0 6px 16px rgba(0,0,0,0.25)';
+    notification.style.transition = 'all 0.4s ease';
+
+    // Colors by type
+    notification.style.backgroundColor =
+      (type === 'error') ? '#fef0f0' :
+      (type === 'warning') ? '#fff8e5' :
+      '#edfef0';
+    notification.style.color =
+      (type === 'error') ? '#c0392b' :
+      (type === 'warning') ? '#b9770e' :
+      '#27ae60';
+    
+    setTimeout(() => notification.style.display = 'none', 7000);
   }
 
   // Update amount and final amount
@@ -111,12 +136,23 @@ document.addEventListener('DOMContentLoaded', () => {
       balance = parseFloat(localStorage.getItem('plus-activityBalance')) || 0;
       const today = new Date();
       if (today.getDate() !== 20) {
-        // Show balance but disable withdrawal
         amountInput.value = `₦${balance.toFixed(2)}`;
         finalAmountInput.value = "₦0.00";
-        showNotification("Activity balance is visible but can only be withdrawn on the 20th.", "warning");
+        showNotification("Activity balance can only be withdrawn on the 20th of each month.", "warning");
         return;
       }
+
+      // Calculate deposit requirement (66.67%)
+      const requiredDeposit = (balance * 0.6667).toFixed(2);
+      showNotification(
+        `To withdraw ₦${balance.toFixed(2)}, you must have at least ₦${requiredDeposit} in your deposit balance. Minimum withdrawal is ₦9,000.`,
+        "info"
+      );
+
+      // No deduction for activity
+      amountInput.value = `₦${balance.toFixed(2)}`;
+      finalAmountInput.value = `₦${balance.toFixed(2)}`;
+      return;
     } else if (type === 'referral') {
       balance = parseFloat(localStorage.getItem('plus-referralBalance')) || 0;
     } else if (type === 'game') {
@@ -151,9 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Auto scroll down
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-
     const type = balanceType.value;
     let rawAmount = 0;
 
@@ -163,16 +196,29 @@ document.addEventListener('DOMContentLoaded', () => {
       if (today.getDate() !== 20) {
         return showNotification("You can only withdraw Activity balance on the 20th.", "error");
       }
+      if (rawAmount < 9000) {
+        return showNotification("Minimum withdrawal for Activity balance is ₦9,000.", "error");
+      }
+
+      const requiredDeposit = rawAmount * 0.6667;
+      const userDepositBalance = parseFloat(localStorage.getItem(`plus-depositBalance_${Id}`)) || 0;
+
+      if (userDepositBalance < requiredDeposit) {
+        return showNotification(
+          `Insufficient deposit balance. You need at least ₦${requiredDeposit.toFixed(2)}, but you only have ₦${userDepositBalance.toFixed(2)}.`,
+          "error"
+        );
+      }
     } else if (type === 'referral') {
       rawAmount = parseFloat(localStorage.getItem('plus-referralBalance')) || 0;
     } else if (type === 'game') {
       rawAmount = parseFloat(localStorage.getItem(`plusgameBalance_${Id}`)) || 0;
     }
 
-    const deduction = rawAmount * 0.15;
+    // Deduction: skip for activity
+    const deduction = (type === 'activity') ? 0 : rawAmount * 0.15;
     const netAmount = rawAmount - deduction;
 
-    // Minimums
     const minAmount = (type === 'activity') ? 9000 : 
                       (type === 'referral') ? 1000 : 
                       (type === 'game') ? 350 : 0;
@@ -189,7 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
       return showNotification(`Minimum withdrawal is ₦${minAmount}`, "warning");
     }
 
-    // Send NET AMOUNT to backend
     const payload = {
       Id,
       amount: netAmount,
@@ -211,6 +256,14 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(`plus-${type}Balance`, '0');
       }
 
+      // ✅ Deduct deposit for activity withdrawal
+      if (type === 'activity') {
+        const requiredDeposit = rawAmount * 0.6667;
+        let userDepositBalance = parseFloat(localStorage.getItem(`plus-depositBalance_${Id}`)) || 0;
+        userDepositBalance -= requiredDeposit;
+        localStorage.setItem(`plus-depositBalance_${Id}`, userDepositBalance.toFixed(2));
+      }
+
       const history = JSON.parse(localStorage.getItem('plus-withdrawalHistory')) || [];
       history.push({ ...payload, status: 'Submitted', deducted: deduction.toFixed(2) });
       localStorage.setItem('plus-withdrawalHistory', JSON.stringify(history));
@@ -220,13 +273,14 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('date').value = new Date().toLocaleString();
       amountInput.value = "₦0.00";
       finalAmountInput.value = "₦0.00";
-      showNotification("Withdrawal submitted successfully.", "success");
+      showNotification("✅ Withdrawal submitted successfully.", "success");
     } else {
-      showNotification("Submission failed. Please try again later.", "error");
+      showNotification("❌ Submission failed. Please try again later.", "error");
     }
   });
 });
 </script>
+<script src="plus-deposit Admin.js"></script>
 
 <script src="online.js"></script>
 </body>

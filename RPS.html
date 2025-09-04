@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoniSharp RPS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body{
+      background:radial-gradient(circle at top,#0f2027,#203a43,#2c5364);
+      color:#fff;display:flex;flex-direction:column;
+      align-items:center;padding:20px;min-height:100vh;overflow-x:hidden;
+    }
+    header{width:100%;display:flex;justify-content:space-between;margin-bottom:20px;}
+    .balance-box{
+      background:rgba(255,255,255,0.1);padding:12px 20px;border-radius:12px;
+      backdrop-filter:blur(8px);font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.4);
+    }
+    .game-container{
+      background:rgba(255,255,255,0.08);padding:25px;border-radius:18px;text-align:center;
+      max-width:480px;width:100%;box-shadow:0 8px 25px rgba(0,0,0,0.4);
+    }
+    h1{font-size:1.8rem;margin-bottom:10px;}
+
+    .arena{display:flex;flex-direction:column;align-items:center;gap:40px;margin:20px 0;}
+    .hand{
+      width:100px;height:100px;font-size:3rem;
+      display:flex;align-items:center;justify-content:center;
+      border-radius:50%;background:rgba(255,255,255,0.1);
+      box-shadow:0 6px 16px rgba(0,0,0,0.4);transform-origin:center;
+    }
+    .bot-hand{transform:rotate(180deg);}
+    .shake{animation:shake 0.6s ease-in-out 3;}
+    @keyframes shake{
+      0%{transform:translateX(0);}
+      25%{transform:translateX(-15px);}
+      50%{transform:translateX(15px);}
+      75%{transform:translateX(-15px);}
+      100%{transform:translateX(0);}
+    }
+
+    .buttons{margin:20px 0;display:flex;justify-content:center;gap:12px;}
+    button{
+      padding:12px 18px;border:none;border-radius:8px;font-size:1rem;
+      cursor:pointer;font-weight:600;color:#fff;transition:0.3s;
+    }
+    button:hover{transform:scale(1.05);}
+    .rock{background:linear-gradient(135deg,#6c757d,#495057);}
+    .paper{background:linear-gradient(135deg,#007bff,#0056b3);}
+    .scissors{background:linear-gradient(135deg,#e83e8c,#c2185b);}
+
+    .result{margin-top:15px;font-size:1.1rem;font-weight:600;}
+
+    .popup{
+      position:fixed;top:30px;left:50%;transform:translateX(-50%);
+      background:linear-gradient(135deg,#FFD700,#FF8C00);
+      color:#000;padding:14px 22px;border-radius:10px;
+      box-shadow:0 8px 20px rgba(0,0,0,0.4);
+      opacity:0;pointer-events:none;transition:all 0.4s ease;font-weight:600;
+    }
+    .popup.show{opacity:1;top:50px;pointer-events:auto;}
+
+    /* Help Modal */
+    .help-modal{
+      position:fixed;top:0;left:0;width:100%;height:100%;
+      background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;
+      opacity:0;pointer-events:none;transition:opacity 0.3s ease;
+    }
+    .help-modal.active{opacity:1;pointer-events:auto;}
+    .help-content{
+      background:#fff;color:#000;padding:25px;border-radius:15px;
+      max-width:400px;width:90%;text-align:left;
+      box-shadow:0 10px 25px rgba(0,0,0,0.4);animation:slideUp 0.4s ease;
+    }
+    @keyframes slideUp{from{transform:translateY(50px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+    .help-content h3{margin-bottom:12px;font-size:1.2rem;}
+    .help-content ul{margin-left:18px;line-height:1.6;}
+    .close-btn{margin-top:15px;padding:8px 14px;background:#203a43;color:#fff;border:none;border-radius:8px;cursor:pointer;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="balance-box">Deposit: ₦<span id="depositBalance">0</span></div>
+    <div class="balance-box">Game: ₦<span id="gameBalance">0</span></div>
+  </header>
+
+  <div class="game-container">
+    <h1>✊✋✌ Rock–Paper–Scissors</h1>
+    <div class="arena">
+      <div class="hand bot-hand" id="botHand">❔</div>
+      <div class="hand player-hand" id="playerHand">❔</div>
+    </div>
+
+    <p>Stake: ₦20</p>
+    <div class="buttons">
+      <button class="rock" onclick="playRPS('Rock')">Rock</button>
+      <button class="paper" onclick="playRPS('Paper')">Paper</button>
+      <button class="scissors" onclick="playRPS('Scissors')">Scissors</button>
+    </div>
+    <div class="result" id="result"></div>
+    <button style="margin-top:15px;background:#ff6b6b;" onclick="toggleHelp()">📖 Help</button>
+  </div>
+
+  <!-- Help Modal -->
+  <div class="help-modal" id="helpModal">
+    <div class="help-content">
+      <h3>📖 How to Play</h3>
+      <ul>
+        <li>Each play costs <b>₦20</b> from your deposit.</li>
+        <li>Win = ₦30 added to your Game Balance.</li>
+        <li>Lose = no credit.</li>
+        <li>Rock beats Scissors, Scissors beats Paper, Paper beats Rock.</li>
+        <li>Your opponent is random each game.</li>
+      </ul>
+      <button class="close-btn" onclick="toggleHelp()">Close</button>
+    </div>
+  </div>
+
+  <div class="popup" id="popup"></div>
+
+  <!-- Sounds -->
+  <audio id="countSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3" preload="auto"></audio>
+  <audio id="winSound" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+  <audio id="loseSound" src="https://www.soundjay.com/button/sounds/button-10.mp3" preload="auto"></audio>
+  <audio id="drawSound" src="https://www.soundjay.com/button/sounds/button-09.mp3" preload="auto"></audio>
+  <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop preload="auto"></audio>
+
+  
+  <script>  
+  document.addEventListener("DOMContentLoaded", () => {  
+    const userId = localStorage.getItem("Id") || "defaultUser";  
+    const depositKey = `depositBalance_${userId}`;  
+    const gameKey = `gameBalance_${userId}`;  
+    if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, 0);  
+    if (!localStorage.getItem(gameKey)) localStorage.setItem(gameKey, 0);  
+    updateBalances();  
+
+    const stake = 20;  
+    const icons = {Rock:"✊", Paper:"✋", Scissors:"✌"};  
+
+    const countSound=document.getElementById("countSound");  
+    const winSound=document.getElementById("winSound");  
+    const loseSound=document.getElementById("loseSound");  
+    const drawSound=document.getElementById("drawSound");  
+    const bgMusic=document.getElementById("bgMusic");  
+
+    // Start background music after first user action (for autoplay policy)  
+    document.body.addEventListener("click", ()=>{  
+      if(bgMusic.paused){ bgMusic.volume=0.2; bgMusic.play(); }  
+    }, {once:true});  
+
+    // --- Win/Loss Cycle Control (16 rounds) ---  
+    let outcomes = [];  
+    let roundIndex = 0;  
+
+    function generateCycle(){  
+      let losses = Math.floor(Math.random()*5)+6; // 6–10 losses  
+      let wins = 16 - losses;  
+      outcomes = Array(wins).fill("W").concat(Array(losses).fill("L"));  
+      // shuffle outcomes  
+      for(let i=outcomes.length-1;i>0;i--){  
+        let j=Math.floor(Math.random()*(i+1));  
+        [outcomes[i],outcomes[j]]=[outcomes[j],outcomes[i]];  
+      }  
+      roundIndex=0;  
+      console.log("🎲 New cycle generated:", outcomes);  
+    }  
+    generateCycle();  
+
+    window.playRPS = (playerChoice) => {  
+      let deposit = parseInt(localStorage.getItem(depositKey));  
+      let game = parseInt(localStorage.getItem(gameKey));  
+      if (deposit < stake){showPopup("❌ Insufficient deposit balance!");return;}  
+      deposit -= stake;localStorage.setItem(depositKey, deposit);  
+
+      const choices = ["Rock","Paper","Scissors"];  
+      let botChoice = choices[Math.floor(Math.random()*choices.length)];  
+
+      const playerHand=document.getElementById("playerHand");  
+      const botHand=document.getElementById("botHand");  
+      playerHand.textContent="✊";   
+      botHand.textContent="✊";  
+      playerHand.classList.add("shake");  
+      botHand.classList.add("shake");  
+
+      countSound.currentTime=0; countSound.play();  
+
+      setTimeout(()=>{  
+        playerHand.classList.remove("shake");  
+        botHand.classList.remove("shake");  
+        playerHand.textContent=icons[playerChoice];  
+
+        // Decide outcome from cycle  
+        if(roundIndex>=outcomes.length){  
+          generateCycle();  
+        }  
+        let outcome = outcomes[roundIndex];  
+        roundIndex++;  
+
+        let resultText="";  
+        if(outcome==="W"){  
+          // Bot must lose  
+          if(playerChoice==="Rock") botChoice="Scissors";  
+          else if(playerChoice==="Paper") botChoice="Rock";  
+          else botChoice="Paper";  
+          botHand.textContent=icons[botChoice];  
+          let winAmount=stake*1.5;  
+          game+=winAmount;  
+          localStorage.setItem(gameKey,game);  
+          resultText=`🎉 You WIN! ${playerChoice} beats ${botChoice}. +₦${winAmount}`;  
+          showPopup("🎉 Victory!");  
+          winSound.play();  
+        }else if(outcome==="L"){  
+          // Bot must win  
+          if(playerChoice==="Rock") botChoice="Paper";  
+          else if(playerChoice==="Paper") botChoice="Scissors";  
+          else botChoice="Rock";  
+          botHand.textContent=icons[botChoice];  
+          resultText=`😢 You lost! ${botChoice} beats ${playerChoice}`;  
+          showPopup("😢 Defeat!");  
+          loseSound.play();  
+        }else{  
+          // fallback draw  
+          botChoice=playerChoice;  
+          botHand.textContent=icons[botChoice];  
+          resultText=`🤝 Draw! Both chose ${playerChoice}`;  
+          drawSound.play();  
+        }  
+
+        document.getElementById("result").textContent=resultText;  
+        updateBalances();  
+      },1800);  
+    };  
+
+    function updateBalances(){  
+      document.getElementById("depositBalance").textContent=localStorage.getItem(depositKey);  
+      document.getElementById("gameBalance").textContent=localStorage.getItem(gameKey);  
+    }  
+    function showPopup(msg){  
+      const popup=document.getElementById("popup");  
+      popup.textContent=msg;  
+      popup.classList.add("show");  
+      setTimeout(()=>popup.classList.remove("show"),2500);  
+    }  
+    window.toggleHelp=()=>{  
+      document.getElementById("helpModal").classList.toggle("active");  
+    };  
+  });  
+</script>
+  
+  
+</body>
+</html>
