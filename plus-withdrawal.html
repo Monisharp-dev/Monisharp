@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const minAmount = (type === 'activity') ? 9000 : 
                       (type === 'referral') ? 1000 : 
-                      (type === 'game') ? 350 : 0;
+                      (type === 'game') ? 500: 0;
 
     const bankName = document.getElementById('bankName').value.trim();
     const accountName = document.getElementById('accountName').value.trim();
@@ -235,6 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return showNotification(`Minimum withdrawal is ₦${minAmount}`, "warning");
     }
 
+    // Payload for API
     const payload = {
       Id,
       amount: netAmount,
@@ -242,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
       accountName,
       accountNumber,
       date: new Date().toLocaleString(),
-      source: type
+      status: "pending"
     };
 
     loaderOverlay.classList.add('active');
@@ -264,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(`plus-depositBalance_${Id}`, userDepositBalance.toFixed(2));
       }
 
+      // History should show "Submitted" (not "Game pending")
       const history = JSON.parse(localStorage.getItem('plus-withdrawalHistory')) || [];
       history.push({ ...payload, status: 'Submitted', deducted: deduction.toFixed(2) });
       localStorage.setItem('plus-withdrawalHistory', JSON.stringify(history));

@@ -227,9 +227,9 @@ document.addEventListener("DOMContentLoaded", () => {
       loader.style.display = "none";
       return showAlert("Enter a valid amount.", "error");
     }
-    if (enteredAmount < 300) {
+    if (enteredAmount < 600) {
       loader.style.display = "none";
-      return showAlert("Minimum withdrawal is ₦300.", "warning");
+      return showAlert("Minimum withdrawal is ₦600.", "warning");
     }
     if (balance <= 0) {
       loader.style.display = "none";

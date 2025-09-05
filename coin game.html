@@ -144,85 +144,93 @@
 <audio id="loseSound" src="https://www.fesliyanstudios.com/play-mp3/4381" preload="auto"></audio>
 
 <script>
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener("DOMContentLoaded", () => {
 
-  const userId = localStorage.getItem("Id")||"defaultUser";
+  const userId = localStorage.getItem("Id") || "defaultUser";
   const depositKey = `depositBalance_${userId}`;
   const gameKey = `gameBalance_${userId}`;
+  const freePlayKey = `firstFreePlay_${userId}`;
 
-  if(!localStorage.getItem(depositKey)) localStorage.setItem(depositKey,0);
-  if(!localStorage.getItem(gameKey)) localStorage.setItem(gameKey,0);
+  if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, 0);
+  if (!localStorage.getItem(gameKey)) localStorage.setItem(gameKey, 0);
+  if (!localStorage.getItem(freePlayKey)) localStorage.setItem(freePlayKey, "true");
 
   updateBalances();
 
-  const botNames=["Michael","Sophia","Ayo","Grace","Daniel","Amara","Chinedu","Rose","David","Kemi"];
-  const randomBot=botNames[Math.floor(Math.random()*botNames.length)];
-  document.getElementById("botName").textContent=randomBot;
-  document.getElementById("botAvatar").textContent=randomBot[0].toUpperCase();
+  const botNames = ["Michael","Sophia","Ayo","Grace","Daniel","Amara","Chinedu","Rose","David","Kemi"];
+  const randomBot = botNames[Math.floor(Math.random()*botNames.length)];
+  document.getElementById("botName").textContent = randomBot;
+  document.getElementById("botAvatar").textContent = randomBot[0].toUpperCase();
 
-  const flipSound=document.getElementById("flipSound");
-  const winSound=document.getElementById("winSound");
-  const loseSound=document.getElementById("loseSound");
+  const flipSound = document.getElementById("flipSound");
+  const winSound = document.getElementById("winSound");
+  const loseSound = document.getElementById("loseSound");
 
   // floating stars
-  for(let i=0;i<50;i++){
-    const star=document.createElement("div");
-    star.className="star";
-    star.style.top=Math.random()*window.innerHeight+"px";
-    star.style.left=Math.random()*window.innerWidth+"px";
-    star.style.animationDuration=2+Math.random()*3+"s";
+  for (let i = 0; i < 50; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * window.innerHeight + "px";
+    star.style.left = Math.random() * window.innerWidth + "px";
+    star.style.animationDuration = 2 + Math.random() * 3 + "s";
     document.body.appendChild(star);
   }
 
-  // --- Random win/loss generator (4–7 wins per 15 rounds) ---
-  let resultsPool = [];
-  function refillPool(){
-    const winCount = Math.floor(Math.random()*4)+4;
-    const lossCount = 15 - winCount;
-    resultsPool = Array(winCount).fill("WIN").concat(Array(lossCount).fill("LOSE"));
-    for(let i=resultsPool.length-1;i>0;i--){
-      const j=Math.floor(Math.random()*(i+1));
-      [resultsPool[i],resultsPool[j]]=[resultsPool[j],resultsPool[i]];
+  // --- Controlled Win/Loss Cycle (with random positions) ---
+  let cycle = [];
+  function generateCycle() {
+    const winCount = Math.floor(Math.random() * 2) + 1;  // 1–2 wins
+    const lossCount = Math.floor(Math.random() * 4) + 3; // 3–6 losses
+    cycle = Array(winCount).fill("WIN").concat(Array(lossCount).fill("LOSE"));
+
+    // Shuffle the cycle to randomize win positions
+    for (let i = cycle.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cycle[i], cycle[j]] = [cycle[j], cycle[i]];
     }
   }
-  refillPool();
+  generateCycle();
 
   // Stake handling
   let currentStake = 10;
-  window.setStake = (val)=>{
+  window.setStake = (val) => {
     currentStake = val;
-    document.querySelectorAll(".stake-btn").forEach(btn=>btn.classList.remove("active"));
+    document.querySelectorAll(".stake-btn").forEach(btn => btn.classList.remove("active"));
     event.target.classList.add("active");
   };
 
-  window.playGame=(choice)=>{
-    let deposit=parseInt(localStorage.getItem(depositKey));
-    let game=parseInt(localStorage.getItem(gameKey));
+  window.playGame = (choice) => {
+    let deposit = parseInt(localStorage.getItem(depositKey));
+    let game = parseInt(localStorage.getItem(gameKey));
 
-    if(deposit<currentStake){
+    let freePlayAvailable = localStorage.getItem(freePlayKey) === "true";
+    if (freePlayAvailable) {
+      currentStake = 0; // free round
+      localStorage.setItem(freePlayKey, "false");
+    } else if (deposit < currentStake) {
       showPopup("❌ Insufficient deposit balance!");
       return;
+    } else {
+      deposit -= currentStake;
+      localStorage.setItem(depositKey, deposit);
     }
 
-    deposit-=currentStake;
-    localStorage.setItem(depositKey,deposit);
-
-    const tossResult=Math.random()<0.5?"Heads":"Tails";
-    const coin=document.getElementById("coin");
-    coin.style.transform="rotateY(1440deg)";
+    const tossResult = Math.random() < 0.5 ? "Heads" : "Tails";
+    const coin = document.getElementById("coin");
+    coin.style.transform = "rotateY(1440deg)";
     flipSound.play();
 
-    setTimeout(()=>{
-      coin.textContent=tossResult==="Heads"?"H":"T";
-      coin.style.transform="rotateY(0deg)";
+    setTimeout(() => {
+      coin.textContent = tossResult === "Heads" ? "H" : "T";
+      coin.style.transform = "rotateY(0deg)";
 
-      if(resultsPool.length===0) refillPool();
-      const outcome = resultsPool.pop();
+      if (cycle.length === 0) generateCycle();
+      const outcome = cycle.shift(); // get next outcome in the randomized cycle
 
-      if(outcome==="WIN" && choice===tossResult){
-        let winAmount=currentStake*2;
-        game+=winAmount;
-        localStorage.setItem(gameKey,game);
+      if (outcome === "WIN" && choice === tossResult) {
+        let winAmount = currentStake * 2;
+        game += winAmount;
+        localStorage.setItem(gameKey, game);
         showPopup(`🎉 WIN! It was ${tossResult} (+₦${winAmount})`);
         winSound.play();
         launchConfetti();
@@ -230,36 +238,38 @@ document.addEventListener("DOMContentLoaded",()=>{
         showPopup(`😢 You lost! It was ${tossResult}`);
         loseSound.play();
       }
+
+      if (freePlayAvailable) currentStake = 10;
+
       updateBalances();
-    },1000);
+    }, 1000);
   };
 
-  function updateBalances(){
-    document.getElementById("depositBalance").textContent=localStorage.getItem(depositKey);
-    document.getElementById("gameBalance").textContent=localStorage.getItem(gameKey);
+  function updateBalances() {
+    document.getElementById("depositBalance").textContent = localStorage.getItem(depositKey);
+    document.getElementById("gameBalance").textContent = localStorage.getItem(gameKey);
   }
 
-  function showPopup(msg){
-    const popup=document.getElementById("popup");
-    popup.textContent=msg;
+  function showPopup(msg) {
+    const popup = document.getElementById("popup");
+    popup.textContent = msg;
     popup.classList.add("show");
-    setTimeout(()=>popup.classList.remove("show"),3500);
+    setTimeout(() => popup.classList.remove("show"), 3500);
   }
 
-  function launchConfetti(){
-    for(let i=0;i<30;i++){
-      const conf=document.createElement("div");
-      conf.className="confetti-piece";
-      conf.style.left=Math.random()*document.querySelector(".game-container").offsetWidth+"px";
+  function launchConfetti() {
+    for (let i = 0; i < 30; i++) {
+      const conf = document.createElement("div");
+      conf.className = "confetti-piece";
+      conf.style.left = Math.random() * document.querySelector(".game-container").offsetWidth + "px";
       document.querySelector(".game-container").appendChild(conf);
-      setTimeout(()=>conf.remove(),1500);
+      setTimeout(() => conf.remove(), 1500);
     }
   }
 
-  // Help toggle
-  document.getElementById("helpIcon").addEventListener("click",()=>{
-    const box=document.getElementById("helpBox");
-    box.style.display = box.style.display==="block" ? "none" : "block";
+  document.getElementById("helpIcon").addEventListener("click", () => {
+    const box = document.getElementById("helpBox");
+    box.style.display = box.style.display === "block" ? "none" : "block";
   });
 
 });

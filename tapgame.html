@@ -87,7 +87,7 @@
   <div id="tooltipModal" class="modal" style="display:none;">
     <div class="card">
       <h3>👋 Welcome!</h3>
-      <p>Tap coins to earn. Avoid bombs 💣.<br/>You get 1 free round daily. Extra rounds cost ₦25.</p>
+      <p>Tap coins to earn. Avoid bombs 💣.<br/>You get 1 free round daily. Extra rounds cost ₦20.</p>
       <div class="actions">
         <button class="btn btn-ghost" id="soundToggleBtn">Mute</button>
         <button class="btn btn-primary" id="startBtn">Start</button>
@@ -102,27 +102,27 @@
       <p>You collected <b><span id="finalScore">0</span></b> coins.</p>
       <p>Deposit: <b id="depositInModal">₦0</b></p>
       <div class="actions">
-        <button class="btn btn-primary" id="retryBtn">Retry (₦30)</button>
-        <button class="btn btn-ghost" id="convertBtn">Convert 100 Coins → ₦25 Game balance </button>
+        <button class="btn btn-primary" id="retryBtn">Retry (₦20)</button>
+        <button class="btn btn-ghost" id="convertBtn">Convert 100 Coins → ₦20 Game balance </button>
         <button class="btn btn-ghost" id="closeOverBtn">Close</button>
       </div>
     </div>
   </div>
 
   <!-- Styled Alerts -->
-  <div id="convertAlert" class="toast success">✅ Converted 100 coins → ₦25 Game Balance </div>
+  <div id="convertAlert" class="toast success">✅ Converted 100 coins → ₦20 Game Balance </div>
   <div id="errorAlert" class="toast error">⚠️ Error</div>
 
   <button id="helpBtn">?</button>
-  <footer>Play free once/day 🎁 | Extra plays ₦30 | Convert 100 coins → ₦25 Game Balance </footer>
+  <footer>Play free once/day 🎁 | Extra plays ₦20 | Convert 100 coins → ₦20 Game Balance </footer>
 
-<script>
+ <script>
   // ===========================
   // Keys
   // ===========================
-  const userId = localStorage.getItem("plus-Id") || "guest";
-  const depositKey = "plus-depositBalance_" + userId;
-  const taskKey = "plusgameBalance_" + userId;
+  const userId = localStorage.getItem("Id") || "guest";
+  const depositKey = "depositBalance_" + userId;
+  const taskKey = "gameBalance_" + userId;
   const firstTimeKey = "tapGameFirstTime"; // marks first-time free play
 
   // ===========================
@@ -446,6 +446,5 @@
   // Init
   updBalances();
   tooltipModal.style.display = "flex";
-</script>
-</body>
+</script></body>
 </html>

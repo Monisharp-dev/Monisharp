@@ -127,128 +127,149 @@
   <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop preload="auto"></audio>
 
   
-  <script>  
-  document.addEventListener("DOMContentLoaded", () => {  
-    const userId = localStorage.getItem("plus-Id") || "defaultUser";  
-    const depositKey = `plus-depositBalance_${userId}`;  
-    const gameKey = `plusgameBalance_${userId}`;  
-    if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, 0);  
-    if (!localStorage.getItem(gameKey)) localStorage.setItem(gameKey, 0);  
-    updateBalances();  
+ <script>
+document.addEventListener("DOMContentLoaded", () => {
+  const userId = localStorage.getItem("plus-Id") || "defaultUser";
+  const depositKey = `plus-depositBalance_${userId}`;
+  const gameKey = `plusgameBalance_${userId}`;
+  if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, 0);
+  if (!localStorage.getItem(gameKey)) localStorage.setItem(gameKey, 0);
+  updateBalances();
 
-    const stake = 20;  
-    const icons = {Rock:"✊", Paper:"✋", Scissors:"✌"};  
+  const stake = 20;
+  const icons = { Rock: "✊", Paper: "✋", Scissors: "✌" };
 
-    const countSound=document.getElementById("countSound");  
-    const winSound=document.getElementById("winSound");  
-    const loseSound=document.getElementById("loseSound");  
-    const drawSound=document.getElementById("drawSound");  
-    const bgMusic=document.getElementById("bgMusic");  
+  const countSound = document.getElementById("countSound");
+  const winSound = document.getElementById("winSound");
+  const loseSound = document.getElementById("loseSound");
+  const drawSound = document.getElementById("drawSound");
+  const bgMusic = document.getElementById("bgMusic");
 
-    // Start background music after first user action (for autoplay policy)  
-    document.body.addEventListener("click", ()=>{  
-      if(bgMusic.paused){ bgMusic.volume=0.2; bgMusic.play(); }  
-    }, {once:true});  
+  document.body.addEventListener("click", () => {
+    if (bgMusic.paused) { bgMusic.volume = 0.2; bgMusic.play(); }
+  }, { once: true });
 
-    // --- Win/Loss Cycle Control (16 rounds) ---  
-    let outcomes = [];  
-    let roundIndex = 0;  
+  // --- Cycle Control ---
+  let cyclePhase = "userWin"; // userWin or botForceWin
+  let userWinCount = 0;
+  let userWinTarget = getRandomInt(1, 2); // 1–2 wins
+  let botForceCount = 0;
+  let botForceMax = 0;
+  let drawInserted = false;
+  let drawPosition = 0;
 
-    function generateCycle(){  
-      let losses = Math.floor(Math.random()*5)+6; // 6–10 losses  
-      let wins = 16 - losses;  
-      outcomes = Array(wins).fill("W").concat(Array(losses).fill("L"));  
-      // shuffle outcomes  
-      for(let i=outcomes.length-1;i>0;i--){  
-        let j=Math.floor(Math.random()*(i+1));  
-        [outcomes[i],outcomes[j]]=[outcomes[j],outcomes[i]];  
-      }  
-      roundIndex=0;  
-      console.log("🎲 New cycle generated:", outcomes);  
-    }  
-    generateCycle();  
+  function getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
 
-    window.playRPS = (playerChoice) => {  
-      let deposit = parseInt(localStorage.getItem(depositKey));  
-      let game = parseInt(localStorage.getItem(gameKey));  
-      if (deposit < stake){showPopup("❌ Insufficient deposit balance!");return;}  
-      deposit -= stake;localStorage.setItem(depositKey, deposit);  
+  function nextOutcome() {
+    if (cyclePhase === "userWin") {
+      if (userWinCount < userWinTarget) {
+        userWinCount++;
+        return "W"; // Controlled user win
+      } else {
+        // Switch to bot phase
+        cyclePhase = "botForceWin";
+        botForceCount = 0;
+        botForceMax = getRandomInt(3, 7); // 3–7 bot wins
+        drawInserted = false;
+        drawPosition = getRandomInt(1, botForceMax - 1); // random draw position
+      }
+    }
 
-      const choices = ["Rock","Paper","Scissors"];  
-      let botChoice = choices[Math.floor(Math.random()*choices.length)];  
+    if (cyclePhase === "botForceWin") {
+      botForceCount++;
+      // Insert a draw randomly
+      if (!drawInserted && botForceCount === drawPosition) {
+        drawInserted = true;
+        return "D";
+      }
+      if (botForceCount >= botForceMax) {
+        // Reset to user win phase
+        cyclePhase = "userWin";
+        userWinTarget = getRandomInt(1, 2);
+        userWinCount = 0;
+      }
+      return "L"; // Bot wins
+    }
+  }
 
-      const playerHand=document.getElementById("playerHand");  
-      const botHand=document.getElementById("botHand");  
-      playerHand.textContent="✊";   
-      botHand.textContent="✊";  
-      playerHand.classList.add("shake");  
-      botHand.classList.add("shake");  
+  // --- Play Game ---
+  window.playRPS = (playerChoice) => {
+    let deposit = parseInt(localStorage.getItem(depositKey));
+    let game = parseInt(localStorage.getItem(gameKey));
+    if (deposit < stake) { showPopup("❌ Insufficient deposit balance!"); return; }
+    deposit -= stake; localStorage.setItem(depositKey, deposit);
 
-      countSound.currentTime=0; countSound.play();  
+    const choices = ["Rock", "Paper", "Scissors"];
+    let botChoice = choices[getRandomInt(0, 2)]; // default, will be overridden
 
-      setTimeout(()=>{  
-        playerHand.classList.remove("shake");  
-        botHand.classList.remove("shake");  
-        playerHand.textContent=icons[playerChoice];  
+    const playerHand = document.getElementById("playerHand");
+    const botHand = document.getElementById("botHand");
+    playerHand.textContent = "✊";
+    botHand.textContent = "✊";
+    playerHand.classList.add("shake");
+    botHand.classList.add("shake");
 
-        // Decide outcome from cycle  
-        if(roundIndex>=outcomes.length){  
-          generateCycle();  
-        }  
-        let outcome = outcomes[roundIndex];  
-        roundIndex++;  
+    countSound.currentTime = 0; countSound.play();
 
-        let resultText="";  
-        if(outcome==="W"){  
-          // Bot must lose  
-          if(playerChoice==="Rock") botChoice="Scissors";  
-          else if(playerChoice==="Paper") botChoice="Rock";  
-          else botChoice="Paper";  
-          botHand.textContent=icons[botChoice];  
-          let winAmount=stake*1.5;  
-          game+=winAmount;  
-          localStorage.setItem(gameKey,game);  
-          resultText=`🎉 You WIN! ${playerChoice} beats ${botChoice}. +₦${winAmount}`;  
-          showPopup("🎉 Victory!");  
-          winSound.play();  
-        }else if(outcome==="L"){  
-          // Bot must win  
-          if(playerChoice==="Rock") botChoice="Paper";  
-          else if(playerChoice==="Paper") botChoice="Scissors";  
-          else botChoice="Rock";  
-          botHand.textContent=icons[botChoice];  
-          resultText=`😢 You lost! ${botChoice} beats ${playerChoice}`;  
-          showPopup("😢 Defeat!");  
-          loseSound.play();  
-        }else{  
-          // fallback draw  
-          botChoice=playerChoice;  
-          botHand.textContent=icons[botChoice];  
-          resultText=`🤝 Draw! Both chose ${playerChoice}`;  
-          drawSound.play();  
-        }  
+    setTimeout(() => {
+      playerHand.classList.remove("shake");
+      botHand.classList.remove("shake");
+      playerHand.textContent = icons[playerChoice];
 
-        document.getElementById("result").textContent=resultText;  
-        updateBalances();  
-      },1800);  
-    };  
+      let outcome = nextOutcome();
+      let resultText = "";
 
-    function updateBalances(){  
-      document.getElementById("depositBalance").textContent=localStorage.getItem(depositKey);  
-      document.getElementById("gameBalance").textContent=localStorage.getItem(gameKey);  
-    }  
-    function showPopup(msg){  
-      const popup=document.getElementById("popup");  
-      popup.textContent=msg;  
-      popup.classList.add("show");  
-      setTimeout(()=>popup.classList.remove("show"),2500);  
-    }  
-    window.toggleHelp=()=>{  
-      document.getElementById("helpModal").classList.toggle("active");  
-    };  
-  });  
+      if (outcome === "W") {
+        // Pick a bot move that loses to the player randomly
+        const loseMap = { Rock: ["Scissors"], Paper: ["Rock"], Scissors: ["Paper"] };
+        botChoice = loseMap[playerChoice][getRandomInt(0, loseMap[playerChoice].length - 1)];
+        botHand.textContent = icons[botChoice];
+        let winAmount = stake * 1.5;
+        game += winAmount;
+        localStorage.setItem(gameKey, game);
+        resultText = `🎉 You WIN! ${playerChoice} beats ${botChoice}. +₦${winAmount}`;
+        showPopup("🎉 Victory!");
+        winSound.play();
+      } else if (outcome === "L") {
+        // Pick a bot move that beats player randomly
+        const winMap = { Rock: ["Paper"], Paper: ["Scissors"], Scissors: ["Rock"] };
+        botChoice = winMap[playerChoice][getRandomInt(0, winMap[playerChoice].length - 1)];
+        botHand.textContent = icons[botChoice];
+        resultText = `😢 You lost! ${botChoice} beats ${playerChoice}`;
+        showPopup("😢 Defeat!");
+        loseSound.play();
+      } else {
+        // Draw
+        botChoice = playerChoice;
+        botHand.textContent = icons[botChoice];
+        resultText = `🤝 Draw! Both chose ${playerChoice}`;
+        drawSound.play();
+      }
+
+      document.getElementById("result").textContent = resultText;
+      updateBalances();
+    }, 1800);
+  };
+
+  function updateBalances() {
+    document.getElementById("depositBalance").textContent = localStorage.getItem(depositKey);
+    document.getElementById("gameBalance").textContent = localStorage.getItem(gameKey);
+  }
+
+  function showPopup(msg) {
+    const popup = document.getElementById("popup");
+    popup.textContent = msg;
+    popup.classList.add("show");
+    setTimeout(() => popup.classList.remove("show"), 2500);
+  }
+
+  window.toggleHelp = () => {
+    document.getElementById("helpModal").classList.toggle("active");
+  };
+});
 </script>
-  
   
 </body>
 </html>

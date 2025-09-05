@@ -153,245 +153,199 @@
 <audio id="loseSound"><source src="https://actions.google.com/sounds/v1/cartoon/concussive_drum_hit.ogg" type="audio/ogg"></audio>
 
 <script>
-  const userId = localStorage.getItem("plus-Id") || "guest";
-  const depositKey = "plus-depositBalance_" + userId;
-  const gameKey = "plusgameBalance_" + userId;
+const userId = localStorage.getItem("plus-Id") || "guest";
+const depositKey = "plus-depositBalance_" + userId;
+const gameKey = "plusgameBalance_" + userId;
 
-  let depositBalance = parseInt(localStorage.getItem(depositKey)) || 200;
-  let gameBalance = parseInt(localStorage.getItem(gameKey)) || 0;
-  let firstPlay = localStorage.getItem("targetShooterFirstPlay") || "true";
+let depositBalance = parseInt(localStorage.getItem(depositKey)) || 0;
+let gameBalance = parseInt(localStorage.getItem(gameKey)) || 0;
+let firstPlay = localStorage.getItem("targetShooterFirstPlay") || "true";
 
-  const depositEl = document.getElementById("depositBalance");
-  const gameEl = document.getElementById("gameBalance");
-  const userScoreEl = document.getElementById("userScore");
-  const botScoreEl = document.getElementById("botScore");
-  const timeEl = document.getElementById("timeLeft");
-  const playArea = document.getElementById("playArea");
-  const loader = document.getElementById("loader");
-  const gameContainer = document.getElementById("gameContainer");
-  const resultBox = document.getElementById("resultBox");
-  const resultTitle = document.getElementById("resultTitle");
-  const resultText = document.getElementById("resultText");
-  const botNameEl = document.getElementById("botName");
+const depositEl = document.getElementById("depositBalance");
+const gameEl = document.getElementById("gameBalance");
+const userScoreEl = document.getElementById("userScore");
+const botScoreEl = document.getElementById("botScore");
+const timeEl = document.getElementById("timeLeft");
+const playArea = document.getElementById("playArea");
+const loader = document.getElementById("loader");
+const gameContainer = document.getElementById("gameContainer");
+const resultBox = document.getElementById("resultBox");
+const resultTitle = document.getElementById("resultTitle");
+const resultText = document.getElementById("resultText");
+const botNameEl = document.getElementById("botName");
 
-  const bgMusic = document.getElementById("bgMusic");
-  const shootSound = document.getElementById("shootSound");
-  const winSound = document.getElementById("winSound");
-  const loseSound = document.getElementById("loseSound");
+const bgMusic = document.getElementById("bgMusic");
+const shootSound = document.getElementById("shootSound");
+const winSound = document.getElementById("winSound");
+const loseSound = document.getElementById("loseSound");
 
-  // 🔊 Sound toggle button
-  const soundToggle = document.createElement("button");
-  soundToggle.textContent = "🔊 Sound";
-  soundToggle.style.position = "fixed";
-  soundToggle.style.bottom = "15px";
-  soundToggle.style.right = "15px";
-  soundToggle.style.padding = "8px 14px";
-  soundToggle.style.borderRadius = "8px";
-  soundToggle.style.border = "none";
-  soundToggle.style.background = "#222";
-  soundToggle.style.color = "#fff";
-  soundToggle.style.cursor = "pointer";
-  document.body.appendChild(soundToggle);
+// 🔊 Sound toggle button
+const soundToggle = document.createElement("button");
+soundToggle.textContent = "🔊 Sound";
+soundToggle.style.position = "fixed";
+soundToggle.style.bottom = "15px";
+soundToggle.style.right = "15px";
+soundToggle.style.padding = "8px 14px";
+soundToggle.style.borderRadius = "8px";
+soundToggle.style.border = "none";
+soundToggle.style.background = "#222";
+soundToggle.style.color = "#fff";
+soundToggle.style.cursor = "pointer";
+document.body.appendChild(soundToggle);
 
-  soundToggle.onclick = () => {
-    bgMusic.muted = !bgMusic.muted;
-    soundToggle.textContent = bgMusic.muted ? "🔇 Muted" : "🔊 Sound";
+soundToggle.onclick = () => {
+  bgMusic.muted = !bgMusic.muted;
+  soundToggle.textContent = bgMusic.muted ? "🔇 Muted" : "🔊 Sound";
+};
+
+let userScore = 0, botScore = 0, timeLeft = 30;
+let timer;
+let forceBotWinsLeft = 0; // number of bot wins left in streak
+let hideBotScore = false;   // hide bot score during round
+
+function updateBalances() {
+  depositEl.textContent = depositBalance;
+  gameEl.textContent = gameBalance;
+  localStorage.setItem(depositKey, depositBalance);
+  localStorage.setItem(gameKey, gameBalance);
+}
+updateBalances();
+
+async function getBotName() {
+  try {
+    const res = await fetch("https://randomuser.me/api/?nat=NG");
+    const data = await res.json();
+    return data.results[0].name.first + " " + data.results[0].name.last;
+  } catch {
+    const fallback = [
+      "Chinedu Okafor","Ngozi Balogun","Aisha Musa","Emeka Obi","Temitope Adeyemi",
+      "Ifeanyi Nwankwo","Bola Akinyemi","Fatima Abdullahi","Obinna Eze","Yetunde Oladipo",
+      "Yakubu Ibrahim","Chiamaka Okeke","Kunle Ogunleye","Hauwa Bello","Nnamdi Anyaorah",
+      "Oluwaseun Ajayi","Blessing Udo","Musa Danjuma","Amarachi Nwachukwu","Gbenga Alabi",
+      "Maryam Sani","Ikenna Onoh","Adesuwa Okojie","Samuel Olatunji","Khadija Yusuf",
+      "Tochukwu Umeh","Folake Lawal","Ibrahim Garba","Uchechi Duru","Segun Falade",
+      "Chioma Nnaji","Usman Shehu","Kelechi Okorie","Opeyemi Bamidele","Hadiza Mohammed",
+      "Olumide Fashola","Zainab Suleiman","Ebuka Onuoha","Ruqayyah Ahmed","Tunde Bakare",
+      "Patience Ekanem","Chukwudi Okoro","Halima Idris","Sunday Awolowo","Ijeoma Anyanwu",
+      "Danjuma Hassan"
+    ];
+    return fallback[Math.floor(Math.random() * fallback.length)];
+  }
+}
+
+function showLoader() {
+  loader.style.display = "flex";
+  gameContainer.style.display = "none";
+  resultBox.style.display = "none";
+  setTimeout(() => {
+    loader.style.display = "none";
+    startRound();
+  }, 3000 + Math.random() * 2000);
+}
+
+function startGame() {
+  if (firstPlay === "true") {
+    localStorage.setItem("targetShooterFirstPlay", "false");
+  } else {
+    if (depositBalance < 20) {
+      alert("Not enough deposit to play!");
+      return;
+    }
+    depositBalance -= 20;
+    updateBalances();
+  }
+
+  bgMusic.volume = 0.5;
+  bgMusic.loop = true;
+  bgMusic.play().catch(() => console.warn("Music blocked until user interacts."));
+
+  showLoader();
+}
+
+async function startRound() {
+  botNameEl.textContent = await getBotName();
+  gameContainer.style.display = "block";
+  userScore = 0; botScore = 0; timeLeft = 30;
+  userScoreEl.textContent = userScore;
+  botScoreEl.textContent = "..."; // hide bot score
+  hideBotScore = true;
+  timeEl.textContent = timeLeft;
+
+  timer = setInterval(() => {
+    timeLeft--;
+    timeEl.textContent = timeLeft;
+    if (timeLeft <= 0) endRound();
+  }, 1000);
+
+  spawnTarget();
+}
+
+function spawnTarget() {
+  if (timeLeft <= 0) return;
+  const target = document.createElement("div");
+  target.className = "target";
+  target.style.top = Math.random() * 360 + "px";
+  target.style.left = Math.random() * 320 + "px";
+  playArea.appendChild(target);
+
+  target.onclick = () => {
+    shootSound.play();
+    userScore++;
+    userScoreEl.textContent = userScore;
+
+    // bot mirrors user score live if in bot streak
+    if (forceBotWinsLeft > 0) {
+      botScore = userScore;
+    }
+    if (!hideBotScore) botScoreEl.textContent = botScore;
+
+    target.remove();
   };
 
-  let userScore = 0, botScore = 0, timeLeft = 30;
-  let timer, botInterval;
-  let forceBotWinsLeft = 0; // bot’s forced win streak
-  let userWinStreak = 0;    // track user consecutive wins
+  setTimeout(() => target.remove(), 1200);
+  setTimeout(spawnTarget, 800);
+}
 
-  function updateBalances() {
-    depositEl.textContent = depositBalance;
-    gameEl.textContent = gameBalance;
-    localStorage.setItem(depositKey, depositBalance);
-    localStorage.setItem(gameKey, gameBalance);
-  }
-  updateBalances();
+function endRound() {
+  clearInterval(timer);
+  playArea.innerHTML = "";
 
-  async function getBotName() {
-    try {
-      const res = await fetch("https://rrandomuser.me/api/?nat=NG");
-      const data = await res.json();
-      return data.results[0].name.first + " " + data.results[0].name.last;
-    } catch {
-      const fallback = [
-  "Chinedu Okafor",
-  "Ngozi Balogun",
-  "Aisha Musa",
-  "Emeka Obi",
-  "Temitope Adeyemi",
-  "Ifeanyi Nwankwo",
-  "Bola Akinyemi",
-  "Fatima Abdullahi",
-  "Obinna Eze",
-  "Yetunde Oladipo",
-  "Yakubu Ibrahim",
-  "Chiamaka Okeke",
-  "Kunle Ogunleye",
-  "Hauwa Bello",
-  "Nnamdi Anyaorah",
-  "Oluwaseun Ajayi",
-  "Blessing Udo",
-  "Musa Danjuma",
-  "Amarachi Nwachukwu",
-  "Gbenga Alabi",
-  "Maryam Sani",
-  "Ikenna Onoh",
-  "Adesuwa Okojie",
-  "Samuel Olatunji",
-  "Khadija Yusuf",
-  "Tochukwu Umeh",
-  "Folake Lawal",
-  "Ibrahim Garba",
-  "Uchechi Duru",
-  "Segun Falade",
-  "Chioma Nnaji",
-  "Usman Shehu",
-  "Kelechi Okorie",
-  "Opeyemi Bamidele",
-  "Hadiza Mohammed",
-  "Olumide Fashola",
-  "Zainab Suleiman",
-  "Ebuka Onuoha",
-  "Ruqayyah Ahmed",
-  "Tunde Bakare",
-  "Patience Ekanem",
-  "Chukwudi Okoro",
-  "Halima Idris",
-  "Sunday Awolowo",
-  "Ijeoma Anyanwu",
-  "Danjuma Hassan"
-];
-      return fallback[Math.floor(Math.random() * fallback.length)];
-    }
+  let userWins = userScore > botScore;
+
+  // BOT STREAK LOGIC
+  if (userWins && forceBotWinsLeft === 0) {
+    // user wins a round → trigger bot streak 2–4 next rounds
+    forceBotWinsLeft = 2 + Math.floor(Math.random() * 3); // 2–4
+    userWins = true; // allow this round win
+  } else if (forceBotWinsLeft > 0) {
+    // bot streak ongoing → bot wins
+    forceBotWinsLeft--;
+    userWins = false;
+    botScore = userScore + (2 + Math.floor(Math.random() * 7)); // +2–8
   }
 
-  function showLoader() {
-    loader.style.display = "flex";
-    gameContainer.style.display = "none";
-    resultBox.style.display = "none";
-    setTimeout(() => {
-      loader.style.display = "none";
-      startRound();
-    }, 3000 + Math.random() * 2000);
+  hideBotScore = false;
+  botScoreEl.textContent = botScore;
+
+  if (userWins) {
+    gameBalance += 35;
+    updateBalances();
+    winSound.play();
+    resultTitle.textContent = "🏆 You Win!";
+    resultText.textContent = `You: ${userScore}, Opponent: ${botScore}. +₦35 Game Balance`;
+  } else {
+    loseSound.play();
+    resultTitle.textContent = "😞 You Lost!";
+    resultText.textContent = `You: ${userScore}, Opponent: ${botScore}. Better luck next time.`;
   }
 
-  function startGame() {
-    if (firstPlay === "true") {
-      localStorage.setItem("targetShooterFirstPlay", "false");
-    } else {
-      if (depositBalance < 20) {
-        alert("Not enough deposit to play!");
-        return;
-      }
-      depositBalance -= 20;
-      updateBalances();
-    }
+  resultBox.style.display = "block";
+}
 
-    // 🎵 Start background music on page load
-    bgMusic.volume = 0.5;
-    bgMusic.loop = true;
-    bgMusic.play().catch(() => {
-      console.warn("Music blocked until user interacts.");
-    });
-
-    showLoader();
-  }
-
-  async function startRound() {
-    botNameEl.textContent = await getBotName();
-    gameContainer.style.display = "block";
-    userScore = 0; botScore = 0; timeLeft = 30;
-    userScoreEl.textContent = userScore;
-    botScoreEl.textContent = botScore;
-    timeEl.textContent = timeLeft;
-
-    timer = setInterval(() => {
-      timeLeft--;
-      timeEl.textContent = timeLeft;
-      if (timeLeft <= 0) endRound();
-    }, 1000);
-
-    spawnTarget();
-
-    // 🤖 Bot scoring loop (natural, no magic at the end)
-    botInterval = setInterval(() => {
-      let chance = 0.5; // base 50%
-
-      if (forceBotWinsLeft > 0) {
-        chance = 0.8; // bot is in winning mode
-      } else if (userWinStreak >= 1) {
-        chance = 0.65; // if user winning, bot tries harder
-      }
-
-      if (Math.random() < chance) {
-        botScore++;
-        botScoreEl.textContent = botScore;
-      }
-    }, 700 + Math.random() * 400);
-  }
-
-  function spawnTarget() {
-    if (timeLeft <= 0) return;
-    const target = document.createElement("div");
-    target.className = "target";
-    target.style.top = Math.random() * 360 + "px";
-    target.style.left = Math.random() * 320 + "px";
-    playArea.appendChild(target);
-
-    target.onclick = () => {
-      shootSound.play();
-      userScore++;
-      userScoreEl.textContent = userScore;
-      target.remove();
-    };
-
-    setTimeout(() => target.remove(), 1200);
-    setTimeout(spawnTarget, 800);
-  }
-
-  function endRound() {
-    clearInterval(timer);
-    clearInterval(botInterval);
-    playArea.innerHTML = "";
-
-    let userWins = userScore > botScore;
-
-    // If user wins while no bot streak active
-    if (userWins && forceBotWinsLeft === 0) {
-      userWinStreak++;
-      if (userWinStreak >= 2 + Math.floor(Math.random() * 2)) {
-        forceBotWinsLeft = Math.floor(Math.random() * 5) + 4; // 4–8 wins
-        userWinStreak = 0;
-      }
-    }
-
-    // If bot streak active → just decrement streak counter
-    if (forceBotWinsLeft > 0 && !userWins) {
-      forceBotWinsLeft--;
-    }
-
-    if (userWins) {
-      gameBalance += 35;
-      updateBalances();
-      winSound.play();
-      resultTitle.textContent = "🏆 You Win!";
-      resultText.textContent = `You: ${userScore}, Opponent: ${botScore}. +₦35 Game Balance`;
-    } else {
-      loseSound.play();
-      resultTitle.textContent = "😞 You Lost!";
-      resultText.textContent = `You: ${userScore}, Opponent: ${botScore}. Better luck next time.`;
-    }
-
-    resultBox.style.display = "block";
-  }
-
-  // 🚀 Autostart game on page load
-  window.addEventListener("load", startGame);
+// 🚀 Autostart
+window.addEventListener("load", startGame);
 </script>
+
 <script src="plus-deposit Admin.js"></script>
 </body>
 </html>
