@@ -1,4 +1,4 @@
-function allotTaskBalance(userId, amount, uniqueKey) {
+    function allotTaskBalance(userId, amount, uniqueKey) {
   if (!userId || typeof amount !== "number" || !uniqueKey || uniqueKey.length !== 5) {
     console.error("Missing or invalid userId, amount, or key.");
     return;
@@ -557,3 +557,7 @@ allotTaskBalance("ceceshed1980", 50, "JI7JE");
 allotTaskBalance("isrealsolomon629", 4, "OLMNT");
 allotTaskBalance("ndulakachukwudi01", 11, "PY55G");
 allotTaskBalance("justicejonathan07", 8, "IJVED");
+allotTaskBalance("baloguntaiwo0001", 8, "JL5DB");
+allotTaskBalance("danieligboke510", 26, "EPQJW");
+allotTaskBalance("tencomark", 6, "V5STA");
+allotTaskBalance("richesosimejom", 9, "NG8KT");
