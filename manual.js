@@ -237,22 +237,16 @@ const allowedIds = [
   "marvelousdavid465",
   "aminukanotv",
   "ifeomaawa65",
-  "ademolaoyinkasola034",
-  "kaosaratomobolanle627",
-  "thehacker190261",
-  "meyeneedet001",
-  "abubakarharoon450",
-  "monisharp45",
-  "sisfathia120",
-  "richesosimejom",
-  "bartholomewmusa90",
-  "mahmudusman717",
-  "elizspyce",
-  "jemiluabdulrahaman111",
-  "baloguntaiwo0001",
-  "uwaguegodstime4",
-  "abiodunsamurai",
-  "tencomark"
+  "heritagemofetoluwa",
+  "akpesiriedward5",
+  "honour212122",
+  "greatnessedet8",
+  "olasunkanmiomotayo2",
+  "ephraimjj646",
+  "ndulakachukwudi01",
+  "omurogo9",
+  "sharpd940"
+  
 ];
 
 const currentUserId = localStorage.getItem("Id");
