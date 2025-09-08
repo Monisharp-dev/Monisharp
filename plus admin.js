@@ -81,6 +81,11 @@ allotTaskBalance("alexanderifenabohplus", 50, "AHT90");
 allotTaskBalance("greatnessedet8plus", 1400, "AGM90");
 allotTaskBalance("shikemiopeyemi0plus", 70, "GTM60");
 allotTaskBalance("anigedavid9plus", 70, "VVT80");
+allotTaskBalance("mohammedmanyisa9680plus", 10, "VXT80");
+allotTaskBalance("danemmanuel692plus", 450, "VT890");
+
+
+
 
 
 
