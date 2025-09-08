@@ -561,3 +561,4 @@ allotTaskBalance("baloguntaiwo0001", 8, "JL5DB");
 allotTaskBalance("danieligboke510", 26, "EPQJW");
 allotTaskBalance("tencomark", 6, "V5STA");
 allotTaskBalance("richesosimejom", 9, "NG8KT");
+allotTaskBalance("richesosimejom", 6, "L8CP2");
