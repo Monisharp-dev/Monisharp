@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vendor Coupon Generator</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f172a;
+      color: #f9fafb;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    .box {
+      width: 100%;
+      max-width: 480px;
+      margin-top: 40px;
+      padding: 25px;
+      background: #1e293b;
+      border-radius: 14px;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.4);
+      animation: fadeIn 0.6s ease;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      font-weight: 600;
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+    input {
+      background: #334155;
+      color: #fff;
+    }
+    button {
+      background: linear-gradient(90deg, #3b82f6, #2563eb);
+      color: #fff;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    button:disabled {
+      background: #64748b;
+      cursor: not-allowed;
+    }
+    button:hover:not(:disabled) {
+      transform: scale(1.03);
+    }
+    .instruction {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .help {
+      font-size: 13px;
+      color: #cbd5e1;
+      background: #334155;
+      padding: 10px;
+      margin-top: 6px;
+      border-radius: 8px;
+      display: none;
+      animation: slideDown 0.3s ease;
+    }
+    .toggleHelp {
+      background: none;
+      border: none;
+      color: #38bdf8;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #2563eb;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      display: none;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal-content {
+      background: #1e293b;
+      padding: 25px;
+      border-radius: 12px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      animation: fadeIn 0.4s ease;
+    }
+    .modal-content h3 {
+      margin-top: 0;
+    }
+    .whatsapp-btn {
+      background: #25D366;
+      margin-top: 15px;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .history {
+      margin-top: 20px;
+      background: #111827;
+      padding: 15px;
+      border-radius: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 13px;
+    }
+    .history h3 {
+      margin-top: 0;
+      font-size: 15px;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 6px;
+    }
+    .history-entry {
+      margin-bottom: 8px;
+      word-break: break-all;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    @keyframes slideDown {
+      from {opacity: 0; max-height: 0;}
+      to {opacity: 1; max-height: 200px;}
+    }
+  </style>
+</head>
+<body>
+<div class="box">
+  <h2><i class="fas fa-store"></i> Vendor Coupon Panel</h2>
+  <div id="step"></div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<div id="quotaModal" class="modal">
+  <div class="modal-content">
+    <h3><i class="fas fa-exclamation-circle"></i> Quota Finished</h3>
+    <p>You have used up all your coupon generations. Please buy a new license.</p>
+    <button class="whatsapp-btn" onclick="window.open('https://wa.me/2348146054930?text=Hello%20Admin,%20I%20want%20to%20buy%20a%20new%20license','_blank')">
+      <i class="fab fa-whatsapp"></i> Contact Admin
+    </button>
+  </div>
+</div>
+
+<script>
+const API_URL = "https://sheetdb.io/api/v1/b3npm01mdp6d2";
+
+// 🔹 Toast Notification
+function showToast(msg, type="info") {
+  const toast = document.getElementById("toast");
+  toast.textContent = msg;
+  toast.style.background = type === "error" ? "#dc2626" : "#2563eb";
+  toast.style.display = "block";
+  setTimeout(() => toast.style.display = "none", 3000);
+}
+
+// 🔹 Toggle Help
+function toggleHelp(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === "block" ? "none" : "block";
+}
+
+// Init
+document.addEventListener("DOMContentLoaded", () => {
+  const vendorId = localStorage.getItem("vendorId");
+  if (!vendorId) {
+    askVendorId();
+  } else {
+    checkLicense();
+  }
+});
+
+// Step 1: Vendor ID
+function askVendorId() {
+  document.getElementById("step").innerHTML = `
+    <p class="instruction">Enter your Vendor ID
+      <button class="toggleHelp" onclick="toggleHelp('vendorHelp')"><i class="fas fa-question-circle"></i></button>
+    </p>
+    <div id="vendorHelp" class="help">
+      This is the unique ID assigned to you by the Admin (e.g., MON1).<br>
+      It verifies you as a registered vendor.
+    </div>
+    <input type="text" id="vendorInput" placeholder="e.g., MON1"/>
+    <button onclick="verifyVendor()">Submit</button>
+  `;
+}
+
+async function verifyVendor() {
+  const vendorId = document.getElementById("vendorInput").value.trim();
+  if (!vendorId) return showToast("Enter Vendor ID", "error");
+
+  const res = await fetch(`${API_URL}/search?VendorId=${vendorId}`);
+  const data = await res.json();
+
+  if (data.length > 0) {
+    localStorage.setItem("vendorId", vendorId);
+    showToast("Vendor verified ✅");
+    checkLicense();
+  } else {
+    showToast("❌ Vendor not found", "error");
+  }
+}
+
+// Step 2: License Code
+function checkLicense() {
+  const licenseData = JSON.parse(localStorage.getItem("licenseData") || "null");
+
+  if (!licenseData) {
+    document.getElementById("step").innerHTML = `
+      <p class="instruction">Enter your License Code
+        <button class="toggleHelp" onclick="toggleHelp('licenseHelp')"><i class="fas fa-question-circle"></i></button>
+      </p>
+      <div id="licenseHelp" class="help">
+        A License Code is provided after payment.<br>
+        Format: 4 letters + 2 digits quota (e.g., <b>ABCD07</b> → 7 generations).
+      </div>
+      <input type="text" id="licenseInput" placeholder="e.g., ABCD07"/>
+      <button onclick="verifyLicense()">Submit</button>
+    `;
+  } else {
+    showGenerator(licenseData.remaining);
+  }
+}
+
+async function verifyLicense() {
+  const code = document.getElementById("licenseInput").value.trim();
+  if (!code) return showToast("Enter License Code", "error");
+
+  const vendorId = localStorage.getItem("vendorId");
+  const res = await fetch(`${API_URL}/search?VendorId=${vendorId}&LicenceCode=${code}`);
+  const data = await res.json();
+
+  if (data.length === 0) return showToast("❌ Invalid license", "error");
+  if (data[0].Status.toLowerCase() === "used") return showToast("⚠️ License already used", "error");
+
+  // Decode license code into quota (last 2 digits)
+  const quota = parseInt(code.slice(-2)) || 5;
+
+  const licenseData = { code, remaining: quota };
+  localStorage.setItem("licenseData", JSON.stringify(licenseData));
+
+  // Mark license as used in API
+  await fetch(`${API_URL}/LicenceCode/${code}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ Status: "used" })
+  });
+
+  showToast(`✅ License accepted! You have ${quota} generations.`);
+  showGenerator(quota);
+}
+
+// Step 3: Coupon Generator
+function showGenerator(remaining) {
+  document.getElementById("step").innerHTML = `
+    <p class="instruction">Generations left: <b>${remaining}</b>
+      <button class="toggleHelp" onclick="toggleHelp('genHelp')"><i class="fas fa-question-circle"></i></button>
+    </p>
+    <div id="genHelp" class="help">
+      Enter a User ID containing <b>'plus'</b> to generate a coupon.<br>
+      Each generation reduces your quota by 1.
+    </div>
+    <input type="text" id="userIdInput" placeholder="Enter User ID (must include 'plus')"/>
+    <button onclick="generateCoupon()" ${remaining <= 0 ? "disabled" : ""}>Generate Coupon</button>
+    <div id="couponBox" style="margin-top:15px;"></div>
+    <div class="history">
+      <h3><i class="fas fa-history"></i> Generation History</h3>
+      <div id="historyEntries"></div>
+    </div>
+  `;
+  renderHistory();
+}
+
+async function generateCoupon() {
+  let licenseData = JSON.parse(localStorage.getItem("licenseData"));
+  if (!licenseData || licenseData.remaining <= 0) {
+    document.getElementById("quotaModal").style.display = "flex";
+    showToast("Quota finished – please contact Admin", "error");
+    return;
+  }
+
+  const userId = document.getElementById("userIdInput").value.trim();
+  if (!userId.toLowerCase().includes("plus")) {
+    return showToast("❌ User ID must contain 'plus'", "error");
+  }
+
+  // Hash-based coupon
+  const encoder = new TextEncoder();
+  const data = encoder.encode(userId);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const coupon = hashArray.map(b => b.toString(16).padStart(2, '0')).join('').substr(0,16).toUpperCase();
+
+  document.getElementById("couponBox").innerHTML = `
+    <p><i class="fas fa-ticket-alt"></i> Coupon for <b>${userId}</b>:</p>
+    <div style="background:#334155;padding:10px;border-radius:8px;word-break:break-all;">${coupon}</div>
+  `;
+
+  // Save to history
+  const history = JSON.parse(localStorage.getItem("couponHistory") || "[]");
+  history.unshift({ userId, coupon, date: new Date().toLocaleString() });
+  localStorage.setItem("couponHistory", JSON.stringify(history));
+
+  // Update quota
+  licenseData.remaining -= 1;
+  localStorage.setItem("licenseData", JSON.stringify(licenseData));
+  showGenerator(licenseData.remaining);
+
+  if (licenseData.remaining === 0) {
+    document.getElementById("quotaModal").style.display = "flex";
+    showToast("Quota finished – please contact Admin", "error");
+  }
+}
+
+function renderHistory() {
+  const history = JSON.parse(localStorage.getItem("couponHistory") || "[]");
+  const container = document.getElementById("historyEntries");
+  container.innerHTML = "";
+  if (history.length === 0) {
+    container.innerHTML = "<p>No coupons generated yet.</p>";
+    return;
+  }
+  history.forEach(item => {
+    const div = document.createElement("div");
+    div.className = "history-entry";
+    div.innerHTML = `<b>${item.userId}</b> → ${item.coupon} <br><small>${item.date}</small>`;
+    container.appendChild(div);
+  });
+}
+</script>
+</body>
+</html>

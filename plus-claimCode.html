@@ -175,13 +175,15 @@
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const apis = [
-       "https://sheetdb.io/api/v1/taxrdhzpikz2l", "https://sheetdb.io/api/v1/qyn13nrtm1um7",
-        "https://sheetdb.io/api/v1/1siodve875sc4",
-        "https://sheetdb.io/api/v1/aldfwi86xgkil"
+       "https://sheetdb.io/api/v1/taxrdhzpikz2l",
+       "https://sheetdb.io/api/v1/qyn13nrtm1um7",
+       "https://sheetdb.io/api/v1/1siodve875sc4",
+       "https://sheetdb.io/api/v1/aldfwi86xgkil"
       ];
 
       const claimBtn = document.getElementById("claimBtn");
       const notify = document.getElementById("notify");
+      const claimInput = document.getElementById("claimInput");
 
       // Show notification
       function showNotification(msg, type="info") {
@@ -191,9 +193,16 @@
       }
 
       claimBtn.addEventListener("click", async () => {
-        const inputCode = document.getElementById("claimInput").value.trim().toUpperCase();
+        const inputCode = claimInput.value.trim().toUpperCase();
         if (!inputCode) {
           showNotification("⚠️ Please enter a claim code", "warning");
+          return;
+        }
+
+        // 🚫 Block WED01
+        if (inputCode === "WED01") {
+          showNotification("⛔ Sorry, the code WED01 cannot be claimed.", "error");
+          claimInput.value = ""; // clear field
           return;
         }
 
