@@ -1,7 +1,7 @@
 // BlockAccess.js
 
 document.addEventListener('DOMContentLoaded', function () {
-    const blockedIds = ["alexanderifenabohplus"]; // List of blocked user IDs
+    const blockedIds = ["alexakkkplus"]; // List of blocked user IDs
     const userId = localStorage.getItem("plus-Id"); // Get user Id from localStorage
 
     if (blockedIds.includes(userId)) {
