@@ -195,7 +195,7 @@
     const depositKey = "depositBalance_" + userId;
     const fixedAmount = 20;
 
-    if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey,"200");
+    if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey,"0");
 
     function updateDepositBalance(){
       let bal = parseInt(localStorage.getItem(depositKey)||"0");
