@@ -7,9 +7,9 @@ document.addEventListener("DOMContentLoaded", () => {
         "monisharp45plus": 4500, // example from before
         "user456": 1000,
         "user789": 250,
-        "gfame682plus": 327.25,
-        "shanegray017plus": 297.5,
-        "kingmark7747707plus": 301.75
+      //  "gfame682plus": 327.25,
+      //  "shanegray017plus": 297.5,
+        //"kingmark7747707plus": 301.75
     };
 
     // Key to track if refund has been applied

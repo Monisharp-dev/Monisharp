@@ -115,13 +115,13 @@
       <p><strong>Deposit Balance:</strong> ₦<span id="depositBalance">0</span></p>
     </div>
 
-    <button class="btn" id="claimBtn">Claim ₦150 Now</button>
+    <button class="btn" id="claimBtn">Claim ₦50 Now</button>
 
     <div class="notification" id="message" style="display:none;"></div>
 
     <div class="auto-section">
-      <h3><i class="fas fa-clock"></i> Auto-Claim for 7 Days (₦1,400)</h3>
-      <p>Enable automatic daily rewards of ₦200/day. Total ₦1,400 added to your Activity Balance after 7 days.</p>
+      <h3><i class="fas fa-clock"></i> Auto-Claim for 7 Days (₦1,050)</h3>
+      <p>Enable automatic daily rewards of ₦150/day. Total ₦1,050 added to your Activity Balance after 7 days.</p>
       <button class="btn" id="autoBtn">Activate for ₦300</button>
       <div class="progress-bar" id="progressBar" style="display:none;">
         <div class="progress-fill" id="progressFill"></div>
@@ -184,11 +184,11 @@
     }
 
     const current = parseInt(localStorage.getItem(activityKey)) || 0;
-    const updated = current + 150;
+    const updated = current + 50;
     localStorage.setItem(activityKey, updated);
     localStorage.setItem('plus-lastClaim', today);
     loadBalances();
-    showMessage("🎉 ₦150 Claimed Successfully!", "success");
+    showMessage("🎉 ₦50 Claimed Successfully!", "success");
   }
 
   function isAutoActive() {
@@ -215,9 +215,9 @@
         const alreadyCredited = localStorage.getItem('plus-autoPaid') === 'yes';
         if (!alreadyCredited) {
           const current = parseInt(localStorage.getItem(activityKey)) || 0;
-          localStorage.setItem(activityKey, current + 1400);
+          localStorage.setItem(activityKey, current + 1050);
           localStorage.setItem('plus-autoPaid', 'yes');
-          showMessage("✅ ₦1,400 Auto Reward Credited!", "success");
+          showMessage("✅ ₦1,050 Auto Reward Credited!", "success");
           loadBalances();
         }
       }
