@@ -150,6 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const depositKey = `depositBalance_${userId}`;
   const gameKey = `gameBalance_${userId}`;
   const freePlayKey = `firstFreePlay_${userId}`;
+  const cycleKey = `gameCycle_${userId}`; // 🔑 Persistent cycle state
 
   if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, 0);
   if (!localStorage.getItem(gameKey)) localStorage.setItem(gameKey, 0);
@@ -176,20 +177,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(star);
   }
 
-  // --- Controlled Win/Loss Cycle (with random positions) ---
-  let cycle = [];
+  // --- Cycle system with random outcome each round ---
   function generateCycle() {
-    const winCount = Math.floor(Math.random() * 2) + 1;  // 1–2 wins
-    const lossCount = Math.floor(Math.random() * 4) + 3; // 3–6 losses
-    cycle = Array(winCount).fill("WIN").concat(Array(lossCount).fill("LOSE"));
-
-    // Shuffle the cycle to randomize win positions
-    for (let i = cycle.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [cycle[i], cycle[j]] = [cycle[j], cycle[i]];
-    }
+    const wins = Math.floor(Math.random() * 2) + 1;   // 1–2 wins
+    const losses = Math.floor(Math.random() * 5) + 3; // 3–7 losses
+    const newCycle = { winsLeft: wins, lossesLeft: losses };
+    localStorage.setItem(cycleKey, JSON.stringify(newCycle));
+    return newCycle;
   }
-  generateCycle();
+
+  // Load or create cycle
+  let cycle = JSON.parse(localStorage.getItem(cycleKey)) || generateCycle();
 
   // Stake handling
   let currentStake = 10;
@@ -224,9 +222,32 @@ document.addEventListener("DOMContentLoaded", () => {
       coin.textContent = tossResult === "Heads" ? "H" : "T";
       coin.style.transform = "rotateY(0deg)";
 
-      if (cycle.length === 0) generateCycle();
-      const outcome = cycle.shift(); // get next outcome in the randomized cycle
+      // --- Decide outcome dynamically ---
+      let outcome;
+      if (cycle.winsLeft === 0 && cycle.lossesLeft > 0) {
+        outcome = "LOSE"; // force losses if only losses left
+      } else if (cycle.lossesLeft === 0 && cycle.winsLeft > 0) {
+        outcome = "WIN"; // force wins if only wins left
+      } else {
+        // Randomly choose between win/loss if both are available
+        outcome = Math.random() < 0.5 ? "WIN" : "LOSE";
+      }
 
+      // Deduct from cycle
+      if (outcome === "WIN") {
+        cycle.winsLeft--;
+      } else {
+        cycle.lossesLeft--;
+      }
+
+      localStorage.setItem(cycleKey, JSON.stringify(cycle));
+
+      // Reset cycle if finished
+      if (cycle.winsLeft === 0 && cycle.lossesLeft === 0) {
+        cycle = generateCycle();
+      }
+
+      // --- Apply outcome ---
       if (outcome === "WIN" && choice === tossResult) {
         let winAmount = currentStake * 2;
         game += winAmount;
