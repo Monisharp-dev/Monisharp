@@ -109,7 +109,7 @@
   <div class="container">
     <!-- Top Notification -->
     <div class="top-notice">
-      Note: A 10% bank charge will be deducted from the withdrawal amount.
+      Note: A 20% bank charge will be deducted from the withdrawal amount.
     </div>
 
     <h2>Withdraw Funds</h2>
@@ -205,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==== Calculate and Display Amount to Receive ====
   const updateAmountToReceive = () => {
     const enteredAmount = parseFloat(amountInput.value.trim()) || 0;
-    const charge = enteredAmount * 0.1; // 10% bank charge
+    const charge = enteredAmount * 0.2; // 20% bank charge
     const finalAmount = enteredAmount - charge;
     amountToReceiveInput.value = finalAmount > 0 ? finalAmount.toFixed(2) : "0.00";
   };

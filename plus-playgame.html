@@ -210,17 +210,17 @@
       <a href="plus-tapGame.html" class="play-btn">Play Now</a>
     </div>
 
-    <!-- Prediction Game -->
+    <!-- Card Flip Game -->
     <div class="game-card">
-      <i class="fas fa-crystal-ball"></i>
-      <h2>Prediction Game</h2>
+      <i class="fas fa-clone"></i>
+      <h2>Card Flip Game</h2>
       <p>
-        🔮 Trust your instincts<br>
-        🎯 Predict outcomes & win big<br>
-        💵 Stake as low as ₦50<br>
-        ⚡ Fast-paced, thrilling, and rewarding.
+        🃏 Pick 1 of 3 cards<br>
+        💵 Stake ₦20 each play<br>
+        🎉 Win ₦40, get refund ₦20, or lose<br>
+        ⚡ Fast, fun, and addictive!
       </p>
-      <a href="plus-predictionGame.html" class="play-btn">Start Predicting</a>
+      <a href="plus-cardGame.html" class="play-btn">Flip Cards</a>
     </div>
 
     <!-- Coin Game -->
@@ -233,7 +233,7 @@
         💵 Stake small, win double<br>
         ⚡ Fun, fast, and addictive!
       </p>
-      <a href="coin game.html" class="play-btn">Flip Coin</a>
+      <a href="plus-coin game.html" class="play-btn">Flip Coin</a>
     </div>
     
     <!-- Rock Paper Scissors -->
@@ -276,13 +276,13 @@
     let depositBalance = localStorage.getItem("plus-depositBalance_" + userId) || "0";
     depositBalance = parseFloat(depositBalance);
 
-    if (depositBalance < 300) {
+    if (depositBalance < 800) {
       const popup = document.createElement("div");
       popup.className = "popup-overlay";
       popup.innerHTML = `
         <div class="popup-box">
           <h2>⚠️ Insufficient Balance</h2>
-          <p>Your deposit balance is below ₦300.<br>Please top up to access the games.</p>
+          <p>Your deposit balance is below ₦800.<br>Please top up to access the games.</p>
           <button onclick="window.location.href='plus-deposit.html'">Top Up Now</button>
         </div>
       `;

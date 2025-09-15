@@ -181,7 +181,7 @@
   <!-- Header -->
   <header>
     <h1>🎮 Monisharp Game Hub</h1>
-    <p>Play, Earn & Enjoy! Collect coins, predict right, and cash out big.</p>
+    <p>Play, Earn & Enjoy! Collect coins, win flips, and cash out big.</p>
   </header>
 
   <!-- Games Container -->
@@ -200,18 +200,17 @@
       <a href="tapGame.html" class="play-btn">Play Now</a>
     </div>
 
-    <!-- Prediction Game -->
+    <!-- Card Flip Game -->
     <div class="game-card">
-      <i class="fas fa-crystal-ball"></i>
-      <h2>Prediction Game</h2>
+      <i class="fas fa-clone"></i>
+      <h2>Card Flip Game</h2>
       <p>
-        🔮 Test your instincts!<br>
-        🎯 Predict outcomes of random draws, spins & mini-events.<br>
-        💵 Stake as low as ₦50 & multiply instantly!<br>
-        🏆 Hit streaks for MEGA bonuses & leaderboard rewards.<br>
-        ⚡ Fast, thrilling & very rewarding.
+        🃏 Pick a card & test your luck<br>
+        💵 Stake ₦20 per flip<br>
+        🎉 Win ₦40 (double), ₦20 (refund), or nothing<br>
+        ⚡ Instant results & addictive fun!
       </p>
-      <a href="predictionGame.html" class="play-btn">Start Predicting</a>
+      <a href="cardGame.html" class="play-btn">Flip Cards</a>
     </div>
   
     <!-- Coin Game -->
@@ -257,22 +256,22 @@
   
   <script>
     // Load balances from localStorage
-    const userId = localStorage.getItem("plus-Id"); // ✅ using your correct key
-    let gameBalance = localStorage.getItem("plus-gameBalanc_" + userId) || "0";
-    let depositBalance = localStorage.getItem("plus-depositBalanc_" + userId) || "0";
+    const userId = localStorage.getItem("Id"); // ✅ using your correct key
+    let gameBalance = localStorage.getItem("gameBalance_" + userId) || "0";
+    let depositBalance = localStorage.getItem("depositBalance_" + userId) || "0";
 
     // Show game balance
     document.getElementById("gameBalance").innerHTML =
       '<i class="fas fa-coins"></i> ₦' + gameBalance;
 
     // Check deposit balance
-    if (parseInt(depositBalance) < 300) {
+    if (parseInt(depositBalance) < 600) {
       const popup = document.createElement("div");
       popup.className = "popup-overlay";
       popup.innerHTML = `
         <div class="popup-box">
           <h2>⚠ Insufficient Balance</h2>
-          <p>You need at least ₦300 in your deposit balance to access Monisharp Games.</p>
+          <p>You need at least ₦600 in your deposit balance to access Monisharp Games.</p>
           <a href="deposit.html">💳 Deposit Now</a>
         </div>
       `;

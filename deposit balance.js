@@ -37,7 +37,7 @@ function allotDepositBalance(userId, amount, uniqueKey) {
 
 // ✅ Allotments to specific users (manual and direct)
 allotDepositBalance("jemiluabdulrahaman111", 200, "000FX");
-allotDepositBalance("sisfathia120", 200, "000SD");
+allotDepositBalance("danemmanuel692plus", 200, "000SD");
 allotDepositBalance("thehacker190261", 6500, "LLLOP")
 allotDepositBalance("olasunkanmiomotayo2", 100, "0000A");
 allotDepositBalance("Emmanuelomoruyi14", 100,"000AC");

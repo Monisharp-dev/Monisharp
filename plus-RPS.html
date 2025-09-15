@@ -127,11 +127,14 @@
   <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop preload="auto"></audio>
 
   
- <script>
+ 
+<script>
 document.addEventListener("DOMContentLoaded", () => {
   const userId = localStorage.getItem("plus-Id") || "defaultUser";
   const depositKey = `plus-depositBalance_${userId}`;
   const gameKey = `plusgameBalance_${userId}`;
+  const cycleKey = `plus-rpsCycle_${userId}`; // NEW: key for saving cycle state
+
   if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, 0);
   if (!localStorage.getItem(gameKey)) localStorage.setItem(gameKey, 0);
   updateBalances();
@@ -150,46 +153,57 @@ document.addEventListener("DOMContentLoaded", () => {
   }, { once: true });
 
   // --- Cycle Control ---
-  let cyclePhase = "userWin"; // userWin or botForceWin
-  let userWinCount = 0;
-  let userWinTarget = getRandomInt(1, 2); // 1–2 wins
-  let botForceCount = 0;
-  let botForceMax = 0;
-  let drawInserted = false;
-  let drawPosition = 0;
-
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+  // Load cycle state or initialize fresh
+  let cycleState = JSON.parse(localStorage.getItem(cycleKey)) || {
+    cyclePhase: "userWin",  // "userWin" or "botForceWin"
+    userWinCount: 0,
+    userWinTarget: getRandomInt(1, 2), // 1–2 wins
+    botForceCount: 0,
+    botForceMax: 0,
+    drawInserted: false,
+    drawPosition: 0
+  };
+
+  function saveCycle() {
+    localStorage.setItem(cycleKey, JSON.stringify(cycleState));
+  }
+
   function nextOutcome() {
-    if (cyclePhase === "userWin") {
-      if (userWinCount < userWinTarget) {
-        userWinCount++;
+    if (cycleState.cyclePhase === "userWin") {
+      if (cycleState.userWinCount < cycleState.userWinTarget) {
+        cycleState.userWinCount++;
+        saveCycle();
         return "W"; // Controlled user win
       } else {
         // Switch to bot phase
-        cyclePhase = "botForceWin";
-        botForceCount = 0;
-        botForceMax = getRandomInt(3, 7); // 3–7 bot wins
-        drawInserted = false;
-        drawPosition = getRandomInt(1, botForceMax - 1); // random draw position
+        cycleState.cyclePhase = "botForceWin";
+        cycleState.botForceCount = 0;
+        cycleState.botForceMax = getRandomInt(3, 7); // 3–7 bot wins
+        cycleState.drawInserted = false;
+        cycleState.drawPosition = getRandomInt(1, cycleState.botForceMax - 1); // random draw position
+        saveCycle();
       }
     }
 
-    if (cyclePhase === "botForceWin") {
-      botForceCount++;
+    if (cycleState.cyclePhase === "botForceWin") {
+      cycleState.botForceCount++;
       // Insert a draw randomly
-      if (!drawInserted && botForceCount === drawPosition) {
-        drawInserted = true;
+      if (!cycleState.drawInserted && cycleState.botForceCount === cycleState.drawPosition) {
+        cycleState.drawInserted = true;
+        saveCycle();
         return "D";
       }
-      if (botForceCount >= botForceMax) {
+      if (cycleState.botForceCount >= cycleState.botForceMax) {
         // Reset to user win phase
-        cyclePhase = "userWin";
-        userWinTarget = getRandomInt(1, 2);
-        userWinCount = 0;
+        cycleState.cyclePhase = "userWin";
+        cycleState.userWinTarget = getRandomInt(1, 2);
+        cycleState.userWinCount = 0;
       }
+      saveCycle();
       return "L"; // Bot wins
     }
   }
