@@ -267,15 +267,22 @@
   <script>
     const userId = localStorage.getItem("plus-Id");
 
-    // Load Game Balance
+    // ✅ Load Game Balance
     let gameBalance = localStorage.getItem("plusgameBalance_" + userId) || "0";
     document.getElementById("gameBalance").innerHTML =
       '<i class="fas fa-coins"></i> ₦' + gameBalance;
 
-    // Check Deposit Balance
-    let depositBalance = localStorage.getItem("plus-depositBalance_" + userId) || "0";
-    depositBalance = parseFloat(depositBalance);
+    // ✅ Check Deposit Balance safely
+    let depositBalanceRaw = localStorage.getItem("plus-depositBalance_" + userId);
+    let depositBalance = parseFloat(depositBalanceRaw);
+    if (isNaN(depositBalance)) depositBalance = 0;
 
+    // Debug logs (remove later if you want)
+    console.log("User ID:", userId);
+    console.log("Deposit Balance (raw):", depositBalanceRaw);
+    console.log("Deposit Balance (parsed):", depositBalance);
+
+    // ✅ Show popup ONLY if below ₦800
     if (depositBalance < 800) {
       const popup = document.createElement("div");
       popup.className = "popup-overlay";
