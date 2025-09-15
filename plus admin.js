@@ -40,8 +40,8 @@ allotTaskBalance("olasunkanmiomotayo2", 18, "FZMLC");
 allotTaskBalance("amopeadeganiyatplus", 150, "FZMLC");
 allotTaskBalance("danemmanuel692plus", 20, "FZZZC");
 allotTaskBalance("baloguntaiwo0001", 21, "SEPTE");
-allotTaskBalance("etokwudogplus", 50, "SEPTE");
-allotTaskBalance("inafisat019plus", 210, "FZSSC");
+allotTaskBalance("etokwudogplus", 3550, "SETTE");
+allotTaskBalance("inaplus", 210, "FZSSC");
 allotTaskBalance("alexanderifenabohplus", 50, "FZMLC");
 
 //hiii;
