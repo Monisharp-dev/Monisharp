@@ -42,7 +42,7 @@ allotDepositBalance("thehacker190261", 6500, "LLLOP")
 allotDepositBalance("olasunkanmiomotayo2", 100, "0000A");
 allotDepositBalance("Emmanuelomoruyi14", 100,"000AC");
 allotDepositBalance("destinysylvanus74", 200, "000VB");
-allotDepositBalance("udejiobinna305", 300, "000AA");
+allotDepositBalance("sisfathia120", 500, "00SEG");
 allotDepositBalance("akpesiriedward5", 98, "000AB");
 
 // ✅ Optional: Credit the currently logged-in user (if any)
