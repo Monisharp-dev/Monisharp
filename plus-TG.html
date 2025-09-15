@@ -156,6 +156,7 @@
 const userId = localStorage.getItem("plus-Id") || "guest";
 const depositKey = "plus-depositBalance_" + userId;
 const gameKey = "plusgameBalance_" + userId;
+const cycleKey = "plustargetShooterCycle_" + userId;
 
 let depositBalance = parseInt(localStorage.getItem(depositKey)) || 0;
 let gameBalance = parseInt(localStorage.getItem(gameKey)) || 0;
@@ -200,8 +201,37 @@ soundToggle.onclick = () => {
 
 let userScore = 0, botScore = 0, timeLeft = 30;
 let timer;
-let forceBotWinsLeft = 0; // number of bot wins left in streak
 let hideBotScore = false;   // hide bot score during round
+
+// =============== CYCLE SYSTEM ===================
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function loadCycle() {
+  let cycle = JSON.parse(localStorage.getItem(cycleKey));
+  if (!cycle || cycle.steps.length === 0) {
+    // Generate new cycle
+    const userWins = 1 + Math.floor(Math.random() * 2);  // 1–2
+    const botWins = 3 + Math.floor(Math.random() * 5);   // 3–7
+    let steps = [];
+    for (let i = 0; i < userWins; i++) steps.push("user");
+    for (let i = 0; i < botWins; i++) steps.push("bot");
+    steps = shuffleArray(steps); // random order
+    cycle = { steps, index: 0 };
+    localStorage.setItem(cycleKey, JSON.stringify(cycle));
+  }
+  return cycle;
+}
+
+function saveCycle(cycle) {
+  localStorage.setItem(cycleKey, JSON.stringify(cycle));
+}
+// =================================================
 
 function updateBalances() {
   depositEl.textContent = depositBalance;
@@ -292,13 +322,6 @@ function spawnTarget() {
     shootSound.play();
     userScore++;
     userScoreEl.textContent = userScore;
-
-    // bot mirrors user score live if in bot streak
-    if (forceBotWinsLeft > 0) {
-      botScore = userScore;
-    }
-    if (!hideBotScore) botScoreEl.textContent = botScore;
-
     target.remove();
   };
 
@@ -310,18 +333,26 @@ function endRound() {
   clearInterval(timer);
   playArea.innerHTML = "";
 
-  let userWins = userScore > botScore;
+  // 🔄 Load current cycle
+  let cycle = loadCycle();
+  let currentStep = cycle.steps[cycle.index];
 
-  // BOT STREAK LOGIC
-  if (userWins && forceBotWinsLeft === 0) {
-    // user wins a round → trigger bot streak 2–4 next rounds
-    forceBotWinsLeft = 2 + Math.floor(Math.random() * 3); // 2–4
-    userWins = true; // allow this round win
-  } else if (forceBotWinsLeft > 0) {
-    // bot streak ongoing → bot wins
-    forceBotWinsLeft--;
+  let userWins = false;
+
+  if (currentStep === "user") {
+    userWins = true;
+    botScore = Math.max(0, userScore - (1 + Math.floor(Math.random() * 3))); // bot slightly lower
+  } else {
     userWins = false;
-    botScore = userScore + (2 + Math.floor(Math.random() * 7)); // +2–8
+    botScore = userScore + (2 + Math.floor(Math.random() * 7)); // bot stronger
+  }
+
+  cycle.index++;
+  if (cycle.index >= cycle.steps.length) {
+    // Reset cycle
+    localStorage.removeItem(cycleKey);
+  } else {
+    saveCycle(cycle);
   }
 
   hideBotScore = false;
@@ -345,7 +376,6 @@ function endRound() {
 // 🚀 Autostart
 window.addEventListener("load", startGame);
 </script>
-
 <script src="plus-deposit Admin.js"></script>
 </body>
 </html>
