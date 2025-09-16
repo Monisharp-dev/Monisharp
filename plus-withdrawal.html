@@ -46,7 +46,7 @@
 
     <!-- New Field: Amount After Deduction -->
     <div class="form-group">
-      <label><i class="fas fa-percentage"></i> Amount You Will Receive (after 15% deduction)</label>
+      <label><i class="fas fa-percentage"></i> Amount You Will Receive (after 30% deduction)</label>
       <input type="text" id="finalAmount" readonly>
     </div>
 
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
       balance = parseFloat(localStorage.getItem(`plusgameBalance_${Id}`)) || 0;
     }
 
-    const deduction = balance * 0.15;
+    const deduction = balance * 0.3;
     const finalAmount = balance - deduction;
 
     amountInput.value = `₦${balance.toFixed(2)}`;
