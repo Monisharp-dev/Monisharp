@@ -1,10 +1,27 @@
 // BlockAccess.js
 
 document.addEventListener('DOMContentLoaded', function () {
-    const blockedIds = ["sisfathia120"]; // List of blocked user IDs
-    const userId = localStorage.getItem("Id"); // Get user Id from localStorage
+    // Arrays of blocked IDs for each package
+    const blockedStudentIds = ["sisfathia120", "moghj56"]; 
+    const blockedPlusIds = ["alexanderifenabohplus", "plusBoss777"]; 
 
-    if (blockedIds.includes(userId)) {
+    // Fetch both possible IDs
+    const studentId = localStorage.getItem("Id");
+    const plusId = localStorage.getItem("plus-Id");
+
+    let isBlocked = false;
+
+    // Check if student ID exists and is blocked
+    if (studentId && blockedStudentIds.includes(studentId)) {
+        isBlocked = true;
+    }
+
+    // Check if plus ID exists and is blocked
+    if (plusId && blockedPlusIds.includes(plusId)) {
+        isBlocked = true;
+    }
+
+    if (isBlocked) {
         // Create and inject CSS to block entire interface
         const style = document.createElement('style');
         style.innerHTML = `
