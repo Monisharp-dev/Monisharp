@@ -1,8 +1,8 @@
 // BlockAccess.js
 
 document.addEventListener('DOMContentLoaded', function () {
-    const blockedIds = ["alexanderifenabohplus","sisfathia120"]; // List of blocked user IDs
-    const userId = localStorage.getItem("plus-Id"); // Get user Id from localStorage
+    const blockedIds = ["sisfathia120"]; // List of blocked user IDs
+    const userId = localStorage.getItem("Id"); // Get user Id from localStorage
 
     if (blockedIds.includes(userId)) {
         // Create and inject CSS to block entire interface
