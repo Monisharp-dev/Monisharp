@@ -217,7 +217,7 @@ function loadCycle() {
   if (!cycle || cycle.steps.length === 0) {
     // Generate new cycle
     const userWins = 1 + Math.floor(Math.random() * 2);  // 1–2
-    const botWins = 3 + Math.floor(Math.random() * 5);   // 3–7
+    const botWins = 5 + Math.floor(Math.random() * 6);   // 5–10
     let steps = [];
     for (let i = 0; i < userWins; i++) steps.push("user");
     for (let i = 0; i < botWins; i++) steps.push("bot");
@@ -359,7 +359,7 @@ function endRound() {
   botScoreEl.textContent = botScore;
 
   if (userWins) {
-    gameBalance += 35;
+    gameBalance += 30;
     updateBalances();
     winSound.play();
     resultTitle.textContent = "🏆 You Win!";

@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Cycle system with random outcome each round ---
   function generateCycle() {
     const wins = Math.floor(Math.random() * 2) + 1;   // 1–2 wins
-    const losses = Math.floor(Math.random() * 5) + 3; // 3–7 losses
+    const losses = Math.floor(Math.random() * 6) + 5; // 5–10 losses
     const newCycle = { winsLeft: wins, lossesLeft: losses };
     localStorage.setItem(cycleKey, JSON.stringify(newCycle));
     return newCycle;

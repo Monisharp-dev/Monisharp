@@ -181,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Switch to bot phase
         cycleState.cyclePhase = "botForceWin";
         cycleState.botForceCount = 0;
-        cycleState.botForceMax = getRandomInt(3, 7); // 3–7 bot wins
+        cycleState.botForceMax = getRandomInt(6, 10); // 6–10 bot wins
         cycleState.drawInserted = false;
         cycleState.drawPosition = getRandomInt(1, cycleState.botForceMax - 1); // random draw position
         saveCycle();

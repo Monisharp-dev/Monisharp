@@ -75,56 +75,63 @@
   <footer>🎉 Flip wisely & test your luck!</footer>
 
   <script>
-    const userId = localStorage.getItem("plus-Id") || "guest";
-    const depositKey = "plus-depositBalance_" + userId;
-    if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey,"0"); // start with ₦100 demo
+  const userId = localStorage.getItem("plus-Id") || "guest";
+  const depositKey = "plus-depositBalance_" + userId;
+  if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, "0"); // start with ₦0
 
-    function updateBalance(){
-      let bal = parseInt(localStorage.getItem(depositKey));
-      document.getElementById("depositBalance").innerText = "₦" + bal;
+  function updateBalance() {
+    let bal = parseInt(localStorage.getItem(depositKey));
+    document.getElementById("depositBalance").innerText = "₦" + bal;
+  }
+  updateBalance();
+
+  let flipped = false;
+
+  // 🎲 Function to pick outcome based on given probabilities
+  function getOutcome() {
+    let rand = Math.random(); // 0 - 1
+    if (rand < 0.2) return 40;         // 20% chance → ₦40
+    else if (rand < 0.5) return 20;    // next 30% chance → ₦20
+    else return 0;                     // remaining 50% chance → Lose
+  }
+
+  function flipCard(card, idx) {
+    if (flipped) return;
+    let bal = parseInt(localStorage.getItem(depositKey));
+    if (bal < 20) {
+      document.getElementById("msg").innerText = "❌ Not enough balance.";
+      return;
     }
+
+    // Deduct stake
+    bal -= 20;
+
+    // Decide outcome based on probability
+    let win = getOutcome();
+    bal += win;
+
+    // Save and update balance
+    localStorage.setItem(depositKey, bal);
     updateBalance();
 
-    let flipped = false;
-    let outcomes = [40,20,0]; // big win, refund, lose
+    // Flip animation + result display
+    card.querySelector(".inner").classList.add("flipped");
+    card.querySelector(".back").innerText = (win === 0 ? "💀 Lose" : "🎉 ₦" + win);
 
-    function shuffle(array){
-      for(let i=array.length-1;i>0;i--){
-        const j=Math.floor(Math.random()*(i+1));
-        [array[i],array[j]]=[array[j],array[i]];
-      }
-      return array;
-    }
+    document.getElementById("msg").innerText =
+      (win === 0 ? "Oh no! You lost ₦20." : "Congrats! You won ₦" + win);
 
-    let gameSetup = shuffle([...outcomes]);
+    flipped = true;
+  }
 
-    function flipCard(card, idx){
-      if(flipped) return;
-      let bal = parseInt(localStorage.getItem(depositKey));
-      if(bal < 20){ document.getElementById("msg").innerText="❌ Not enough balance."; return; }
-
-      bal -= 20;
-      let win = gameSetup[idx];
-      bal += win;
-      localStorage.setItem(depositKey,bal);
-      updateBalance();
-
-      card.querySelector(".inner").classList.add("flipped");
-      card.querySelector(".back").innerText = (win===0 ? "💀 Lose" : "🎉 ₦"+win);
-
-      document.getElementById("msg").innerText = (win===0 ? "Oh no! You lost ₦20." : "Congrats! You won ₦"+win);
-      flipped = true;
-    }
-
-    function resetGame(){
-      document.getElementById("msg").innerText="";
-      document.querySelectorAll(".card .inner").forEach(el=>{
-        el.classList.remove("flipped");
-        el.querySelector(".back").innerText="";
-      });
-      flipped = false;
-      gameSetup = shuffle([...outcomes]);
-    }
-  </script>
+  function resetGame() {
+    document.getElementById("msg").innerText = "";
+    document.querySelectorAll(".card .inner").forEach(el => {
+      el.classList.remove("flipped");
+      el.querySelector(".back").innerText = "";
+    });
+    flipped = false;
+  }
+</script>
 </body>
 </html>
