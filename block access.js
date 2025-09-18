@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Arrays of blocked IDs for each package
     const blockedStudentIds = ["sisfathia120", "moghj56"]; 
-    const blockedPlusIds = ["alexanderifenabohplus", "plusBoss777"]; 
+    const blockedPlusIds = ["alenabohplus", "plusBoss777"]; 
 
     // Fetch both possible IDs
     const studentId = localStorage.getItem("Id");
