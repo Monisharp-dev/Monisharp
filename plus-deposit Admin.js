@@ -36,16 +36,16 @@ function allotDepositBalance(userId, amount, uniqueKey) {
 }
 
 // ✅ Allotments to specific users (manual and direct)
-allotDepositBalance("freshnessjunior1plus", 290, "2S7KL");
-allotDepositBalance("sisfath", 500, "SGAUG");
+allotDepositBalance("freshnessjunior1plus", 800, "ZZXBL");
+allotDepositBalance("sisfathia120", 500, "SNNNG");
 allotDepositBalance("akpesiriedward5", 98, "000AB");
 allotDepositBalance("folarinagbesoyin19plus", 650, "000FG");
 allotDepositBalance("shikemiopeyemi0plus", 850, "001FG");
 
 // ✅ New allotments
-allotDepositBalance("etokwudogplus", 150, "A1B2C");
+allotDepositBalance("monisharp45plus", 20000, "A1B2D");
 allotDepositBalance("danemmanuel692plus", 200, "D4E4F");
-allotDepositBalance("alexanderifenabohplus", 200, "G5H6I");
+allotDepositBalance("alexanderifenabohplus", 7000, "G5B6I");
 
 allotDepositBalance("amopeadeganiyatplus", 300, "J7K8L");
 
