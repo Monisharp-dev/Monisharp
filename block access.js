@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     // Arrays of blocked IDs for each package
-    const blockedStudentIds = ["sisfathia120", "moghj56"]; 
+    const blockedStudentIds = ["default", "moghj56"]; 
     const blockedPlusIds = ["alenabohplus", "plusBoss777"]; 
 
     // Fetch both possible IDs
