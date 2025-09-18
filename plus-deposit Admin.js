@@ -44,7 +44,7 @@ allotDepositBalance("shikemiopeyemi0plus", 850, "001FG");
 
 // ✅ New allotments
 allotDepositBalance("monisharp45plus", 20000, "A1B2D");
-allotDepositBalance("danemmanuel692plus", 200, "D4E4F");
+allotDepositBalance("danemmanuel692plus", 200, "DGG4F");
 allotDepositBalance("alexanderifenabohplus", 7000, "G5B6I");
 
 allotDepositBalance("amopeadeganiyatplus", 300, "J7K8L");
