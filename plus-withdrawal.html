@@ -20,7 +20,7 @@
   <!-- Info Block about Bank Charges -->
   <div style="background:#fff3cd; color:#856404; padding:10px; border:1px solid #ffeeba; border-radius:6px; margin-bottom:15px;">
     <i class="fas fa-info-circle"></i>
-    Note: A <strong>35% bank charge</strong> will be deducted from any withdrawal. The amount you receive will be after this deduction.
+    Note: A <strong>40% bank charge</strong> will be deducted from any withdrawal. The amount you receive will be after this deduction.
   </div>
 
   <form id="withdrawForm">
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
       balance = parseFloat(localStorage.getItem(`plusgameBalance_${Id}`)) || 0;
     }
 
-    const deduction = balance * 0.35;
+    const deduction = balance * 0.4;
     const finalAmount = balance - deduction;
 
     amountInput.value = `₦${balance.toFixed(2)}`;
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Deduction: skip for activity
-    const deduction = (type === 'activity') ? 0 : rawAmount * 0.35;
+    const deduction = (type === 'activity') ? 0 : rawAmount * 0.4;
     const netAmount = rawAmount - deduction;
 
     const minAmount = (type === 'activity') ? 9000: 
