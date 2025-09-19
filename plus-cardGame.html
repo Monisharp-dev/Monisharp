@@ -12,23 +12,25 @@
     }
     header {
       background:linear-gradient(90deg,#0284c7,#0ea5e9);
-      padding:14px 18px; font-size:1.2rem; font-weight:bold;
+      padding:12px 18px; font-size:1.1rem; font-weight:bold;
       display:flex; justify-content:space-between; align-items:center;
       box-shadow:0 4px 10px rgba(0,0,0,0.3);
     }
-    .balance {
+    .balances {
+      display:flex; gap:8px;
       background:rgba(255,255,255,0.15);
-      padding:6px 12px; border-radius:14px; font-size:0.9rem;
+      padding:6px 12px; border-radius:10px; font-size:0.85rem;
     }
+    .balance span { font-weight:600; color:#facc15; }
     main {
       flex:1; display:flex; flex-direction:column;
       align-items:center; justify-content:center; text-align:center;
-      padding:20px;
+      padding:16px;
     }
-    h2 { margin-bottom:12px; color:#facc15; }
-    .cards { display:flex; gap:20px; margin-top:20px; }
+    h2 { margin:10px 0; color:#facc15; font-size:1.2rem; }
+    .cards { display:flex; gap:18px; margin-top:18px; }
     .card {
-      width:100px; height:150px; perspective:1000px; cursor:pointer;
+      width:100px; height:140px; perspective:1000px; cursor:pointer;
     }
     .inner {
       position:relative; width:100%; height:100%;
@@ -38,35 +40,37 @@
     .front, .back {
       position:absolute; width:100%; height:100%; border-radius:10px;
       backface-visibility:hidden; display:flex; align-items:center; justify-content:center;
-      font-size:1.2rem; font-weight:bold;
+      font-size:1.1rem; font-weight:bold;
     }
     .front { background:#0ea5e9; }
     .back { background:#fff; color:#222; transform:rotateY(180deg); }
-    .msg { margin-top:20px; font-size:1rem; font-weight:bold; }
+    .msg { margin-top:16px; font-size:1rem; font-weight:bold; min-height:24px; }
     footer {
-      text-align:center; padding:12px; font-size:0.85rem;
+      text-align:center; padding:10px; font-size:0.8rem;
       background:rgba(0,0,0,0.6); color:#ddd;
     }
     .btn {
       background:#facc15; color:#000; font-weight:bold;
-      padding:10px 16px; border:0; border-radius:8px; cursor:pointer;
-      margin-top:20px;
+      padding:8px 14px; border:0; border-radius:6px; cursor:pointer;
+      margin-top:18px; font-size:0.9rem;
     }
   </style>
 </head>
 <body>
   <header>
-    <div>🃏 Monisharp Card Flip</div>
-    <div class="balance">💰 Balance: <span id="depositBalance">₦0</span></div>
+    <div>🃏 Monisharp Flip</div>
+    <div class="balances">
+      <div class="balance">💵 <span id="depositBalance">₦0</span></div>
+      <div class="balance">🎮 <span id="gameBalance">₦0</span></div>
+    </div>
   </header>
 
   <main>
-    <h2>Pick a card - Stake ₦20</h2>
-    <p>One card doubles your money (₦40), one returns stake (₦20), one loses all.</p>
+    <h2>Stake ₦30 to Flip</h2>
     <div class="cards">
-      <div class="card" onclick="flipCard(this,0)"><div class="inner"><div class="front">❓</div><div class="back"></div></div></div>
-      <div class="card" onclick="flipCard(this,1)"><div class="inner"><div class="front">❓</div><div class="back"></div></div></div>
-      <div class="card" onclick="flipCard(this,2)"><div class="inner"><div class="front">❓</div><div class="back"></div></div></div>
+      <div class="card" onclick="flipCard(this)"><div class="inner"><div class="front">❓</div><div class="back"></div></div></div>
+      <div class="card" onclick="flipCard(this)"><div class="inner"><div class="front">❓</div><div class="back"></div></div></div>
+      <div class="card" onclick="flipCard(this)"><div class="inner"><div class="front">❓</div><div class="back"></div></div></div>
     </div>
     <div class="msg" id="msg"></div>
     <button class="btn" onclick="resetGame()">🔄 Play Again</button>
@@ -77,49 +81,58 @@
   <script>
   const userId = localStorage.getItem("plus-Id") || "guest";
   const depositKey = "plus-depositBalance_" + userId;
-  if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, "0"); // start with ₦0
+  const gameKey = "plusgameBalance_" + userId;
 
-  function updateBalance() {
-    let bal = parseInt(localStorage.getItem(depositKey));
-    document.getElementById("depositBalance").innerText = "₦" + bal;
+  if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, "0");
+  if (!localStorage.getItem(gameKey)) localStorage.setItem(gameKey, "0");
+
+  function updateBalances() {
+    let deposit = parseInt(localStorage.getItem(depositKey));
+    let game = parseInt(localStorage.getItem(gameKey));
+    document.getElementById("depositBalance").innerText = "₦" + deposit;
+    document.getElementById("gameBalance").innerText = "₦" + game;
   }
-  updateBalance();
+  updateBalances();
 
   let flipped = false;
 
-  // 🎲 Function to pick outcome based on given probabilities
+  // 🎲 Hidden probability logic
   function getOutcome() {
-    let rand = Math.random(); // 0 - 1
-    if (rand < 0.2) return 40;         // 20% chance → ₦40
-    else if (rand < 0.5) return 20;    // next 30% chance → ₦20
-    else return 0;                     // remaining 50% chance → Lose
+    let rand = Math.random();
+    if (rand < 0.05) return 60;      // 5%
+    else if (rand < 0.15) return 40; // next 15%
+    else return 5;                   // 80%
   }
 
-  function flipCard(card, idx) {
+  function flipCard(card) {
     if (flipped) return;
-    let bal = parseInt(localStorage.getItem(depositKey));
-    if (bal < 20) {
-      document.getElementById("msg").innerText = "❌ Not enough balance.";
+
+    let deposit = parseInt(localStorage.getItem(depositKey));
+    let game = parseInt(localStorage.getItem(gameKey));
+
+    if (deposit < 20) {
+      document.getElementById("msg").innerText = "❌ Not enough deposit to stake ₦30.";
       return;
     }
 
-    // Deduct stake
-    bal -= 20;
+    // Deduct stake from deposit
+    deposit -= 30;
 
-    // Decide outcome based on probability
+    // Get outcome
     let win = getOutcome();
-    bal += win;
+    game += win; // winnings go to game balance
 
-    // Save and update balance
-    localStorage.setItem(depositKey, bal);
-    updateBalance();
+    // Save updated balances
+    localStorage.setItem(depositKey, deposit);
+    localStorage.setItem(gameKey, game);
+    updateBalances();
 
-    // Flip animation + result display
+    // Show card result
     card.querySelector(".inner").classList.add("flipped");
     card.querySelector(".back").innerText = (win === 0 ? "💀 Lose" : "🎉 ₦" + win);
 
     document.getElementById("msg").innerText =
-      (win === 0 ? "Oh no! You lost ₦20." : "Congrats! You won ₦" + win);
+      (win === 0 ? "Oh no! You lost ₦20." : "Congrats! ₦" + win + " added to Game Balance!");
 
     flipped = true;
   }
@@ -133,5 +146,6 @@
     flipped = false;
   }
 </script>
+<script src="depo-cop.js"></script>
 </body>
 </html>

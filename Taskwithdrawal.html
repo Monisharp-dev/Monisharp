@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Display net receiveable
   function updateReceiveAmount() {
     const amount = parseFloat(amountInput.value) || 0;
-    const net = amount - (amount * 0.10);
+    const net = amount - (amount * 0.250);
     receiveAmountDisplay.textContent = `You will receive: ₦${net.toFixed(2)}`;
   }
   updateReceiveAmount();
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const amount = parseFloat(amountInput.value);
-    const fee = amount * 0.10;
+    const fee = amount * 0.250;
     const netAmount = amount - fee;
 
     const bankName = document.getElementById('bankName').value.trim();

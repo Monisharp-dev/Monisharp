@@ -123,6 +123,8 @@
         <label for="amount">Withdrawal Amount:</label>
         <input type="number" id="amount" required />
       </div>
+      <label for="remainingBalance">Remaining Balance (₦):</label>
+<input type="text" id="remainingBalance" readonly>
 
       <div class="form-group">
         <label for="amountToReceive">Amount You Will Receive:</label>
@@ -159,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("withdrawForm");
   const amountInput = document.getElementById("amount");
   const amountToReceiveInput = document.getElementById("amountToReceive");
+  const remainingBalanceField = document.getElementById("remainingBalance"); // NEW
 
   // ==== Loader ====
   const loader = document.createElement("div");
@@ -197,20 +200,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ==== Populate Fields ====
   const id = localStorage.getItem("Id");
-  const balance = parseFloat(localStorage.getItem(`gameBalance_${id}`)) || 0;
+  let balance = parseFloat(localStorage.getItem(`gameBalance_${id}`)) || 0;
   if (id) document.getElementById("Id").value = id;
-  amountInput.value = balance.toFixed(2);
   document.getElementById("date").value = new Date().toLocaleString();
 
-  // ==== Calculate and Display Amount to Receive ====
+  // Show initial balance
+  if (remainingBalanceField) {
+    remainingBalanceField.value = balance.toFixed(2);
+  }
+
+  // ==== Calculate and Display Amount to Receive & Remaining Balance ====
   const updateAmountToReceive = () => {
     const enteredAmount = parseFloat(amountInput.value.trim()) || 0;
-    const charge = enteredAmount * 0.2; // 20% bank charge
+    const charge = enteredAmount * 0.4; // 40% deduction
     const finalAmount = enteredAmount - charge;
+
     amountToReceiveInput.value = finalAmount > 0 ? finalAmount.toFixed(2) : "0.00";
+
+    // Live remaining balance
+    if (remainingBalanceField) {
+      const newBalance = balance - enteredAmount;
+      remainingBalanceField.value = newBalance >= 0 ? newBalance.toFixed(2) : balance.toFixed(2);
+    }
   };
   amountInput.addEventListener("input", updateAmountToReceive);
-  updateAmountToReceive(); // initial load
 
   // ==== Submit Logic ====
   form.addEventListener("submit", async (e) => {
@@ -223,13 +236,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const accountName = document.getElementById("accountName").value.trim();
     const accountNumber = document.getElementById("accountNumber").value.trim();
 
+    // ==== Validations ====
     if (!enteredAmount || enteredAmount <= 0) {
       loader.style.display = "none";
       return showAlert("Enter a valid amount.", "error");
     }
-    if (enteredAmount < 600) {
+    if (enteredAmount < 900) {
       loader.style.display = "none";
-      return showAlert("Minimum withdrawal is ₦600.", "warning");
+      return showAlert("Minimum withdrawal is ₦900.", "warning");
     }
     if (balance <= 0) {
       loader.style.display = "none";
@@ -248,10 +262,11 @@ document.addEventListener("DOMContentLoaded", () => {
       return showAlert("Account number must be at least 10 digits.", "warning");
     }
 
+    // ==== Data Object ====
     const data = {
       Id: id,
-      amount: amountToReceive, // Send final amount after deduction
-      originalAmount: enteredAmount, // optional, for reference
+      amount: amountToReceive,      // amount after deduction
+      originalAmount: enteredAmount, // before deduction
       bankName,
       accountName,
       accountNumber,
@@ -267,6 +282,11 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (response.ok) {
+        // ==== Update local balance ====
+        balance -= enteredAmount;
+        localStorage.setItem(`gameBalance_${id}`, balance.toFixed(2));
+
+        // ==== Save withdrawal history ====
         const history = JSON.parse(localStorage.getItem("withdrawalHistory")) || [];
         history.unshift(data);
         localStorage.setItem("withdrawalHistory", JSON.stringify(history));
@@ -274,7 +294,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         showAlert("Withdrawal request submitted successfully!", "success");
         form.reset();
-        updateAmountToReceive();
+        amountToReceiveInput.value = "0.00";
+        if (remainingBalanceField) {
+          remainingBalanceField.value = balance.toFixed(2);
+        }
 
         setTimeout(() => {
           window.location.href = "withdrawHistory.html";

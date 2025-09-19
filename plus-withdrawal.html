@@ -20,7 +20,7 @@
   <!-- Info Block about Bank Charges -->
   <div style="background:#fff3cd; color:#856404; padding:10px; border:1px solid #ffeeba; border-radius:6px; margin-bottom:15px;">
     <i class="fas fa-info-circle"></i>
-    Note: A <strong>15% bank charge</strong> will be deducted from any withdrawal. The amount you receive will be after this deduction.
+    Note: A <strong>35% bank charge</strong> will be deducted from any withdrawal. The amount you receive will be after this deduction.
   </div>
 
   <form id="withdrawForm">
@@ -46,7 +46,7 @@
 
     <!-- New Field: Amount After Deduction -->
     <div class="form-group">
-      <label><i class="fas fa-percentage"></i> Amount You Will Receive (after 30% deduction)</label>
+      <label><i class="fas fa-percentage"></i> Amount You Will Receive (after 35% deduction)</label>
       <input type="text" id="finalAmount" readonly>
     </div>
 
@@ -115,15 +115,20 @@ document.addEventListener('DOMContentLoaded', () => {
     notification.style.transition = 'all 0.4s ease';
 
     // Colors by type
-    notification.style.backgroundColor =
-      (type === 'error') ? '#fef0f0' :
-      (type === 'warning') ? '#fff8e5' :
-      '#edfef0';
-    notification.style.color =
-      (type === 'error') ? '#c0392b' :
-      (type === 'warning') ? '#b9770e' :
-      '#27ae60';
-    
+    if (type === 'error') {
+      notification.style.backgroundColor = '#fef0f0';
+      notification.style.color = '#c0392b';
+    } else if (type === 'warning') {
+      notification.style.backgroundColor = '#fff8e5';
+      notification.style.color = '#b9770e';
+    } else if (type === 'info') {
+      notification.style.backgroundColor = '#eaf3fe';
+      notification.style.color = '#2980b9';
+    } else { // success (default)
+      notification.style.backgroundColor = '#edfef0';
+      notification.style.color = '#27ae60';
+    }
+
     setTimeout(() => notification.style.display = 'none', 7000);
   }
 
@@ -142,8 +147,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Calculate deposit requirement (66.67%)
-      const requiredDeposit = (balance * 0.6667).toFixed(2);
+      // Calculate deposit requirement (80%)
+      const requiredDeposit = (balance * 0.80).toFixed(2);
       showNotification(
         `To withdraw ₦${balance.toFixed(2)}, you must have at least ₦${requiredDeposit} in your deposit balance. Minimum withdrawal is ₦9,000.`,
         "info"
@@ -159,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
       balance = parseFloat(localStorage.getItem(`plusgameBalance_${Id}`)) || 0;
     }
 
-    const deduction = balance * 0.3;
+    const deduction = balance * 0.35;
     const finalAmount = balance - deduction;
 
     amountInput.value = `₦${balance.toFixed(2)}`;
@@ -200,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return showNotification("Minimum withdrawal for Activity balance is ₦9,000.", "error");
       }
 
-      const requiredDeposit = rawAmount * 0.6667;
+      const requiredDeposit = rawAmount * 0.80;
       const userDepositBalance = parseFloat(localStorage.getItem(`plus-depositBalance_${Id}`)) || 0;
 
       if (userDepositBalance < requiredDeposit) {
@@ -216,10 +221,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Deduction: skip for activity
-    const deduction = (type === 'activity') ? 0 : rawAmount * 0.15;
+    const deduction = (type === 'activity') ? 0 : rawAmount * 0.35;
     const netAmount = rawAmount - deduction;
 
-    const minAmount = (type === 'activity') ? 9000 : 
+    const minAmount = (type === 'activity') ? 9000: 
                       (type === 'referral') ? 1000 : 
                       (type === 'game') ? 500: 0;
 
@@ -259,13 +264,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // ✅ Deduct deposit for activity withdrawal
       if (type === 'activity') {
-        const requiredDeposit = rawAmount * 0.6667;
+        const requiredDeposit = rawAmount * 0.80;
         let userDepositBalance = parseFloat(localStorage.getItem(`plus-depositBalance_${Id}`)) || 0;
         userDepositBalance -= requiredDeposit;
         localStorage.setItem(`plus-depositBalance_${Id}`, userDepositBalance.toFixed(2));
       }
 
-      // History should show "Submitted" (not "Game pending")
+      // History should show "Submitted"
       const history = JSON.parse(localStorage.getItem('plus-withdrawalHistory')) || [];
       history.push({ ...payload, status: 'Submitted', deducted: deduction.toFixed(2) });
       localStorage.setItem('plus-withdrawalHistory', JSON.stringify(history));

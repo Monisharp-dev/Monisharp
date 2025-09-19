@@ -6,7 +6,7 @@
   <title>Withdraw Funds</title>
   <link rel="stylesheet" href="bottom-nav.css">
   <link rel="stylesheet" href="navbar.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
   <style>
     body {
@@ -76,7 +76,12 @@
       width: 100%;
     }
 
-    button:hover {
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    button:hover:enabled {
       background: #15803d;
     }
 
@@ -108,7 +113,8 @@
   <div class="container">
     <!-- Top Notification -->
     <div class="top-notice">
-      Note: A 10% bank charge will be deducted from the withdrawal amount.
+      Note: A 10% bank charge will be deducted from the withdrawal amount.<br>
+      Minimum withdrawal for main balance is ₦450.
     </div>
 
     <h2>Withdraw Funds</h2>
@@ -120,7 +126,7 @@
 
       <div class="form-group">
         <label for="amount">Withdrawal Amount:</label>
-        <input type="number" id="amount" required />
+        <input type="number" id="amount" required readonly /> 
       </div>
 
       <div class="form-group">
@@ -158,6 +164,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("withdrawForm");
   const amountInput = document.getElementById("amount");
   const amountToReceiveInput = document.getElementById("amountToReceive");
+  const submitBtn = document.getElementById("submitBtn");
+  const MIN_WITHDRAWAL = 450; // ₦450 minimum withdrawal
 
   // ==== Loader ====
   const loader = document.createElement("div");
@@ -201,6 +209,12 @@ document.addEventListener("DOMContentLoaded", () => {
   amountInput.value = balance.toFixed(2);
   document.getElementById("date").value = new Date().toLocaleString();
 
+  // Disable submit if balance < ₦450
+  if (balance < MIN_WITHDRAWAL) {
+    submitBtn.disabled = true;
+    showAlert(`Your balance is below the minimum withdrawal of ₦${MIN_WITHDRAWAL}.`, "warning");
+  }
+
   // ==== Calculate and Display Amount to Receive ====
   const updateAmountToReceive = () => {
     const enteredAmount = parseFloat(amountInput.value.trim()) || 0;
@@ -225,6 +239,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!enteredAmount || enteredAmount <= 0) {
       loader.style.display = "none";
       return showAlert("Enter a valid amount.", "error");
+    }
+    if (enteredAmount < MIN_WITHDRAWAL) {
+      loader.style.display = "none";
+      return showAlert(`Minimum withdrawal is ₦${MIN_WITHDRAWAL}.`, "warning");
     }
     if (!bankName || !accountName || !accountNumber) {
       loader.style.display = "none";

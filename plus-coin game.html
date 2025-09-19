@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // --- Apply outcome ---
       if (outcome === "WIN" && choice === tossResult) {
-        let winAmount = currentStake * 2;
+        let winAmount = currentStake * 2.5;
         game += winAmount;
         localStorage.setItem(gameKey, game);
         showPopup(`🎉 WIN! It was ${tossResult} (+₦${winAmount})`);
@@ -294,5 +294,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 </script>
+<script src="cop depo.js"></script>
 </body>
 </html>
