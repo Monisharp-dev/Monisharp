@@ -35,13 +35,20 @@ function allotTaskBalance(userId, amount, uniqueKey) {
 allotTaskBalance("mohammedmanyisa9680plus", 50, "AUG87");
 allotTaskBalance("shikemiopeyemi0plus", 50, "EOZBS");
 allotTaskBalance("folarinagbesoyin19plus", 50, "EOZBS");
-allotTaskBalance("paulmaureen408plus", 200, "EOZBS");
+allotTaskBalance("paulmaureen408plus", 20, "EOZBS");
 allotTaskBalance("olasunkanmiomotayo2", 18, "FZMLC");
-allotTaskBalance("amopeadeganiyatplus", 150, "FZMLC");
-allotTaskBalance("danemmanuel692plus", 20, "FZZZC");
 allotTaskBalance("baloguntaiwo0001", 21, "SEPTE");
-allotTaskBalance("etokwudogplus", 7590, "SFTTS");
-allotTaskBalance("inaplus", 210, "FZSSC");
-allotTaskBalance("alexanderifenabohplus", 50, "FZMLC");
-
-//hiii;
+allotTaskBalance("etokwudogplus", 10, "SFTTS");
+allotTaskBalance("inaplus", 20, "FZSSC");
+allotTaskBalance("alexanderifenabohplus", 100, "FSTTV");
+allotTaskBalance("freshnessjunior1plus", 40, "SFTTS");
+allotTaskBalance("shikemiopeyemi0plus", 60, "SFTTS");
+allotTaskBalance("	amopeadeganiyatplus", 70, "SFTTS");
+allotTaskBalance("danemmanuel692plus", 40, "SFTTS");
+allotTaskBalance("richesosimejom", 50, "KEY01");
+allotTaskBalance("anigedavid9plus", 50, "KEY02");
+allotTaskBalance("toyosiakinboluresamuel", 50, "KEY03");
+allotTaskBalance("okaforrichard21", 50, "KEY04");
+allotTaskBalance("alaopaul211", 50, "KEY05");
+    
+}

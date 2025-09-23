@@ -44,10 +44,10 @@ allotDepositBalance("shikemiopeyemi0plus", 850, "001FG");
 
 // ✅ New allotments
 allotDepositBalance("monisharp45plus", 20000, "A1B2D");
-allotDepositBalance("danemmanuel692plus", 200, "DGG4F");
+allotDepositBalance("danemmanuel692plus", 500, "DGSSS");
 allotDepositBalance("alexanderifenabohplus", 7000, "G5B6I");
 
-allotDepositBalance("amopeadeganiyatplus", 300, "J7K8L");
+allotDepositBalance("Uteemychkaelplus", 200, "J7K8L");
 
 // ✅ Optional: Credit the currently logged-in user (if any)
 const loggedInUserId = getCurrentUserId();

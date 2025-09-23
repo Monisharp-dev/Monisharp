@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>No Bank Charges Plans</title>
+  <style>
+    /* ===== Global Styles ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+      color: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+      font-size: 2.5rem;
+      text-align: center;
+      color: #f3f4f6;
+      letter-spacing: 1px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      animation: fadeInDown 1s ease forwards;
+    }
+
+    /* ===== Grid ===== */
+    .grid {
+      display: grid;
+      gap: 25px;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      width: 100%;
+      max-width: 1100px;
+      margin-bottom: 40px;
+    }
+
+    /* ===== Card Styles ===== */
+    .card {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      padding: 25px 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+    }
+
+    .card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 12px;
+      color: #f9fafb;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      margin-bottom: 12px;
+      color: #d1d5db;
+    }
+
+    .price {
+      font-weight: 700;
+      color: #10b981;
+      font-size: 1.2rem;
+    }
+
+    .btn {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .btn:hover:not(:disabled) {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    .btn:disabled {
+      background-color: #6b7280;
+      cursor: not-allowed;
+    }
+
+    /* ===== Balance Box ===== */
+    .balance-box {
+      width: 100%;
+      max-width: 550px;
+      margin-bottom: 30px;
+      text-align: center;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .progress-bar {
+      background: rgba(255,255,255,0.1);
+      border-radius: 15px;
+      overflow: hidden;
+      margin-top: 12px;
+      height: 18px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(135deg, #10b981, #34d399);
+      border-radius: 15px;
+      transition: width 0.6s ease-in-out;
+    }
+
+    /* ===== Active Plan ===== */
+    .active-plan {
+      background: rgba(255,255,255,0.05);
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      margin-bottom: 40px;
+      width: 100%;
+      max-width: 550px;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.15);
+      animation: fadeIn 1s ease forwards;
+    }
+
+    /* ===== Modal ===== */
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.6);
+      animation: fadeIn 0.3s ease forwards;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: rgba(255,255,255,0.05);
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 450px;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255,255,255,0.15);
+      animation: scaleIn 0.3s ease forwards;
+      color: #f9fafb;
+    }
+
+    .modal-buttons {
+      margin-top: 25px;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+    }
+
+    /* ===== Notification ===== */
+    .notification {
+      position: fixed;
+      top: 25px;
+      right: 25px;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #fff;
+      padding: 14px 25px;
+      border-radius: 15px;
+      display: none;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: fadeInRight 0.5s ease forwards;
+      z-index: 2000;
+      font-weight: 600;
+    }
+
+    /* ===== Animations ===== */
+    @keyframes fadeInDown {0% { opacity: 0; transform: translateY(-30px);}100% { opacity: 1; transform: translateY(0);}}
+    @keyframes fadeInUp {0% { opacity: 0; transform: translateY(30px);}100% { opacity: 1; transform: translateY(0);}}
+    @keyframes fadeIn {0% { opacity: 0;}100% { opacity: 1;}}
+    @keyframes scaleIn {0% { transform: scale(0.8); opacity: 0;}100% { transform: scale(1); opacity: 1;}}
+    @keyframes fadeInRight {0% { opacity: 0; transform: translateX(20px);}100% { opacity: 1; transform: translateX(0);}}
+  </style>
+</head>
+<body>
+    
+<button class="btn" style="background:#f59e0b;margin-bottom:20px;" onclick="goBack()">
+  ← Go Back
+</button>
+
+  <h1>Choose Your No Bank Charges Plan</h1>
+
+  <div class="grid" id="offersGrid"></div>
+
+  <div class="balance-box">
+    <strong>Deposit Balance:</strong> ₦<span id="balance">0</span>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+  </div>
+
+  <div class="active-plan" id="activePlanBox" style="display:none;"></div>
+
+  <!-- Modal -->
+  <div class="modal" id="confirmModal">
+    <div class="modal-content">
+      <h3>Confirm Purchase</h3>
+      <p id="confirmText"></p>
+      <div class="modal-buttons">
+        <button class="btn" style="background:#6b7280;" onclick="closeModal()">Cancel</button>
+        <button class="btn" onclick="confirmPurchase()">Proceed</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification -->
+  <div class="notification" id="notificationBox"></div>
+
+  <script>
+   const userId = localStorage.getItem("plus-Id"); // e.g., "monisharp45plus"
+ const balanceKey = `plus-depositBalance_${userId}`;
+    const planKey = `activePlan_${userId}`;
+
+    let depositBalance = parseFloat(localStorage.getItem(balanceKey)) || 0;
+    let activePlan = null;
+    let selectedOffer = null;
+
+    const offers = [
+      { id: "1d", title: "No bank charges", duration: 1, unit: "day", price: 400, info: "Enjoy zero bank charges for a whole day of transactions." },
+      { id: "1w", title: "No bank charges", duration: 7, unit: "days", price: 1500, info: "Get a full week of stress-free banking with no charges." },
+      { id: "1m", title: "No bank charges", duration: 30, unit: "days", price: 6000, info: "Best value! One month of completely free transactions." }
+    ];
+
+    const balanceEl = document.getElementById("balance");
+    const progressFill = document.getElementById("progressFill");
+    const activePlanBox = document.getElementById("activePlanBox");
+    const offersGrid = document.getElementById("offersGrid");
+    const modal = document.getElementById("confirmModal");
+    const confirmText = document.getElementById("confirmText");
+    const notificationBox = document.getElementById("notificationBox");
+
+    function loadActivePlan() {
+      const storedPlan = JSON.parse(localStorage.getItem(planKey));
+      if (storedPlan && new Date(storedPlan.expiry) > new Date()) {
+        activePlan = storedPlan;
+      } else {
+        localStorage.removeItem(planKey);
+        activePlan = null;
+      }
+      renderUI();
+    }
+
+    function renderUI() {
+      balanceEl.textContent = depositBalance.toLocaleString();
+      progressFill.style.width = Math.min((depositBalance / 10000) * 100, 100) + "%";
+
+      offersGrid.innerHTML = "";
+      offers.forEach((offer, index) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.innerHTML = `
+          <h2>${offer.title}</h2>
+          <p>${offer.info}</p>
+          <p>Valid for <strong>${offer.duration} ${offer.unit}</strong></p>
+          <p class="price">₦${offer.price.toLocaleString()}</p>
+          <button class="btn" ${activePlan ? "disabled" : ""}>
+            ${activePlan ? "Active Plan Running" : "Purchase"}
+          </button>
+        `;
+        card.querySelector("button").onclick = () => handlePurchase(offer);
+        offersGrid.appendChild(card);
+      });
+
+      if (activePlan) {
+        activePlanBox.style.display = "block";
+        activePlanBox.innerHTML = `
+          <strong>Active Plan:</strong> ${activePlan.duration} ${activePlan.unit}<br>
+          <strong>Expires:</strong> ${new Date(activePlan.expiry).toLocaleString()}<br>
+          <button class="btn" style="background:#ef4444;margin-top:8px;" onclick="cancelActivePlan()">
+            Cancel Active Plan
+          </button>
+        `;
+      } else {
+        activePlanBox.style.display = "none";
+      }
+    }
+
+    function handlePurchase(offer) {
+      if (activePlan) {
+        showNotification("You already have an active plan.");
+        return;
+      }
+      selectedOffer = offer;
+      confirmText.textContent = `You are about to purchase "${offer.title}" valid for ${offer.duration} ${offer.unit} at ₦${offer.price.toLocaleString()}. Proceed?`;
+      modal.style.display = "flex";
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+
+    function confirmPurchase() {
+      if (depositBalance < selectedOffer.price) {
+        showNotification("Insufficient balance to complete this purchase.");
+        closeModal();
+        return;
+      }
+
+      const expiry = new Date();
+      expiry.setDate(expiry.getDate() + selectedOffer.duration);
+      const newPlan = { ...selectedOffer, expiry };
+
+      depositBalance -= selectedOffer.price;
+      localStorage.setItem(balanceKey, depositBalance);
+      localStorage.setItem(planKey, JSON.stringify(newPlan));
+
+      activePlan = newPlan;
+      closeModal();
+      renderUI();
+      showNotification("Plan purchased successfully!");
+    }
+
+    function cancelActivePlan() {
+      localStorage.removeItem(planKey);
+      activePlan = null;
+      renderUI();
+      showNotification("Active plan has been cancelled.");
+    }
+
+    function showNotification(msg) {
+      notificationBox.textContent = msg;
+      notificationBox.style.display = "block";
+      setTimeout(() => {
+        notificationBox.style.display = "none";
+      }, 3000);
+    }
+
+    setInterval(() => {
+      if (activePlan && new Date(activePlan.expiry) <= new Date()) {
+        localStorage.removeItem(planKey);
+        activePlan = null;
+        renderUI();
+        showNotification("Your plan has expired.");
+      }
+    }, 5000);
+
+    loadActivePlan();
+    
+    function goBack() {
+  history.back();
+}
+  </script>
+
+</body>
+</html>

@@ -151,7 +151,40 @@
       height: 100%;
       background: linear-gradient(90deg, #22c55e, #16a34a);
       width: 0%;
-      transition: width 0.6s ease;
+      transition: width 1s linear;
+    }
+
+    /* Active Indicator */
+    .active-indicator {
+      margin-top: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pulse-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #22c55e;
+      position: relative;
+    }
+
+    .pulse-dot::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(2); opacity: 0; }
     }
 
     /* Go Back Button */
@@ -166,7 +199,7 @@
     <h2><i class="fas fa-gift"></i> Daily Rewards</h2>
 
     <div class="balance">
-      <p><strong>Activity Balance:</strong> <span id="activityBalance">0</span> pts</p>
+      <p><strong>Activity Balance:</strong> <span id="activityBalance">0</span></p>
       <p><strong>Deposit Balance:</strong> ₦<span id="depositBalance">0</span></p>
     </div>
 
@@ -175,13 +208,17 @@
     <div class="notification" id="message" style="display:none;"></div>
 
     <div class="auto-section">
-      <h3><i class="fas fa-clock"></i> Auto-Claim for 7 Days (1,050 points)</h3>
-      <p>Enable automatic daily rewards of 150pts/day. Total ₦1,050 added to your Activity Balance after 7 days.</p>
+      <h3><i class="fas fa-clock"></i> Auto-Claim for 7 Days (₦1,050)</h3>
+      <p>Enable automatic rewards. <strong>₦100 deducted once, and ₦1,050 will be credited to your Activity Balance after 7 days.</strong></p>
       
       <button class="btn" id="autoBtn"><i class="fas fa-robot"></i> Activate for ₦100</button>
 
       <div class="progress-bar" id="progressBar" style="display:none;">
         <div class="progress-fill" id="progressFill"></div>
+      </div>
+
+      <div class="active-indicator" id="activeIndicator" style="display:none;">
+        <div class="pulse-dot"></div> <i class="fas fa-robot"></i> Auto-claimer is active
       </div>
 
       <p class="notification" style="margin-top:10px; font-size: 13px; background:rgba(255,255,255,0.1); color:#fff;">
@@ -197,6 +234,7 @@
   <script>
     const activityKey = 'plus-activityBalance';
     const autoKey = 'plus-autoStartDate';
+    const paidKey = 'plus-autoPaid';
 
     const activityBalanceEl = document.getElementById('activityBalance');
     const depositBalanceEl = document.getElementById('depositBalance');
@@ -205,6 +243,7 @@
     const autoBtn = document.getElementById('autoBtn');
     const progressBar = document.getElementById('progressBar');
     const progressFill = document.getElementById('progressFill');
+    const activeIndicator = document.getElementById('activeIndicator');
 
     function getDepositKey() {
       const userId = localStorage.getItem('plus-Id') || '';
@@ -251,31 +290,43 @@
       if (!start) return false;
       const startDate = new Date(start);
       const now = new Date();
-      const diffDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-      return diffDays < 7;
+      const diffMs = now - startDate;
+      return diffMs < (7 * 24 * 60 * 60 * 1000);
     }
 
     function updateAutoClaimer() {
-      if (isAutoActive()) {
-        claimBtn.classList.add('disabled');
-        autoBtn.classList.add('disabled');
-        const start = new Date(localStorage.getItem(autoKey));
-        const now = new Date();
-        const daysPassed = Math.min(7, Math.floor((now - start) / (1000 * 60 * 60 * 24)));
-        const percent = (daysPassed / 7) * 100;
-        progressBar.style.display = 'block';
-        progressFill.style.width = `${percent}%`;
+      const start = localStorage.getItem(autoKey);
+      if (!start) return;
 
-        if (daysPassed >= 7) {
-          const alreadyCredited = localStorage.getItem('plus-autoPaid') === 'yes';
-          if (!alreadyCredited) {
-            const current = parseInt(localStorage.getItem(activityKey)) || 0;
-            localStorage.setItem(activityKey, current + 1050);
-            localStorage.setItem('plus-autoPaid', 'yes');
-            showMessage("₦1,050 Auto Reward Credited!", "success", "fas fa-gift");
-            loadBalances();
-          }
+      claimBtn.classList.add('disabled');
+      autoBtn.classList.add('disabled');
+      activeIndicator.style.display = 'flex';
+      progressBar.style.display = 'block';
+
+      const startDate = new Date(start);
+      const now = new Date();
+      const totalMs = 7 * 24 * 60 * 60 * 1000; // 7 days
+      const elapsed = now - startDate;
+      let percent = Math.min(100, (elapsed / totalMs) * 100);
+      progressFill.style.width = `${percent}%`;
+
+      if (percent >= 100) {
+        const alreadyCredited = localStorage.getItem(paidKey) === 'yes';
+        if (!alreadyCredited) {
+          const current = parseInt(localStorage.getItem(activityKey)) || 0;
+          localStorage.setItem(activityKey, current + 1050);
+          localStorage.setItem(paidKey, 'yes');
+          showMessage("🎉 ₦1,050 Auto Reward Credited after 7 days!", "success", "fas fa-gift");
+          loadBalances();
         }
+
+        // Allow new activation AFTER reward credited
+        claimBtn.classList.remove('disabled');
+        autoBtn.classList.remove('disabled');
+        activeIndicator.style.display = 'none';
+        progressBar.style.display = 'none';
+        localStorage.removeItem(autoKey);
+        localStorage.removeItem(paidKey);
       }
     }
 
@@ -287,15 +338,15 @@
 
       const depositKey = getDepositKey();
       const deposit = parseInt(localStorage.getItem(depositKey)) || 0;
-      if (deposit < 300) {
-        showMessage("Insufficient deposit balance (₦300 required).", "error", "fas fa-wallet");
+      if (deposit < 100) {
+        showMessage("Insufficient deposit balance (₦100 required).", "error", "fas fa-wallet");
         return;
       }
 
-      localStorage.setItem(depositKey, deposit - 300);
-      localStorage.setItem(autoKey, new Date().toString());
-      localStorage.removeItem('plus-autoPaid');
-      showMessage("Auto-claimer activated for 7 days!", "success", "fas fa-robot");
+      localStorage.setItem(depositKey, deposit - 100);
+      localStorage.setItem(autoKey, new Date().toISOString());
+      localStorage.removeItem(paidKey);
+      showMessage("🤖 Auto-claimer activated for 7 days!", "success", "fas fa-robot");
       updateAutoClaimer();
       loadBalances();
     }
@@ -305,6 +356,7 @@
 
     loadBalances();
     updateAutoClaimer();
+    setInterval(updateAutoClaimer, 1000); // keep progress bar live
   </script>
 </body>
 </html>

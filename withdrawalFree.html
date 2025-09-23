@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Withdraw Funds</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+  <link rel="stylesheet" href="plus-withdrawal.css">
+</head>
+<body>
+
+<!-- Go Back Button -->
+<button onclick="history.back()" class="go-back-btn">
+  <i class="fas fa-arrow-left"></i> Go Back
+</button>
+
+<div class="glass-box">
+  <h2><i class="fas fa-wallet"></i> Withdraw Funds</h2>
+
+  <!-- Info Block about Bank Charges -->
+  <div style="background:#fff3cd; color:#856404; padding:10px; border:1px solid #ffeeba; border-radius:6px; margin-bottom:15px;">
+    <i class="fas fa-info-circle"></i>
+    Note: A <strong>0% bank charge</strong> will be deducted from any withdrawal. The amount you receive will be after this deduction.
+  </div>
+
+  <form id="withdrawForm">
+    <div class="form-group">
+      <label><i class="fas fa-random"></i> Choose Balance Source</label>
+      <select id="balanceType" required>
+        <option value="">-- Select Balance --</option>
+        <option value="referral">Referral Balance</option>
+        <option value="task">Task Balance</option>
+        <option value="game">Game Balance</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-user-tag"></i> User ID</label>
+      <input type="text" id="Id" readonly>
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-money-bill-wave"></i> Available Amount</label>
+      <input type="text" id="amount" readonly>
+    </div>
+
+    <!-- New Field: Amount After Deduction -->
+    <div class="form-group">
+      <label><i class="fas fa-percentage"></i> Amount You Will Receive (after 0% deduction)</label>
+      <input type="text" id="finalAmount" readonly>
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-university"></i> Bank Name</label>
+      <input type="text" id="bankName" required>
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-user"></i> Account Name</label>
+      <input type="text" id="accountName" required>
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-hashtag"></i> Account Number</label>
+      <input type="text" id="accountNumber" required>
+    </div>
+
+    <div class="form-group">
+      <label><i class="fas fa-calendar-day"></i> Date</label>
+      <input type="text" id="date" readonly>
+    </div>
+
+    <button type="submit"><i class="fas fa-paper-plane"></i> Withdraw Now</button>
+  </form>
+
+  <div id="notification" class="notification"></div>
+</div>
+
+<!-- Loader -->
+<div class="loader-overlay" id="loaderOverlay">
+  <div class="loader"></div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const Id = localStorage.getItem('plus-Id');
+  document.getElementById('Id').value = Id || 'N/A';
+  document.getElementById('date').value = new Date().toLocaleString();
+
+  const amountInput = document.getElementById('amount');
+  const finalAmountInput = document.getElementById('finalAmount');
+  const balanceType = document.getElementById('balanceType');
+  const notification = document.getElementById('notification');
+  const form = document.getElementById('withdrawForm');
+  const loaderOverlay = document.getElementById('loaderOverlay');
+
+  // 🔔 Notification
+  function showNotification(message, type) {
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.style.display = 'flex';
+    notification.style.position = 'fixed';
+    notification.style.top = '50%';
+    notification.style.left = '50%';
+    notification.style.transform = 'translate(-50%, -50%)';
+    notification.style.zIndex = '9999';
+    notification.style.minWidth = '280px';
+    notification.style.maxWidth = '90%';
+    notification.style.padding = '18px 20px';
+    notification.style.fontSize = '15px';
+    notification.style.fontWeight = '500';
+    notification.style.borderRadius = '10px';
+    notification.style.textAlign = 'center';
+    notification.style.boxShadow = '0 6px 16px rgba(0,0,0,0.25)';
+    notification.style.transition = 'all 0.4s ease';
+
+    if (type === 'error') {
+      notification.style.backgroundColor = '#fef0f0';
+      notification.style.color = '#c0392b';
+    } else if (type === 'warning') {
+      notification.style.backgroundColor = '#fff8e5';
+      notification.style.color = '#b9770e';
+    } else if (type === 'info') {
+      notification.style.backgroundColor = '#eaf3fe';
+      notification.style.color = '#2980b9';
+    } else {
+      notification.style.backgroundColor = '#edfef0';
+      notification.style.color = '#27ae60';
+    }
+
+    setTimeout(() => notification.style.display = 'none', 7000);
+  }
+
+  // ✅ Update amount and final amount (0% deduction)
+  const updateAmount = () => {
+    const type = balanceType.value;
+    let balance = 0;
+
+    if (type === 'task') {
+      balance = parseFloat(localStorage.getItem(`taskBalance_${Id}`)) || 0;
+    } else if (type === 'referral') {
+      balance = parseFloat(localStorage.getItem(`plus-referralBalance_${Id}`)) || 0;
+    } else if (type === 'game') {
+      balance = parseFloat(localStorage.getItem(`plusgameBalance_${Id}`)) || 0;
+    }
+
+    const deduction = balance * 0;
+    const finalAmount = balance - deduction;
+
+    amountInput.value = `₦${balance.toFixed(2)}`;
+    finalAmountInput.value = `₦${finalAmount.toFixed(2)}`;
+  };
+
+  // 🚀 Submit withdrawal
+  async function submitWithdrawal(payload, attempt = 1) {
+    try {
+      const res = await fetch('https://sheetdb.io/api/v1/pecncmqdgxgih', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ data: payload })
+      });
+      if (!res.ok) throw new Error('Status: ' + res.status);
+      return true;
+    } catch {
+      return attempt < 10 ? await submitWithdrawal(payload, attempt + 1) : false;
+    }
+  }
+
+  balanceType.addEventListener('change', updateAmount);
+  updateAmount();
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const type = balanceType.value;
+    let rawAmount = 0;
+
+    if (type === 'task') {
+      rawAmount = parseFloat(localStorage.getItem(`taskBalance_${Id}`)) || 0;
+      if (rawAmount < 1000) {
+        return showNotification("Minimum withdrawal for Task balance is ₦1,000.", "error");
+      }
+    } else if (type === 'referral') {
+      rawAmount = parseFloat(localStorage.getItem(`referralBalance_${Id}`)) || 0;
+      if (rawAmount < 1000) {
+        return showNotification("Minimum withdrawal for Referral balance is ₦1,000.", "error");
+      }
+    } else if (type === 'game') {
+      rawAmount = parseFloat(localStorage.getItem(`plusgameBalance_${Id}`)) || 0;
+      if (rawAmount < 500) {
+        return showNotification("Minimum withdrawal for Game balance is ₦500.", "error");
+      }
+    }
+
+    const deduction = rawAmount * 0;
+    const netAmount = rawAmount - deduction;
+
+    const bankName = document.getElementById('bankName').value.trim();
+    const accountName = document.getElementById('accountName').value.trim();
+    const accountNumber = document.getElementById('accountNumber').value.trim();
+
+    if (!type || !bankName || !accountName || !accountNumber) {
+      return showNotification("All fields must be filled.", "warning");
+    }
+
+    // Payload for API
+    const payload = {
+      Id,
+      amount: netAmount,
+      bankName,
+      accountName,
+      accountNumber,
+      date: new Date().toLocaleString(),
+      status: "pending"
+    };
+
+    loaderOverlay.classList.add('active');
+    const success = await submitWithdrawal(payload);
+    loaderOverlay.classList.remove('active');
+
+    if (success) {
+      if (type === 'game') {
+        localStorage.setItem(`plusgameBalance_${Id}`, '0');
+      } else if (type === 'task') {
+        localStorage.setItem(`taskBalance_${Id}`, '0');
+      } else if (type === 'referral') {
+        localStorage.setItem(`referralBalance_${Id}`, '0');
+      }
+
+      const history = JSON.parse(localStorage.getItem('plus-withdrawalHistory')) || [];
+      history.push({ ...payload, status: 'Submitted', deducted: deduction.toFixed(2) });
+      localStorage.setItem('plus-withdrawalHistory', JSON.stringify(history));
+
+      form.reset();
+      document.getElementById('Id').value = Id;
+      document.getElementById('date').value = new Date().toLocaleString();
+      amountInput.value = "₦0.00";
+      finalAmountInput.value = "₦0.00";
+      showNotification("✅ Withdrawal submitted successfully.", "success");
+    } else {
+      showNotification("❌ Submission failed. Please try again later.", "error");
+    }
+  });
+});
+</script>
+<script src="plus-deposit Admin.js"></script>
+<script src="online.js"></script>
+</body>
+</html>
