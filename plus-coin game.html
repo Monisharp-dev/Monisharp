@@ -142,6 +142,7 @@
 <audio id="flipSound" src="https://www.fesliyanstudios.com/play-mp3/387" preload="auto"></audio>
 <audio id="winSound" src="https://www.fesliyanstudios.com/play-mp3/4380" preload="auto"></audio>
 <audio id="loseSound" src="https://www.fesliyanstudios.com/play-mp3/4381" preload="auto"></audio>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
@@ -149,7 +150,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const depositKey = `plus-depositBalance_${userId}`;
   const gameKey = `plusgameBalance_${userId}`;
   const freePlayKey = `firstFreePlay_${userId}`;
-  const cycleKey = `gameCycle_${userId}`; // 🔑 Persistent cycle state
+  const cycleKey = `gameCycle_${userId}`;
 
   if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, 0);
   if (!localStorage.getItem(gameKey)) localStorage.setItem(gameKey, 0);
@@ -176,24 +177,41 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(star);
   }
 
-  // --- Cycle system with random outcome each round ---
+  // --- Cycle system: always 2 wins + 3 losses ---
   function generateCycle() {
-    const wins = Math.floor(Math.random() * 2) + 1;   // 1–2 wins (user wins)
-    const losses = Math.floor(Math.random() * 6) + 5; // 5–10 losses (bot wins)
-    const newCycle = { winsLeft: wins, lossesLeft: losses };
-    localStorage.setItem(cycleKey, JSON.stringify(newCycle));
-    return newCycle;
+    let outcomes = ["WIN","WIN","LOSE","LOSE","LOSE"];
+
+    // Shuffle outcomes (Fisher–Yates)
+    for (let i = outcomes.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [outcomes[i], outcomes[j]] = [outcomes[j], outcomes[i]];
+    }
+
+    localStorage.setItem(cycleKey, JSON.stringify(outcomes));
+    return outcomes;
   }
 
-  // Load or create cycle
-  let cycle = JSON.parse(localStorage.getItem(cycleKey)) || generateCycle();
+  // Load cycle safely
+  function loadCycle() {
+    try {
+      let data = JSON.parse(localStorage.getItem(cycleKey));
+      if (!Array.isArray(data)) throw new Error("Invalid cycle");
+      return data;
+    } catch (e) {
+      return generateCycle();
+    }
+  }
+
+  let cycle = loadCycle();
 
   // Stake handling
   let currentStake = 10;
-  window.setStake = (val) => {
+  window.setStake = (val, evt) => {
     currentStake = val;
     document.querySelectorAll(".stake-btn").forEach(btn => btn.classList.remove("active"));
-    event.target.classList.add("active");
+    if (evt && evt.target) {
+      evt.target.classList.add("active");
+    }
   };
 
   window.playGame = (choice) => {
@@ -212,43 +230,39 @@ document.addEventListener("DOMContentLoaded", () => {
       localStorage.setItem(depositKey, deposit);
     }
 
-    const tossResult = Math.random() < 0.5 ? "Heads" : "Tails";
+    // Reload cycle fresh each play
+    cycle = loadCycle();
+
+    // --- Get next outcome ---
+    let outcome = cycle.shift(); 
+    localStorage.setItem(cycleKey, JSON.stringify(cycle));
+
+    // Reset cycle if finished
+    if (!cycle.length) {
+      cycle = generateCycle();
+    }
+
     const coin = document.getElementById("coin");
     coin.style.transform = "rotateY(1440deg)";
     flipSound.play();
 
     setTimeout(() => {
+      let tossResult;
+
+      if (outcome === "WIN") {
+        // Force guaranteed win → coin = user's choice
+        tossResult = choice;
+      } else {
+        // Force guaranteed loss → coin = opposite of user's choice
+        tossResult = choice === "Heads" ? "Tails" : "Heads";
+      }
+
       coin.textContent = tossResult === "Heads" ? "H" : "T";
       coin.style.transform = "rotateY(0deg)";
 
-      // --- Decide outcome dynamically ---
-      let outcome;
-      if (cycle.winsLeft === 0 && cycle.lossesLeft > 0) {
-        outcome = "LOSE"; // force losses if only losses left
-      } else if (cycle.lossesLeft === 0 && cycle.winsLeft > 0) {
-        outcome = "WIN"; // force wins if only wins left
-      } else {
-        // Randomly choose between win/loss if both are available
-        outcome = Math.random() < 0.5 ? "WIN" : "LOSE";
-      }
-
-      // Deduct from cycle
-      if (outcome === "WIN") {
-        cycle.winsLeft--;
-      } else {
-        cycle.lossesLeft--;
-      }
-
-      localStorage.setItem(cycleKey, JSON.stringify(cycle));
-
-      // Reset cycle if finished
-      if (cycle.winsLeft === 0 && cycle.lossesLeft === 0) {
-        cycle = generateCycle();
-      }
-
       // --- Apply outcome ---
-      if (outcome === "WIN" && choice === tossResult) {
-        let winAmount = currentStake * 2.5;
+      if (outcome === "WIN") {
+        let winAmount = currentStake * 2;
         game += winAmount;
         localStorage.setItem(gameKey, game);
         showPopup(`🎉 WIN! It was ${tossResult} (+₦${winAmount})`);

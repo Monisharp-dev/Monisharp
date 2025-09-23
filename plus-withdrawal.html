@@ -20,7 +20,7 @@
   <!-- Info Block about Bank Charges -->
   <div style="background:#fff3cd; color:#856404; padding:10px; border:1px solid #ffeeba; border-radius:6px; margin-bottom:15px;">
     <i class="fas fa-info-circle"></i>
-    Note: A <strong>40% bank charge</strong> will be deducted from any withdrawal. The amount you receive will be after this deduction.
+    Note: A <strong>35% bank charge</strong> will be deducted from any withdrawal. The amount you receive will be after this deduction.
   </div>
 
   <form id="withdrawForm">
@@ -29,7 +29,7 @@
       <select id="balanceType" required>
         <option value="">-- Select Balance --</option>
         <option value="referral">Referral Balance</option>
-        <option value="activity">Activity Balance</option>
+        <option value="task">Task Balance</option>
         <option value="game">Game Balance</option>
       </select>
     </div>
@@ -81,6 +81,7 @@
   <div class="loader"></div>
 </div>
 
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   const Id = localStorage.getItem('plus-Id');
@@ -94,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('withdrawForm');
   const loaderOverlay = document.getElementById('loaderOverlay');
 
-  // 🔔 Centered, professional notification
+  // 🔔 Notification
   function showNotification(message, type) {
     notification.textContent = message;
     notification.className = `notification ${type}`;
@@ -114,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
     notification.style.boxShadow = '0 6px 16px rgba(0,0,0,0.25)';
     notification.style.transition = 'all 0.4s ease';
 
-    // Colors by type
     if (type === 'error') {
       notification.style.backgroundColor = '#fef0f0';
       notification.style.color = '#c0392b';
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (type === 'info') {
       notification.style.backgroundColor = '#eaf3fe';
       notification.style.color = '#2980b9';
-    } else { // success (default)
+    } else {
       notification.style.backgroundColor = '#edfef0';
       notification.style.color = '#27ae60';
     }
@@ -132,46 +132,27 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => notification.style.display = 'none', 7000);
   }
 
-  // Update amount and final amount
+  // ✅ Update amount and final amount (35% deduction)
   const updateAmount = () => {
     const type = balanceType.value;
     let balance = 0;
 
-    if (type === 'activity') {
-      balance = parseFloat(localStorage.getItem('plus-activityBalance')) || 0;
-      const today = new Date();
-      if (today.getDate() !== 20) {
-        amountInput.value = `₦${balance.toFixed(2)}`;
-        finalAmountInput.value = "₦0.00";
-        showNotification("Activity balance can only be withdrawn on the 20th of each month.", "warning");
-        return;
-      }
-
-      // Calculate deposit requirement (80%)
-      const requiredDeposit = (balance * 0.80).toFixed(2);
-      showNotification(
-        `To withdraw ₦${balance.toFixed(2)}, you must have at least ₦${requiredDeposit} in your deposit balance. Minimum withdrawal is ₦9,000.`,
-        "info"
-      );
-
-      // No deduction for activity
-      amountInput.value = `₦${balance.toFixed(2)}`;
-      finalAmountInput.value = `₦${balance.toFixed(2)}`;
-      return;
+    if (type === 'task') {
+      balance = parseFloat(localStorage.getItem(`taskBalance_${Id}`)) || 0;
     } else if (type === 'referral') {
-      balance = parseFloat(localStorage.getItem('plus-referralBalance')) || 0;
+      balance = parseFloat(localStorage.getItem(`plus-referralBalance_${Id}`)) || 0;
     } else if (type === 'game') {
       balance = parseFloat(localStorage.getItem(`plusgameBalance_${Id}`)) || 0;
     }
 
-    const deduction = balance * 0.4;
+    const deduction = balance * 0.35;
     const finalAmount = balance - deduction;
 
     amountInput.value = `₦${balance.toFixed(2)}`;
     finalAmountInput.value = `₦${finalAmount.toFixed(2)}`;
   };
 
-  // Submit withdrawal to API
+  // 🚀 Submit withdrawal
   async function submitWithdrawal(payload, attempt = 1) {
     try {
       const res = await fetch('https://sheetdb.io/api/v1/pecncmqdgxgih', {
@@ -187,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   balanceType.addEventListener('change', updateAmount);
-  updateAmount(); // run on page load
+  updateAmount();
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -195,38 +176,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const type = balanceType.value;
     let rawAmount = 0;
 
-    if (type === 'activity') {
-      rawAmount = parseFloat(localStorage.getItem('plus-activityBalance')) || 0;
-      const today = new Date();
-      if (today.getDate() !== 20) {
-        return showNotification("You can only withdraw Activity balance on the 20th.", "error");
-      }
-      if (rawAmount < 9000) {
-        return showNotification("Minimum withdrawal for Activity balance is ₦9,000.", "error");
-      }
-
-      const requiredDeposit = rawAmount * 0.80;
-      const userDepositBalance = parseFloat(localStorage.getItem(`plus-depositBalance_${Id}`)) || 0;
-
-      if (userDepositBalance < requiredDeposit) {
-        return showNotification(
-          `Insufficient deposit balance. You need at least ₦${requiredDeposit.toFixed(2)}, but you only have ₦${userDepositBalance.toFixed(2)}.`,
-          "error"
-        );
+    if (type === 'task') {
+      rawAmount = parseFloat(localStorage.getItem(`taskBalance_${Id}`)) || 0;
+      if (rawAmount < 1000) {
+        return showNotification("Minimum withdrawal for Task balance is ₦1,000.", "error");
       }
     } else if (type === 'referral') {
-      rawAmount = parseFloat(localStorage.getItem('plus-referralBalance')) || 0;
+      rawAmount = parseFloat(localStorage.getItem(`referralBalance_${Id}`)) || 0;
+      if (rawAmount < 1000) {
+        return showNotification("Minimum withdrawal for Referral balance is ₦1,000.", "error");
+      }
     } else if (type === 'game') {
       rawAmount = parseFloat(localStorage.getItem(`plusgameBalance_${Id}`)) || 0;
+      if (rawAmount < 500) {
+        return showNotification("Minimum withdrawal for Game balance is ₦500.", "error");
+      }
     }
 
-    // Deduction: skip for activity
-    const deduction = (type === 'activity') ? 0 : rawAmount * 0.4;
+    const deduction = rawAmount * 0.35;
     const netAmount = rawAmount - deduction;
-
-    const minAmount = (type === 'activity') ? 9000: 
-                      (type === 'referral') ? 1000 : 
-                      (type === 'game') ? 500: 0;
 
     const bankName = document.getElementById('bankName').value.trim();
     const accountName = document.getElementById('accountName').value.trim();
@@ -234,10 +202,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!type || !bankName || !accountName || !accountNumber) {
       return showNotification("All fields must be filled.", "warning");
-    }
-
-    if (rawAmount < minAmount) {
-      return showNotification(`Minimum withdrawal is ₦${minAmount}`, "warning");
     }
 
     // Payload for API
@@ -258,19 +222,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (success) {
       if (type === 'game') {
         localStorage.setItem(`plusgameBalance_${Id}`, '0');
-      } else {
-        localStorage.setItem(`plus-${type}Balance`, '0');
+      } else if (type === 'task') {
+        localStorage.setItem(`taskBalance_${Id}`, '0');
+      } else if (type === 'referral') {
+        localStorage.setItem(`referralBalance_${Id}`, '0');
       }
 
-      // ✅ Deduct deposit for activity withdrawal
-      if (type === 'activity') {
-        const requiredDeposit = rawAmount * 0.80;
-        let userDepositBalance = parseFloat(localStorage.getItem(`plus-depositBalance_${Id}`)) || 0;
-        userDepositBalance -= requiredDeposit;
-        localStorage.setItem(`plus-depositBalance_${Id}`, userDepositBalance.toFixed(2));
-      }
-
-      // History should show "Submitted"
       const history = JSON.parse(localStorage.getItem('plus-withdrawalHistory')) || [];
       history.push({ ...payload, status: 'Submitted', deducted: deduction.toFixed(2) });
       localStorage.setItem('plus-withdrawalHistory', JSON.stringify(history));
@@ -288,7 +245,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script src="plus-deposit Admin.js"></script>
-
 <script src="online.js"></script>
 </body>
 </html>

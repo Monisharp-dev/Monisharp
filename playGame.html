@@ -265,13 +265,13 @@
       '<i class="fas fa-coins"></i> ₦' + gameBalance;
 
     // Check deposit balance
-    if (parseInt(depositBalance) < 600) {
+    if (parseInt(depositBalance) < 500) {
       const popup = document.createElement("div");
       popup.className = "popup-overlay";
       popup.innerHTML = `
         <div class="popup-box">
           <h2>⚠ Insufficient Balance</h2>
-          <p>You need at least ₦600 in your deposit balance to access Monisharp Games.</p>
+          <p>You need at least ₦500 in your deposit balance to access Monisharp Games.</p>
           <a href="deposit.html">💳 Deposit Now</a>
         </div>
       `;

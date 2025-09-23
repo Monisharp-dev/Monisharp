@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Check balance
   function checkBalance() {
     const depositBalance = parseFloat(localStorage.getItem(balanceKey)) || 0;
-    if (depositBalance < 800) {
+    if (depositBalance < 500) {
       showBanner();
     } else {
       hideBanner();

@@ -5,85 +5,133 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Daily Rewards</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
+
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #00c6ff, #0072ff);
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
       margin: 0;
       padding: 20px;
       color: #fff;
+      overflow-x: hidden;
     }
 
     .container {
       max-width: 500px;
       margin: auto;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.12);
       padding: 30px;
-      border-radius: 20px;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      border-radius: 25px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 12px 35px rgba(0,0,0,0.25);
       text-align: center;
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h2 {
-      font-size: 28px;
+      font-size: 30px;
       margin-bottom: 20px;
       color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    h2 i {
+      color: #facc15;
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
     }
 
     .balance {
-      background: rgba(0,0,0,0.1);
-      padding: 15px;
-      border-radius: 12px;
-      margin-bottom: 20px;
+      background: rgba(0,0,0,0.2);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 25px;
       font-size: 16px;
+      transition: transform 0.3s ease;
+    }
+
+    .balance:hover {
+      transform: scale(1.03);
     }
 
     .btn {
-      background: #16a34a;
+      background: linear-gradient(90deg, #16a34a, #22c55e);
       color: white;
-      padding: 12px 24px;
+      padding: 14px 26px;
       font-size: 16px;
+      font-weight: 600;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      margin-top: 10px;
-      transition: background 0.3s ease;
+      margin-top: 12px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
     }
 
     .btn:hover {
-      background: #15803d;
+      background: linear-gradient(90deg, #15803d, #16a34a);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.25);
     }
 
     .auto-section {
-      margin-top: 30px;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 20px;
-      border-radius: 14px;
+      margin-top: 35px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 25px;
+      border-radius: 18px;
       font-size: 15px;
       text-align: left;
+      animation: fadeIn 1s ease-in;
+    }
+
+    .auto-section h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .auto-section i {
+      color: #38bdf8;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .notification {
-      margin-top: 15px;
+      margin-top: 18px;
       padding: 12px;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 14px;
       font-weight: 500;
-      background-color: #facc15;
-      color: #000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      animation: fadeSlide 0.5s ease forwards;
     }
 
-    .success {
-      background-color: #22c55e;
-      color: white;
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .error {
-      background-color: #ef4444;
-      color: white;
-    }
+    .success { background-color: #22c55e; color: white; }
+    .error { background-color: #ef4444; color: white; }
+    .notification i { font-size: 16px; }
 
     .disabled {
       opacity: 0.6;
@@ -91,18 +139,25 @@
     }
 
     .progress-bar {
-      background: #ccc;
+      background: #475569;
       border-radius: 20px;
-      height: 14px;
-      margin-top: 12px;
+      height: 16px;
+      margin-top: 14px;
       overflow: hidden;
+      box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
     }
 
     .progress-fill {
       height: 100%;
-      background: #22c55e;
+      background: linear-gradient(90deg, #22c55e, #16a34a);
       width: 0%;
-      transition: width 0.3s ease;
+      transition: width 0.6s ease;
+    }
+
+    /* Go Back Button */
+    .back-btn {
+      background: #334155;
+      margin-top: 30px;
     }
   </style>
 </head>
@@ -111,152 +166,145 @@
     <h2><i class="fas fa-gift"></i> Daily Rewards</h2>
 
     <div class="balance">
-      <p><strong>Activity Balance:</strong> ₦<span id="activityBalance">0</span></p>
+      <p><strong>Activity Balance:</strong> <span id="activityBalance">0</span> pts</p>
       <p><strong>Deposit Balance:</strong> ₦<span id="depositBalance">0</span></p>
     </div>
 
-    <button class="btn" id="claimBtn">Claim ₦50 Now</button>
+    <button class="btn" id="claimBtn"><i class="fas fa-coins"></i> Claim ₦50 Now</button>
 
     <div class="notification" id="message" style="display:none;"></div>
 
     <div class="auto-section">
-      <h3><i class="fas fa-clock"></i> Auto-Claim for 7 Days (₦1,050)</h3>
-      <p>Enable automatic daily rewards of ₦150/day. Total ₦1,050 added to your Activity Balance after 7 days.</p>
-      <button class="btn" id="autoBtn">Activate for ₦300</button>
+      <h3><i class="fas fa-clock"></i> Auto-Claim for 7 Days (1,050 points)</h3>
+      <p>Enable automatic daily rewards of 150pts/day. Total ₦1,050 added to your Activity Balance after 7 days.</p>
+      
+      <button class="btn" id="autoBtn"><i class="fas fa-robot"></i> Activate for ₦100</button>
+
       <div class="progress-bar" id="progressBar" style="display:none;">
         <div class="progress-fill" id="progressFill"></div>
       </div>
-      <p class="notification" style="margin-top:10px; font-size: 13px;">
+
+      <p class="notification" style="margin-top:10px; font-size: 13px; background:rgba(255,255,255,0.1); color:#fff;">
         ⚠️ You cannot claim daily rewards manually when auto-claimer is active.
       </p>
       
-      <!-- Go Back Button -->
-<button class="btn" style="background:#334155; margin-top: 30px;" onclick="history.back()">
-  <i class="fas fa-arrow-left"></i> Go Back
-</button>
-      
+      <button class="btn back-btn" onclick="history.back()">
+        <i class="fas fa-arrow-left"></i> Go Back
+      </button>
     </div>
   </div>
 
   <script>
-  const activityKey = 'plus-activityBalance';
-  const autoKey = 'plus-autoStartDate';
+    const activityKey = 'plus-activityBalance';
+    const autoKey = 'plus-autoStartDate';
 
-  const activityBalanceEl = document.getElementById('activityBalance');
-  const depositBalanceEl = document.getElementById('depositBalance');
-  const messageEl = document.getElementById('message');
-  const claimBtn = document.getElementById('claimBtn');
-  const autoBtn = document.getElementById('autoBtn');
-  const progressBar = document.getElementById('progressBar');
-  const progressFill = document.getElementById('progressFill');
+    const activityBalanceEl = document.getElementById('activityBalance');
+    const depositBalanceEl = document.getElementById('depositBalance');
+    const messageEl = document.getElementById('message');
+    const claimBtn = document.getElementById('claimBtn');
+    const autoBtn = document.getElementById('autoBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
 
-  // Get deposit key for current user
-  function getDepositKey() {
-    const userId = localStorage.getItem('plus-Id') || '';
-    return `plus-depositBalance_${userId}`;
-  }
-
-  function loadBalances() {
-    const activity = parseInt(localStorage.getItem(activityKey)) || 0;
-    const deposit = parseInt(localStorage.getItem(getDepositKey())) || 0;
-    activityBalanceEl.textContent = activity;
-    depositBalanceEl.textContent = deposit;
-  }
-
-  function showMessage(msg, type = '') {
-    messageEl.textContent = msg;
-    messageEl.className = `notification ${type}`;
-    messageEl.style.display = 'block';
-    setTimeout(() => messageEl.style.display = 'none', 4000);
-  }
-
-  function claimDaily() {
-    if (isAutoActive()) {
-      showMessage("❌ Auto-claimer is active. Manual claiming is disabled.", "error");
-      return;
+    function getDepositKey() {
+      const userId = localStorage.getItem('plus-Id') || '';
+      return `plus-depositBalance_${userId}`;
     }
 
-    const lastClaim = localStorage.getItem('plus-lastClaim');
-    const today = new Date().toDateString();
-    if (lastClaim === today) {
-      showMessage("❗ You already claimed today. Come back tomorrow.", "error");
-      return;
+    function loadBalances() {
+      const activity = parseInt(localStorage.getItem(activityKey)) || 0;
+      const deposit = parseInt(localStorage.getItem(getDepositKey())) || 0;
+      activityBalanceEl.textContent = activity;
+      depositBalanceEl.textContent = deposit;
     }
 
-    const current = parseInt(localStorage.getItem(activityKey)) || 0;
-    const updated = current + 50;
-    localStorage.setItem(activityKey, updated);
-    localStorage.setItem('plus-lastClaim', today);
-    loadBalances();
-    showMessage("🎉 ₦50 Claimed Successfully!", "success");
-  }
+    function showMessage(msg, type = '', icon = '') {
+      messageEl.innerHTML = icon ? `<i class="${icon}"></i> ${msg}` : msg;
+      messageEl.className = `notification ${type}`;
+      messageEl.style.display = 'flex';
+      setTimeout(() => messageEl.style.display = 'none', 4000);
+    }
 
-  function isAutoActive() {
-    const start = localStorage.getItem(autoKey);
-    if (!start) return false;
-    const startDate = new Date(start);
-    const now = new Date();
-    const diffDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
-    return diffDays < 7;
-  }
+    function claimDaily() {
+      if (isAutoActive()) {
+        showMessage("Auto-claimer is active. Manual claiming is disabled.", "error", "fas fa-ban");
+        return;
+      }
 
-  function updateAutoClaimer() {
-    if (isAutoActive()) {
-      claimBtn.classList.add('disabled');
-      autoBtn.classList.add('disabled');
-      const start = new Date(localStorage.getItem(autoKey));
+      const lastClaim = localStorage.getItem('plus-lastClaim');
+      const today = new Date().toDateString();
+      if (lastClaim === today) {
+        showMessage("You already claimed today. Come back tomorrow.", "error", "fas fa-exclamation-circle");
+        return;
+      }
+
+      const current = parseInt(localStorage.getItem(activityKey)) || 0;
+      const updated = current + 50;
+      localStorage.setItem(activityKey, updated);
+      localStorage.setItem('plus-lastClaim', today);
+      loadBalances();
+      showMessage("₦50 Claimed Successfully!", "success", "fas fa-check-circle");
+    }
+
+    function isAutoActive() {
+      const start = localStorage.getItem(autoKey);
+      if (!start) return false;
+      const startDate = new Date(start);
       const now = new Date();
-      const daysPassed = Math.min(7, Math.floor((now - start) / (1000 * 60 * 60 * 24)));
-      const percent = (daysPassed / 7) * 100;
-      progressBar.style.display = 'block';
-      progressFill.style.width = `${percent}%`;
+      const diffDays = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+      return diffDays < 7;
+    }
 
-      if (daysPassed >= 7) {
-        const alreadyCredited = localStorage.getItem('plus-autoPaid') === 'yes';
-        if (!alreadyCredited) {
-          const current = parseInt(localStorage.getItem(activityKey)) || 0;
-          localStorage.setItem(activityKey, current + 1050);
-          localStorage.setItem('plus-autoPaid', 'yes');
-          showMessage("✅ ₦1,050 Auto Reward Credited!", "success");
-          loadBalances();
+    function updateAutoClaimer() {
+      if (isAutoActive()) {
+        claimBtn.classList.add('disabled');
+        autoBtn.classList.add('disabled');
+        const start = new Date(localStorage.getItem(autoKey));
+        const now = new Date();
+        const daysPassed = Math.min(7, Math.floor((now - start) / (1000 * 60 * 60 * 24)));
+        const percent = (daysPassed / 7) * 100;
+        progressBar.style.display = 'block';
+        progressFill.style.width = `${percent}%`;
+
+        if (daysPassed >= 7) {
+          const alreadyCredited = localStorage.getItem('plus-autoPaid') === 'yes';
+          if (!alreadyCredited) {
+            const current = parseInt(localStorage.getItem(activityKey)) || 0;
+            localStorage.setItem(activityKey, current + 1050);
+            localStorage.setItem('plus-autoPaid', 'yes');
+            showMessage("₦1,050 Auto Reward Credited!", "success", "fas fa-gift");
+            loadBalances();
+          }
         }
       }
     }
-  }
 
-  function activateAutoClaimer() {
-    if (isAutoActive()) {
-      showMessage("❗ Auto-claimer is already running.", "error");
-      return;
+    function activateAutoClaimer() {
+      if (isAutoActive()) {
+        showMessage("Auto-claimer is already running.", "error", "fas fa-exclamation-triangle");
+        return;
+      }
+
+      const depositKey = getDepositKey();
+      const deposit = parseInt(localStorage.getItem(depositKey)) || 0;
+      if (deposit < 300) {
+        showMessage("Insufficient deposit balance (₦300 required).", "error", "fas fa-wallet");
+        return;
+      }
+
+      localStorage.setItem(depositKey, deposit - 300);
+      localStorage.setItem(autoKey, new Date().toString());
+      localStorage.removeItem('plus-autoPaid');
+      showMessage("Auto-claimer activated for 7 days!", "success", "fas fa-robot");
+      updateAutoClaimer();
+      loadBalances();
     }
 
-    const depositKey = getDepositKey();
-    const deposit = parseInt(localStorage.getItem(depositKey)) || 0;
-    if (deposit < 300) {
-      showMessage("⚠️ Insufficient deposit balance (₦300 required).", "error");
-      return;
-    }
+    claimBtn.addEventListener('click', claimDaily);
+    autoBtn.addEventListener('click', activateAutoClaimer);
 
-    localStorage.setItem(depositKey, deposit - 300);
-    localStorage.setItem(autoKey, new Date().toString());
-    localStorage.removeItem('plus-autoPaid'); // reset credit flag
-    showMessage("🟢 Auto-claimer activated for 7 days!", "success");
-    updateAutoClaimer();
     loadBalances();
-  }
-
-  // Events
-  claimBtn.addEventListener('click', claimDaily);
-  autoBtn.addEventListener('click', activateAutoClaimer);
-
-  // Init
-  loadBalances();
-  updateAutoClaimer();
-</script>
-
-  <script src="plus-deposit Admin.js"></script>
-  <script="plus-upload.js"></script>
-
-<script src="online.js"></script>
- </body>
+    updateAutoClaimer();
+  </script>
+</body>
 </html>

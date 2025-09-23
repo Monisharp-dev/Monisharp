@@ -215,13 +215,12 @@ function shuffleArray(arr) {
 function loadCycle() {
   let cycle = JSON.parse(localStorage.getItem(cycleKey));
   if (!cycle || cycle.steps.length === 0) {
-    // Generate new cycle
-    const userWins = 1 + Math.floor(Math.random() * 2);  // 1–2
-    const botWins = 3 + Math.floor(Math.random() * 5);   // 3–7
+    // Generate fixed cycle: 2 user wins, 3 bot wins
     let steps = [];
-    for (let i = 0; i < userWins; i++) steps.push("user");
-    for (let i = 0; i < botWins; i++) steps.push("bot");
-    steps = shuffleArray(steps); // random order
+    for (let i = 0; i < 2; i++) steps.push("user");
+    for (let i = 0; i < 3; i++) steps.push("bot");
+
+    steps = shuffleArray(steps); // randomize order
     cycle = { steps, index: 0 };
     localStorage.setItem(cycleKey, JSON.stringify(cycle));
   }

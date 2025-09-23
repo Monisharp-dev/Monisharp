@@ -282,14 +282,14 @@
     console.log("Deposit Balance (raw):", depositBalanceRaw);
     console.log("Deposit Balance (parsed):", depositBalance);
 
-    // ✅ Show popup ONLY if below ₦800
-    if (depositBalance < 800) {
+    // ✅ Show popup ONLY if below ₦300
+    if (depositBalance < 300) {
       const popup = document.createElement("div");
       popup.className = "popup-overlay";
       popup.innerHTML = `
         <div class="popup-box">
           <h2>⚠️ Insufficient Balance</h2>
-          <p>Your deposit balance is below ₦800.<br>Please top up to access the games.</p>
+          <p>Your deposit balance is below ₦300.<br>Please top up to access the games.</p>
           <button onclick="window.location.href='plus-deposit.html'">Top Up Now</button>
         </div>
       `;

@@ -110,8 +110,8 @@
         <li>Each play costs <b>₦20</b> from your deposit.</li>
         <li>Win = ₦30 added to your Game Balance.</li>
         <li>Lose = no credit.</li>
+        <li>Draw = Stake refunded.</li>
         <li>Rock beats Scissors, Scissors beats Paper, Paper beats Rock.</li>
-        <li>Your opponent is random each game.</li>
       </ul>
       <button class="close-btn" onclick="toggleHelp()">Close</button>
     </div>
@@ -126,14 +126,12 @@
   <audio id="drawSound" src="https://www.soundjay.com/button/sounds/button-09.mp3" preload="auto"></audio>
   <audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop preload="auto"></audio>
 
-  
- 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const userId = localStorage.getItem("plus-Id") || "defaultUser";
   const depositKey = `plus-depositBalance_${userId}`;
   const gameKey = `plusgameBalance_${userId}`;
-  const cycleKey = `plus-rpsCycle_${userId}`; // NEW: key for saving cycle state
+  const cycleKey = `plus-rpsCycle_${userId}`;
 
   if (!localStorage.getItem(depositKey)) localStorage.setItem(depositKey, 0);
   if (!localStorage.getItem(gameKey)) localStorage.setItem(gameKey, 0);
@@ -153,59 +151,39 @@ document.addEventListener("DOMContentLoaded", () => {
   }, { once: true });
 
   // --- Cycle Control ---
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+  function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   }
 
-  // Load cycle state or initialize fresh
   let cycleState = JSON.parse(localStorage.getItem(cycleKey)) || {
-    cyclePhase: "userWin",  // "userWin" or "botForceWin"
-    userWinCount: 0,
-    userWinTarget: getRandomInt(1, 2), // 1–2 wins
-    botForceCount: 0,
-    botForceMax: 0,
-    drawInserted: false,
-    drawPosition: 0
+    outcomes: [],
+    index: 0
   };
 
   function saveCycle() {
     localStorage.setItem(cycleKey, JSON.stringify(cycleState));
   }
 
-  function nextOutcome() {
-    if (cycleState.cyclePhase === "userWin") {
-      if (cycleState.userWinCount < cycleState.userWinTarget) {
-        cycleState.userWinCount++;
-        saveCycle();
-        return "W"; // Controlled user win
-      } else {
-        // Switch to bot phase
-        cycleState.cyclePhase = "botForceWin";
-        cycleState.botForceCount = 0;
-        cycleState.botForceMax = getRandomInt(6, 10); // 6–10 bot wins
-        cycleState.drawInserted = false;
-        cycleState.drawPosition = getRandomInt(1, cycleState.botForceMax - 1); // random draw position
-        saveCycle();
-      }
-    }
+  function generateCycle() {
+    // 2 wins, 3 losses, 1 draw
+    const base = ["W", "W", "L", "L", "L", "D"];
+    cycleState.outcomes = shuffleArray(base);
+    cycleState.index = 0;
+    saveCycle();
+  }
 
-    if (cycleState.cyclePhase === "botForceWin") {
-      cycleState.botForceCount++;
-      // Insert a draw randomly
-      if (!cycleState.drawInserted && cycleState.botForceCount === cycleState.drawPosition) {
-        cycleState.drawInserted = true;
-        saveCycle();
-        return "D";
-      }
-      if (cycleState.botForceCount >= cycleState.botForceMax) {
-        // Reset to user win phase
-        cycleState.cyclePhase = "userWin";
-        cycleState.userWinTarget = getRandomInt(1, 2);
-        cycleState.userWinCount = 0;
-      }
-      saveCycle();
-      return "L"; // Bot wins
+  function nextOutcome() {
+    if (!cycleState.outcomes.length || cycleState.index >= cycleState.outcomes.length) {
+      generateCycle();
     }
+    const outcome = cycleState.outcomes[cycleState.index];
+    cycleState.index++;
+    saveCycle();
+    return outcome;
   }
 
   // --- Play Game ---
@@ -216,7 +194,7 @@ document.addEventListener("DOMContentLoaded", () => {
     deposit -= stake; localStorage.setItem(depositKey, deposit);
 
     const choices = ["Rock", "Paper", "Scissors"];
-    let botChoice = choices[getRandomInt(0, 2)]; // default, will be overridden
+    let botChoice = choices[Math.floor(Math.random() * 3)];
 
     const playerHand = document.getElementById("playerHand");
     const botHand = document.getElementById("botHand");
@@ -236,9 +214,9 @@ document.addEventListener("DOMContentLoaded", () => {
       let resultText = "";
 
       if (outcome === "W") {
-        // Pick a bot move that loses to the player randomly
+        // Bot move that loses
         const loseMap = { Rock: ["Scissors"], Paper: ["Rock"], Scissors: ["Paper"] };
-        botChoice = loseMap[playerChoice][getRandomInt(0, loseMap[playerChoice].length - 1)];
+        botChoice = loseMap[playerChoice][Math.floor(Math.random() * loseMap[playerChoice].length)];
         botHand.textContent = icons[botChoice];
         let winAmount = stake * 1.5;
         game += winAmount;
@@ -247,18 +225,21 @@ document.addEventListener("DOMContentLoaded", () => {
         showPopup("🎉 Victory!");
         winSound.play();
       } else if (outcome === "L") {
-        // Pick a bot move that beats player randomly
+        // Bot move that wins
         const winMap = { Rock: ["Paper"], Paper: ["Scissors"], Scissors: ["Rock"] };
-        botChoice = winMap[playerChoice][getRandomInt(0, winMap[playerChoice].length - 1)];
+        botChoice = winMap[playerChoice][Math.floor(Math.random() * winMap[playerChoice].length)];
         botHand.textContent = icons[botChoice];
         resultText = `😢 You lost! ${botChoice} beats ${playerChoice}`;
         showPopup("😢 Defeat!");
         loseSound.play();
       } else {
-        // Draw
+        // Draw → refund stake
         botChoice = playerChoice;
         botHand.textContent = icons[botChoice];
-        resultText = `🤝 Draw! Both chose ${playerChoice}`;
+        deposit += stake; 
+        localStorage.setItem(depositKey, deposit);
+        resultText = `🤝 Draw! Both chose ${playerChoice}. Stake refunded.`;
+        showPopup("🤝 Draw! Stake refunded.");
         drawSound.play();
       }
 
@@ -285,6 +266,5 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 <script src="cop depo.js"></script>
-  
 </body>
 </html>

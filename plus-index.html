@@ -62,8 +62,15 @@
       font-size: 18px;
       margin-top: 8px;
     }
-
-    /* Quick Actions */
+    .convert-btn {
+      margin-top: 10px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      background: #0d6efd;
+      color: #fff;
+      cursor: pointer;
+    }
     .quick-actions {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -95,7 +102,6 @@
       margin: 0;
       color: #222;
     }
-
     /* Suggested color accents */
     .blue i { color: #0d6efd; }
     .green i { color: #198754; }
@@ -107,6 +113,75 @@
     .gold i { color: #f1c40f; }
     .pink i { color: #e83e8c; }
     .indigo i { color: #6610f2; }
+
+    /* Custom Notification Styles */
+    .custom-alert {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #dc3545;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: bold;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: fadeIn 0.3s ease, fadeOut 0.3s ease 3s forwards;
+      z-index: 1000;
+    }
+    .custom-alert.success {
+      background: #198754;
+    }
+    .custom-alert i {
+      font-size: 18px;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateY(-10px); }
+    }
+
+    /* Tooltip Styles */
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      opacity: 0;
+      width: 220px;
+      background: #0d6efd;
+      color: #fff;
+      text-align: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      position: absolute;
+      z-index: 100;
+      bottom: 125%; /* position above */
+      left: 50%;
+      transform: translateX(-50%);
+      transition: opacity 0.3s;
+      font-size: 13px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .tooltip .tooltip-text::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px;
+      border-style: solid;
+      border-color: #0d6efd transparent transparent transparent;
+    }
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -122,23 +197,51 @@
 
     <!-- Balance Overview -->
     <div class="balances">
+      <!-- Activity Balance (Points) -->
       <div class="balance-card">
         <i class="fas fa-bolt"></i>
         <h3>Activity Balance</h3>
-        <p id="activityBalance" class="count">₦0</p>
+        <p id="activityBalance" class="count">0 pts</p>
+
+        <!-- Tooltip Wrapper -->
+        <div class="tooltip">
+          <button id="convertBtn" class="convert-btn">
+            Convert to ₦
+          </button>
+          <span class="tooltip-text">
+            Convert your points into spendable deposit balance.<br>
+            Rate: 10 pts = ₦1<br>
+            Minimum: 17,000 pts.
+          </span>
+        </div>
       </div>
 
+      <!-- Referral Balance -->
       <div class="balance-card">
         <i class="fas fa-users"></i>
         <h3>Referral Bonus</h3>
         <p id="referralBalance" class="count">₦0</p>
       </div>
 
-      <!-- NEW Game Balance -->
+      <!-- Game Balance -->
       <div class="balance-card">
         <i class="fas fa-gamepad"></i>
         <h3>Game Balance</h3>
         <p id="gameBalance" class="count">₦0</p>
+      </div>
+
+      <!-- Task Balance -->
+      <div class="balance-card">
+        <i class="fas fa-tasks"></i>
+        <h3>Task Balance</h3>
+        <p id="taskBalance" class="count">₦0</p>
+      </div>
+
+      <!-- Deposit Balance -->
+      <div class="balance-card">
+        <i class="fas fa-wallet"></i>
+        <h3>Deposit Balance</h3>
+        <p id="depositBalance" class="count">₦0</p>
       </div>
     </div>
 
@@ -184,19 +287,14 @@
         <i class="fas fa-tasks"></i>
         <h4>Tasks</h4>
       </a>
-
-      <!-- ✅ NEW Play Games Option -->
       <a href="plus-playgame.html" class="action-card teal">
         <i class="fas fa-gamepad"></i>
         <h4>Play Games</h4>
       </a>
-
-      <!-- ✅ NEW Job Options -->
       <a href="job.html" class="action-card gold">
         <i class="fas fa-briefcase"></i>
         <h4>Job Opportunities</h4>
       </a>
-
       <a href="info.html" class="action-card blue">
         <i class="fas fa-sign-out-alt"></i>
         <h4>Logout</h4>
@@ -210,7 +308,19 @@
 
   <!-- JavaScript -->
   <script>
-    // Load profile image
+    // Custom notification function
+    function showNotification(message, type = "error") {
+      const div = document.createElement("div");
+      div.className = `custom-alert ${type === "success" ? "success" : ""}`;
+      div.innerHTML = `
+        <i class="fas ${type === "success" ? "fa-check-circle" : "fa-times-circle"}"></i>
+        <span>${message}</span>
+      `;
+      document.body.appendChild(div);
+      setTimeout(() => div.remove(), 3500);
+    }
+
+    // Profile Image
     function getProfileImage() {
       const key = "moni_user_pic";
       let saved = localStorage.getItem(key);
@@ -223,14 +333,14 @@
     }
     document.getElementById("profilePic").src = getProfileImage();
 
-    // Auto-dismiss welcome message
+    // Hide Welcome Message after 5s
     setTimeout(() => {
       const note = document.getElementById("welcomeMessage");
       if (note) note.style.display = "none";
     }, 5000);
 
-    // Animate number counting
-    function animateCountUp(el, endValue, duration = 1000) {
+    // Animate Numbers
+    function animateCountUp(el, endValue, duration = 1000, isPoints = false) {
       let start = 0;
       const step = Math.ceil(endValue / (duration / 20));
       const counter = setInterval(() => {
@@ -239,43 +349,66 @@
           start = endValue;
           clearInterval(counter);
         }
-        el.textContent = `₦${start.toLocaleString()}`;
+        el.textContent = isPoints 
+          ? `${start.toLocaleString()} pts`
+          : `₦${start.toLocaleString()}`;
       }, 20);
     }
 
-    // Initialize balances
+    // Init Balances
     function initUserBalances(userId) {
       const keys = {
         activity: `plus-activityBalance`,
         referral: `plus-referralBalance`,
-        game: `plusgameBalance_${userId}`
+        game: `plusgameBalance_${userId}`,
+        task: `taskBalance_${userId}`,
+        deposit: `plus-depositBalance_${userId}`
       };
-
-      // Ensure default values
-      if (!localStorage.getItem(keys.activity)) localStorage.setItem(keys.activity, "0");
-      if (!localStorage.getItem(keys.referral)) localStorage.setItem(keys.referral, "0");
-      if (!localStorage.getItem(keys.game)) localStorage.setItem(keys.game, "0");
-
+      for (const k in keys) {
+        if (!localStorage.getItem(keys[k])) localStorage.setItem(keys[k], "0");
+      }
       return keys;
     }
 
-    // Load balances
+    // Load Balances
     function loadBalancesAnimated() {
       const userId = localStorage.getItem("plus-Id");
       if (!userId) {
-        console.error("❌ No user ID found in localStorage.");
+        console.error("❌ No user ID found.");
         return;
       }
-
       const keys = initUserBalances(userId);
 
       const activity = parseInt(localStorage.getItem(keys.activity)) || 0;
       const referral = parseInt(localStorage.getItem(keys.referral)) || 0;
       const game = parseInt(localStorage.getItem(keys.game)) || 0;
+      const task = parseInt(localStorage.getItem(keys.task)) || 0;
+      const deposit = parseInt(localStorage.getItem(keys.deposit)) || 0;
 
-      animateCountUp(document.getElementById("activityBalance"), activity);
+      animateCountUp(document.getElementById("activityBalance"), activity, 1000, true);
       animateCountUp(document.getElementById("referralBalance"), referral);
       animateCountUp(document.getElementById("gameBalance"), game);
+      animateCountUp(document.getElementById("taskBalance"), task);
+      animateCountUp(document.getElementById("depositBalance"), deposit);
+
+      // Convert Button
+      document.getElementById("convertBtn").onclick = () => {
+        if (activity < 17000) {
+          showNotification("❌ Minimum 17,000 pts required to convert.");
+          return;
+        }
+        const depositNow = parseInt(localStorage.getItem(keys.deposit)) || 0;
+        // Conversion: 10pts = ₦1
+        const nairaValue = Math.floor(activity / 10);
+        const remainder = activity % 10;
+
+        const newDeposit = depositNow + nairaValue;
+        localStorage.setItem(keys.deposit, newDeposit);
+        localStorage.setItem(keys.activity, remainder); // leftover points
+
+        showNotification(`✅ Converted ${activity - remainder} pts into ₦${nairaValue}. Remaining: ${remainder} pts`, "success");
+        loadBalancesAnimated();
+      };
     }
 
     // Run
